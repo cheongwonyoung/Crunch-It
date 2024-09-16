@@ -4,8 +4,6 @@ import com.zaxxer.hikari.HikariDataSource;
 import org.apache.ibatis.io.Resources;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.PropertySource;
-import org.springframework.core.io.Resource;
 
 import javax.sql.DataSource;
 import java.io.IOException;
@@ -20,7 +18,7 @@ public class AppConfig {
         Properties properties = new Properties();
         HikariDataSource dataSource= new HikariDataSource();
         try{
-            Reader reader = Resources.getResourceAsReader("config/db.properties");
+            Reader reader = Resources.getResourceAsReader("properties/db.properties");
             properties.load(reader);
             dataSource.setDriverClassName(properties.getProperty("db.driverClass"));
             dataSource.setJdbcUrl(properties.getProperty("db.url"));
