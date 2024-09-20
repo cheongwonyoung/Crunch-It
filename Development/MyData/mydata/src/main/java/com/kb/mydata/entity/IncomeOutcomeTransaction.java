@@ -23,5 +23,5 @@ public class IncomeOutcomeTransaction {
 
     private Integer amount;
 
-    private LocalDateTime date;
+    private LocalDateTime registerDate;
 }

@@ -13,7 +13,7 @@ public class UserStock {
 
     private String stockName;
 
-    private Integer averagePrice;
+    private Integer averagePurchasePrice;
 
     private Integer quantity;
 
