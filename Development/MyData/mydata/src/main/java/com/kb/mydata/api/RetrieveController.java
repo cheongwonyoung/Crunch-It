@@ -25,4 +25,13 @@ public class RetrieveController {
             return new ResponseEntity<>("계좌 조회 에러", HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
+    @GetMapping("/transaction/{userId}")
+    public ResponseEntity<?> transactionList(@PathVariable("userId") Long userId){
+        try{
+            return new ResponseEntity<>(retrieveService.getTransactionInfo(userId), HttpStatus.OK);
+        } catch(Exception e){
+            e.printStackTrace();
+            return new ResponseEntity<>("입출금내역 조회 에러", HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
 }
