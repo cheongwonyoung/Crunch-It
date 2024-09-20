@@ -1,17 +1,8 @@
 package com.kb.mydata.service;
 
-import com.kb.mydata.dto.resp.AccountResponseDto;
-import com.kb.mydata.dto.resp.IncomeOutcomeTransactionResponseDto;
-import com.kb.mydata.dto.resp.StockResponseDto;
-import com.kb.mydata.dto.resp.TestResponseDto;
-import com.kb.mydata.entity.Account;
-import com.kb.mydata.entity.IncomeOutcomeTransaction;
-import com.kb.mydata.entity.Test;
-import com.kb.mydata.entity.UserStock;
-import com.kb.mydata.repository.AccountRepository;
-import com.kb.mydata.repository.StockRepository;
-import com.kb.mydata.repository.TestRepository;
-import com.kb.mydata.repository.TransactionRepository;
+import com.kb.mydata.dto.resp.*;
+import com.kb.mydata.entity.*;
+import com.kb.mydata.repository.*;
 import lombok.RequiredArgsConstructor;
 import org.hibernate.Transaction;
 import org.springframework.stereotype.Service;
@@ -26,6 +17,7 @@ public class RetrieveServiceImpl implements RetrieveService {
     private final AccountRepository accountRepository;
     private final TransactionRepository transactionRepository;
     private final StockRepository stockRepository;
+    private final FundRepository fundRepository;
 
     @Override
     public List<AccountResponseDto.Info> getAccountInfo(Long userId) {
@@ -65,6 +57,18 @@ public class RetrieveServiceImpl implements RetrieveService {
 
         for(UserStock stock : stockList){
             StockResponseDto.Info info = StockResponseDto.Info.fromEntity(stock);
+            res.add(info);
+        }
+
+        return res;
+    }@Override
+    public List<FundResponseDto.Info> getFundInfo(Long userId) {
+        List<FundResponseDto.Info> res = new ArrayList<>();
+
+        List<UserFund> fundList = fundRepository.findByUser_UserId(userId);
+
+        for(UserFund fund : fundList){
+            FundResponseDto.Info info = FundResponseDto.Info.fromEntity(fund);
             res.add(info);
         }
 

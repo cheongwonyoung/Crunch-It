@@ -1,6 +1,5 @@
 package com.kb.mydata.repository;
 
-import com.kb.mydata.entity.Account;
 import com.kb.mydata.entity.UserStock;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
