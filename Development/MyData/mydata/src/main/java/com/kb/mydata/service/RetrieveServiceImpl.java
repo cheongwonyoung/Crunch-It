@@ -2,11 +2,14 @@ package com.kb.mydata.service;
 
 import com.kb.mydata.dto.resp.AccountResponseDto;
 import com.kb.mydata.dto.resp.IncomeOutcomeTransactionResponseDto;
+import com.kb.mydata.dto.resp.StockResponseDto;
 import com.kb.mydata.dto.resp.TestResponseDto;
 import com.kb.mydata.entity.Account;
 import com.kb.mydata.entity.IncomeOutcomeTransaction;
 import com.kb.mydata.entity.Test;
+import com.kb.mydata.entity.UserStock;
 import com.kb.mydata.repository.AccountRepository;
+import com.kb.mydata.repository.StockRepository;
 import com.kb.mydata.repository.TestRepository;
 import com.kb.mydata.repository.TransactionRepository;
 import lombok.RequiredArgsConstructor;
@@ -19,8 +22,10 @@ import java.util.List;
 @Service
 @RequiredArgsConstructor
 public class RetrieveServiceImpl implements RetrieveService {
+
     private final AccountRepository accountRepository;
     private final TransactionRepository transactionRepository;
+    private final StockRepository stockRepository;
 
     @Override
     public List<AccountResponseDto.Info> getAccountInfo(Long userId) {
@@ -46,6 +51,20 @@ public class RetrieveServiceImpl implements RetrieveService {
 
         for(IncomeOutcomeTransaction transaction : transactionList){
             IncomeOutcomeTransactionResponseDto.Info info = IncomeOutcomeTransactionResponseDto.Info.fromEntity(transaction);
+            res.add(info);
+        }
+
+        return res;
+    }
+
+    @Override
+    public List<StockResponseDto.Info> getStockInfo(Long userId) {
+        List<StockResponseDto.Info> res = new ArrayList<>();
+
+        List<UserStock> stockList = stockRepository.findByUser_UserId(userId);
+
+        for(UserStock stock : stockList){
+            StockResponseDto.Info info = StockResponseDto.Info.fromEntity(stock);
             res.add(info);
         }
 

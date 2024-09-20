@@ -34,4 +34,13 @@ public class RetrieveController {
             return new ResponseEntity<>("입출금내역 조회 에러", HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
+    @GetMapping("/stock/{userId}")
+    public ResponseEntity<?> stockList(@PathVariable("userId") Long userId){
+        try{
+            return new ResponseEntity<>(retrieveService.getStockInfo(userId), HttpStatus.OK);
+        } catch(Exception e){
+            e.printStackTrace();
+            return new ResponseEntity<>("주식 내역 조회 에러", HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
 }
