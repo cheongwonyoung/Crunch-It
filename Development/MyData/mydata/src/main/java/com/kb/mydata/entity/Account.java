@@ -1,11 +1,13 @@
 package com.kb.mydata.entity;
 
 import jakarta.persistence.*;
+import lombok.Getter;
 
 import java.math.BigInteger;
 import java.util.List;
 
 @Entity
+@Getter
 public class Account {
 
     @Id
@@ -19,7 +21,7 @@ public class Account {
 
     private String accountName;
 
-    private BigInteger balance;
+    private long balance;
 
     @ManyToOne
     @JoinColumn(name = "userId")

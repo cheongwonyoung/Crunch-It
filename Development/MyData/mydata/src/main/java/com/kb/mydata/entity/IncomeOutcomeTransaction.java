@@ -1,10 +1,12 @@
 package com.kb.mydata.entity;
 
 import jakarta.persistence.*;
+import lombok.Getter;
 
 import java.time.LocalDateTime;
 
 @Entity
+@Getter
 public class IncomeOutcomeTransaction {
 
     @Id
@@ -23,5 +25,5 @@ public class IncomeOutcomeTransaction {
 
     private Integer amount;
 
-    private LocalDateTime date;
+    private LocalDateTime registerDate;
 }

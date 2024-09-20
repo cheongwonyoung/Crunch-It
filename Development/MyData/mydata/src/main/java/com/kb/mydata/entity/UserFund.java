@@ -1,8 +1,10 @@
 package com.kb.mydata.entity;
 
 import jakarta.persistence.*;
+import lombok.Getter;
 
 @Entity
+@Getter
 public class UserFund {
 
     @Id
@@ -12,11 +14,11 @@ public class UserFund {
     @JoinColumn(name = "userId")
     private MdUser user;
 
-    private Integer fundType;
+    private String fundType;
 
     private String fundName;
 
     private Integer evaluationAmount;
 
-    private Integer investmentAmount;
+    private Integer investingAmount;
 }

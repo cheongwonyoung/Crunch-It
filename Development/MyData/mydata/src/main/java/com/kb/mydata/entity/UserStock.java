@@ -1,8 +1,10 @@
 package com.kb.mydata.entity;
 
 import jakarta.persistence.*;
+import lombok.Getter;
 
 @Entity
+@Getter
 public class UserStock {
     @Id
     private String stockCode;
@@ -13,7 +15,7 @@ public class UserStock {
 
     private String stockName;
 
-    private Integer averagePrice;
+    private Integer averagePurchasePrice;
 
     private Integer quantity;
 
