@@ -18,6 +18,7 @@ public class RetrieveServiceImpl implements RetrieveService {
     private final TransactionRepository transactionRepository;
     private final StockRepository stockRepository;
     private final FundRepository fundRepository;
+    private final BondRepository bondRepository;
 
     @Override
     public List<AccountResponseDto.Info> getAccountInfo(Long userId) {
@@ -61,7 +62,8 @@ public class RetrieveServiceImpl implements RetrieveService {
         }
 
         return res;
-    }@Override
+    }
+    @Override
     public List<FundResponseDto.Info> getFundInfo(Long userId) {
         List<FundResponseDto.Info> res = new ArrayList<>();
 
@@ -69,6 +71,19 @@ public class RetrieveServiceImpl implements RetrieveService {
 
         for(UserFund fund : fundList){
             FundResponseDto.Info info = FundResponseDto.Info.fromEntity(fund);
+            res.add(info);
+        }
+
+        return res;
+    }
+    @Override
+    public List<BondResponseDto.Info> getBondInfo(Long userId) {
+        List<BondResponseDto.Info> res = new ArrayList<>();
+
+        List<UserBond> bondList = bondRepository.findByUser_UserId(userId);
+
+        for(UserBond bond : bondList){
+            BondResponseDto.Info info = BondResponseDto.Info.fromEntity(bond);
             res.add(info);
         }
 

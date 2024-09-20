@@ -1,8 +1,10 @@
 package com.kb.mydata.entity;
 
 import jakarta.persistence.*;
+import lombok.Getter;
 
 @Entity
+@Getter
 public class UserBond {
 
     @Id

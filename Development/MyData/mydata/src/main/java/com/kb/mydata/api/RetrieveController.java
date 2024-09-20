@@ -52,4 +52,13 @@ public class RetrieveController {
             return new ResponseEntity<>("펀드 내역 조회 에러", HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
+    @GetMapping("/bond/{userId}")
+    public ResponseEntity<?> bondList(@PathVariable("userId") Long userId){
+        try{
+            return new ResponseEntity<>(retrieveService.getBondInfo(userId), HttpStatus.OK);
+        } catch(Exception e){
+            e.printStackTrace();
+            return new ResponseEntity<>("채권 내역 조회 에러", HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
 }
