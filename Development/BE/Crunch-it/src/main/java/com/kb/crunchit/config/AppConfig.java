@@ -23,7 +23,7 @@ public class AppConfig {
         Properties properties = new Properties();
         HikariDataSource dataSource= new HikariDataSource();
         try{
-            Reader reader = Resources.getResourceAsReader("db.properties");
+            Reader reader = Resources.getResourceAsReader("properties/db.properties");
             properties.load(reader);
             dataSource.setDriverClassName(properties.getProperty("db.driverClass"));
             dataSource.setJdbcUrl(properties.getProperty("db.url"));
