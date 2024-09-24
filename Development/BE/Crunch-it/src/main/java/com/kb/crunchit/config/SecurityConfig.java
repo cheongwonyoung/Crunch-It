@@ -1,46 +1,46 @@
 package com.kb.crunchit.config;
 
-import com.kb.crunchit.security.JwtAccessDeniedHandler;
-import com.kb.crunchit.security.JwtAuthenticationEntryPoint;
-import com.kb.crunchit.security.JwtAuthenticationFilter;
-import com.kb.crunchit.security.JwtAuthenticationProvider;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.kb.crunchit.mapper.UserMapper;
+import com.kb.crunchit.security.*;
+import com.kb.crunchit.service.JwtService;
+import com.kb.crunchit.service.JwtUserDetailsService;
 import com.kb.crunchit.util.JwtTokenUtil;
+import lombok.RequiredArgsConstructor;
+import org.apache.ibatis.annotations.Mapper;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.ProviderManager;
-import org.springframework.security.config.Customizer;
+import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
+import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
+import org.springframework.security.config.annotation.authentication.configurers.userdetails.DaoAuthenticationConfigurer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.web.FilterChainProxy;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.AuthenticationFailureHandler;
+import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
+import org.springframework.stereotype.Component;
 
 @Configuration
+@RequiredArgsConstructor
 @EnableWebSecurity
+@ComponentScan(basePackages = "com.kb.crunchit.security")
 public class SecurityConfig {
-    @Bean
-    public JwtTokenUtil jwtTokenUtil(){
-        return new JwtTokenUtil();
-    }
+    private final UserDetailsService userDetailsService;
+    private final JwtLoginSuccessHandler loginSuccessHandler;
+    private final JwtLoginFailureHandler loginFailureHandler;
+    private final JwtService jwtService;
+    private final JwtTokenUtil jwtTokenUtil;
 
-    @Bean
-    public JwtAuthenticationProvider jwtAuthenticationProvider() {
-        return new JwtAuthenticationProvider(jwtTokenUtil());
-    }
-
-    @Bean
-    public JwtAuthenticationFilter jwtAuthenticationFilter(AuthenticationManager authenticationManager) {
-        JwtAuthenticationFilter filter = new JwtAuthenticationFilter("/**"); // 필터가 적용될 URL 패턴 지정
-        filter.setAuthenticationManager(authenticationManager);
-        return filter;
-    }
-
-    @Bean
-    public AuthenticationManager authenticationManager() {
-        return authentication -> jwtAuthenticationProvider().authenticate(authentication);
-    }
 
     @Bean
     public JwtAccessDeniedHandler jwtAccessDeniedHandler(){
@@ -53,6 +53,29 @@ public class SecurityConfig {
     }
 
     @Bean
+    public JwtAuthenticationFilter jwtAuthenticationFilter() {return new JwtAuthenticationFilter(jwtService, jwtTokenUtil);}
+
+    @Bean
+    public PasswordEncoder passwordEncoder(){
+        return new BCryptPasswordEncoder();
+    }
+
+    @Bean
+    public AuthenticationManager authenticationManager(){
+        DaoAuthenticationProvider provider = new DaoAuthenticationProvider();
+        provider.setPasswordEncoder(passwordEncoder());
+        provider.setUserDetailsService(userDetailsService);
+        return new ProviderManager(provider);
+    }
+
+    @Bean
+    public JsonUsernamePasswordAuthenticationFilter jsonUsernamePasswordAuthenticationFilter() {
+        JsonUsernamePasswordAuthenticationFilter jsonUsernamePasswordAuthenticationFilter = new JsonUsernamePasswordAuthenticationFilter(loginSuccessHandler, loginFailureHandler);
+        jsonUsernamePasswordAuthenticationFilter.setAuthenticationManager(authenticationManager());
+        return jsonUsernamePasswordAuthenticationFilter;
+    }
+
+    @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
                 .csrf().disable()
@@ -60,15 +83,14 @@ public class SecurityConfig {
                         .accessDeniedHandler(jwtAccessDeniedHandler())
                         .authenticationEntryPoint(jwtAuthenticationEntryPoint()))
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers(new AntPathRequestMatcher("/**")
-                                ,new AntPathRequestMatcher("/login")).permitAll()
+                        .requestMatchers(new AntPathRequestMatcher("/auth/login")).permitAll()
                         .anyRequest().authenticated()
                 )
-                .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
-//                .and()
-//                .addFilterBefore(jwtAuthenticationFilter(authenticationManager()), UsernamePasswordAuthenticationFilter.class);
+                .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
 
-
+                .and()
+                .addFilterBefore(jwtAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class)
+                .addFilterAt(jsonUsernamePasswordAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class);
         return http.build();
     }
 

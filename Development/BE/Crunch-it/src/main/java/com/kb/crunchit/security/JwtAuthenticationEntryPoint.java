@@ -15,7 +15,7 @@ public class JwtAuthenticationEntryPoint  implements AuthenticationEntryPoint {
                          HttpServletResponse response,
                          AuthenticationException authException) throws IOException {
         Map<String,String> map = (Map<String,String>) request.getAttribute("tokenexception");
-        if( map ==null)
+        if(map ==null)
         {
             response.sendError(HttpServletResponse.SC_UNAUTHORIZED);
             return;

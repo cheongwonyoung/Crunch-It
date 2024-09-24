@@ -1,6 +1,7 @@
 package com.kb.crunchit.controller;
 
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.config.annotation.SecurityBuilder;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -8,8 +9,8 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.HashMap;
 import java.util.Map;
 // 추후에 삭제 예정
-@RestController
-@RequestMapping("/")
+
+@RequestMapping("/auth")
 public class TestController {
     @GetMapping("/login")
     public ResponseEntity<Map<String,Object>> login(){
