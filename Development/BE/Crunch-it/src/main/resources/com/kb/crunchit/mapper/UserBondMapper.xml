@@ -25,9 +25,10 @@
     <!-- 특정 user_id가 보유한 채권 중 비중이 높은 3개 조회 -->
     <select id="findTop3BondsByUserId" parameterType="int" resultMap="userBondResultMap">
         SELECT *
-        FROM user_bonds
+        FROM user_bond
         WHERE user_id = #{userId}
         ORDER BY (average_purchase_price * quantity) DESC
             LIMIT 3
     </select>
+
 </mapper>
