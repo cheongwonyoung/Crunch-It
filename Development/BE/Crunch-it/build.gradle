@@ -98,6 +98,7 @@ dependencies {
     testAnnotationProcessor "org.projectlombok:lombok:${lombokVersion}"
 
     implementation 'com.auth0:java-jwt:4.2.1'
+    implementation 'javax.servlet:javax.servlet-api:4.0.1'
 }
 
 test {
