@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.kb.crunchit.mapper.UserBondMapper">
+    <!-- 모든 사용자 채권 정보 조회 -->
+    <resultMap id="userBondResultMap" type="UserBondResponseDTO">
+        <result property="bondCode" column="bond_code" jdbcType="VARCHAR"/>
+        <result property="userId" column="user_id" jdbcType="INTEGER"/>
+        <result property="averagePurchasePrice" column="average_purchase_price" jdbcType="INTEGER"/>
+        <result property="quantity" column="quantity" jdbcType="INTEGER"/>
+        <result property="bondName" column="bond_name" jdbcType="VARCHAR"/>
+    </resultMap>
+
+    <!-- 채권 수익률이 가장 높은 user_id 조회 -->
+    <select id="findTopBondProfitUserId" resultType="int">
+        SELECT user_id
+        FROM user_asset_statistics
+        WHERE bond_invest_amount > 0
+        ORDER BY (bond_profit_amount / bond_invest_amount) DESC
+            LIMIT 1
+    </select>
+
+    <!-- 특정 user_id가 보유한 채권 중 비중이 높은 3개 조회 -->
+    <select id="findTop3BondsByUserId" parameterType="int" resultMap="userBondResultMap">
+        SELECT *
+        FROM user_bonds
+        WHERE user_id = #{userId}
+        ORDER BY (average_purchase_price * quantity) DESC
+            LIMIT 3
+    </select>
+</mapper>

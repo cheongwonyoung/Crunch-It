@@ -1,6 +1,8 @@
 package com.kb.crunchit.config;
 
 
+import org.apache.ibatis.annotations.Mapper;
+import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
@@ -11,6 +13,7 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 @Configuration
 @EnableWebMvc
 @ComponentScan(basePackages = "com.kb.crunchit")
+@MapperScan(basePackages = "com.kb.crunchit.mapper")
 public class WebConfig implements WebMvcConfigurer {
 
 
