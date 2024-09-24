@@ -12,8 +12,7 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 @Configuration
 @EnableWebMvc
-@ComponentScan(basePackages = "com.kb.crunchit")
-@MapperScan(basePackages = "com.kb.crunchit.mapper")
+@ComponentScan(basePackages = "com.kb.crunchit.controller")
 public class WebConfig implements WebMvcConfigurer {
 
 
