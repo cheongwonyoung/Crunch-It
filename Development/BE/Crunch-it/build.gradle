@@ -39,7 +39,7 @@ dependencies {
     // Logging- 최근에 log4j(보안이슈-거의 사용 안함 -> logback - log4j2(실패)
     // https://mvnrepository.com/artifact/ch.qos.logback/logback-classic
     testImplementation group: 'ch.qos.logback', name: 'logback-classic', version: '1.4.14'
-    implementation 'org.slf4j:slf4j-api:2.0.3'
+    implementation 'org.slf4j:slf4j-simple:1.7.36'
 
     // xml내 한글 처리
     implementation 'xerces:xercesImpl:2.12.2'
@@ -96,6 +96,8 @@ dependencies {
     testImplementation "org.springframework:spring-test:${springVersion}"
     testCompileOnly "org.projectlombok:lombok:${lombokVersion}"
     testAnnotationProcessor "org.projectlombok:lombok:${lombokVersion}"
+
+    implementation 'com.auth0:java-jwt:4.2.1'
 }
 
 test {

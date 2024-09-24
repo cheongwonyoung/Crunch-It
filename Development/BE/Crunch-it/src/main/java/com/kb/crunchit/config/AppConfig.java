@@ -9,6 +9,7 @@ import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 
 import javax.sql.DataSource;
@@ -17,6 +18,8 @@ import java.io.Reader;
 import java.util.Properties;
 
 @Configuration
+@ComponentScan(basePackages = {"com.kb.crunchit.util", "com.kb.crunchit.service"})
+@MapperScan(basePackages = "com.kb.crunchit.mapper")
 public class AppConfig {
     @Bean  //(destroyMethod="close")
     public DataSource dataSource() {
