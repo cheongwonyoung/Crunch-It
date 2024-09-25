@@ -25,9 +25,10 @@
     <!-- 특정 user_id가 보유한 펀드 중 비중이 높은 3개 조회 -->
     <select id="findTop3FundsByUserId" parameterType="int" resultMap="userFundResultMap">
         SELECT *
-        FROM user_funds
+        FROM user_fund
         WHERE user_id = #{userId}
         ORDER BY investing_amount DESC
             LIMIT 3
     </select>
+
 </mapper>
