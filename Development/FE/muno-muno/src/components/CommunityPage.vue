@@ -67,7 +67,7 @@ export default {
     },
   },
   mounted() {
-    axios.get('http://localhost:8080/')
+    axios.get('http://localhost:8080/community')
         .then(response => {
           this.posts = response.data;
           console.log(response.data);

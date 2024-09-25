@@ -8,13 +8,31 @@
         <typeAlias alias="UserStockResponseDTO" type="com.kb.crunchit.dto.response.UserStockResponseDTO"/>
         <typeAlias alias="UserBondResponseDTO" type="com.kb.crunchit.dto.response.UserBondResponseDTO"/>
         <typeAlias alias="UserFundResponseDTO" type="com.kb.crunchit.dto.response.UserFundResponseDTO"/>
+
+        <typeAlias alias="BoardRequest" type="com.kb.crunchit.dto.request.BoardRequestDTO"/>
+        <typeAlias alias="BoardResponse" type="com.kb.crunchit.dto.response.BoardResponseDTO"/>
     </typeAliases>
+
+    <!-- 데이터베이스 환경 설정 -->
+    <environments default="development">
+        <environment id="development">
+            <transactionManager type="JDBC"/>
+            <dataSource type="POOLED">
+                <property name="driver" value="com.mysql.cj.jdbc.Driver"/>
+                <property name="url" value="jdbc:mysql://localhost:3306/crunchit"/>
+                <property name="username" value="root"/>
+                <property name="password" value="1234"/>
+            </dataSource>
+        </environment>
+    </environments>
 
     <mappers>
         <mapper resource="com/kb/crunchit/mapper/UserAssetStatisticsMapper.xml"/>
         <mapper resource="com/kb/crunchit/mapper/UserBondMapper.xml"/>
         <mapper resource="com/kb/crunchit/mapper/UserFundMapper.xml"/>
         <mapper resource="com/kb/crunchit/mapper/UserStockMapper.xml"/>
+
+        <mapper resource="com/kb/crunchit/mapper/BoardMapper.xml"/>
     </mappers>
 
 </configuration>

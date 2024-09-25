@@ -12,8 +12,8 @@
             title,
             content,
             category,
-            registerDate,
-            modifyDate,
+            register_date AS registerDate,
+            modify_date As modifyDate,
             likes
         FROM board
     </select>
@@ -26,8 +26,8 @@
             title,
             content,
             category,
-            registerDate,
-            modifyDate,
+            register_date AS registerDate,
+            modify_date As modifyDate,
             likes
         FROM board
         WHERE board_id=#{boardId}
@@ -35,8 +35,8 @@
 
     <!--    게시글 생성-->
     <insert id="insertBoard" parameterType="BoardRequest">
-        INSERT INTO board(board_id, writer_id, title, content, category )
-        VALUES (#{boardId},#{writerId},#{title},#{content},#{category})
+        INSERT INTO board(board_id, writer_id, title, content, category, register_date )
+        VALUES (#{boardId},#{writerId},#{title},#{content},#{category}, NOW())
     </insert>
 
     <!--    게시글 수정-->

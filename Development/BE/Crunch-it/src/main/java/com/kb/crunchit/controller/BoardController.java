@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/board")
+@RequestMapping("/community")
 public class BoardController {
 
     @Autowired
@@ -30,13 +30,13 @@ public class BoardController {
         return ResponseEntity.ok(boardResponseDTO);
     }
 
-    @GetMapping("/all")
+    @GetMapping
     public ResponseEntity<List<BoardResponseDTO>> getAllPost(){
         List<BoardResponseDTO> boardList=boardService.getAllPosts();
         return ResponseEntity.ok(boardList);
     }
 
-    @PutMapping
+    @PutMapping("/modify/{boardId}")
     public ResponseEntity<String> updatePost(@PathVariable int boardId,@RequestBody BoardRequestDTO boardRequestDTO){
         boardService.updatePost(boardId,boardRequestDTO);
         return ResponseEntity.ok("게시글 수정 성공");
