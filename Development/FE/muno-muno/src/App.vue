@@ -1,16 +1,21 @@
 <template>
   <div id="app">
-    <router-view></router-view>
+    <StatusBar />
+    <div class="content">
+      <router-view></router-view>
+    </div>
     <TabBar />
   </div>
 </template>
 
 <script>
 import TabBar from './components/TabBar.vue';
+import StatusBar from './components/StatusBar.vue';
 
 export default {
   components: {
     TabBar,
+    StatusBar,
   },
 };
 </script>
@@ -54,5 +59,11 @@ body {
   --p70: #cce0ff;
   --p80: #ebf3ff;
   --p90: #f0f6ff;
+}
+
+.content {
+  padding-top: 20px;
+  height: calc(100% - 86px - 20px);
+  overflow-y: auto;
 }
 </style>
