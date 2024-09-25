@@ -1,6 +1,7 @@
 package com.kb.crunchit.service;
 
 import com.auth0.jwt.JWT;
+import com.kb.crunchit.security.CustomUserDetails;
 import com.kb.crunchit.util.JwtTokenUtil;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
@@ -63,7 +64,7 @@ public class JwtService {
 
     public Authentication getAuthentication(String token){
         String email = String.valueOf(jwtTokenUtil.extractEmail(token));
-        User principal = new User(email, "", null);
+        CustomUserDetails principal = new CustomUserDetails(email, null);
         return new UsernamePasswordAuthenticationToken(principal, token, null);
     }
 }

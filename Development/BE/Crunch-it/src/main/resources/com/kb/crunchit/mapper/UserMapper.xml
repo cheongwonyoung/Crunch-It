@@ -11,4 +11,15 @@
         where email = #{email};
     </select>
 
+    <select id="findByNickname" resultType="com.kb.crunchit.dto.response.UserDto" parameterType="string">
+        select *
+        from user
+        where email = #{nickname};
+    </select>
+
+    <insert id="signIn" parameterType="com.kb.crunchit.dto.response.UserDto">
+        insert into user (nickname, password, phone_number, email)
+        values (#{nickname}, #{password}, #{phone_number}, #{email})
+    </insert>
+
 </mapper>
