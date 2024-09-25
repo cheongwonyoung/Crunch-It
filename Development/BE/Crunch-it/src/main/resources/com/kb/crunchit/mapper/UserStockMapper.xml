@@ -25,10 +25,12 @@
 
     <!-- 특정 user_id가 보유한 주식 중 비중이 높은 3개 조회 -->
     <select id="findTop3StocksByUserId" parameterType="int" resultMap="userStockResultMap">
-        SELECT stock_code, user_id, average_purchase_price, quantity, stock_market, stock_name
-        FROM user_stocks
+        SELECT *
+        FROM user_stock
         WHERE user_id = #{userId}
         ORDER BY (average_purchase_price * quantity) DESC
             LIMIT 3
     </select>
+
+
 </mapper>
