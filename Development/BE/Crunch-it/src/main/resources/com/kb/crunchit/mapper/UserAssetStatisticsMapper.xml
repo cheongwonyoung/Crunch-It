@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.kb.crunchit.mapper.UserAssetStatisticsMapper">
+    <!-- 주식 수익률이 가장 높은 user_id 조회 -->
+    <select id="findTopUserIdByStockProfit" resultType="Integer">
+        SELECT user_id
+        FROM user_asset_statistics
+        WHERE stock_invest_amount > 0  <!-- 투자금이 0 이상인 경우에만 수익률 계산 -->
+        ORDER BY (stock_profit_amount / stock_invest_amount) DESC
+        LIMIT 1
+    </select>
+
+    <!-- 펀드 수익률이 가장 높은 user_id 조회 -->
+    <select id="findTopUserIdByFundProfit" resultType="Integer">
+        SELECT user_id
+        FROM user_asset_statistics
+        WHERE fund_invest_amount > 0  <!-- 투자금이 0 이상인 경우에만 수익률 계산 -->
+        ORDER BY (fund_profit_amount / fund_invest_amount) DESC
+        LIMIT 1
+    </select>
+
+
+    <!-- 채권 수익률이 가장 높은 user_id 조회 -->
+    <select id="findTopUserIdByBondProfit" resultType="Integer">
+        SELECT user_id
+        FROM user_asset_statistics
+        WHERE bond_invest_amount > 0  <!-- 투자금이 0 이상인 경우에만 수익률 계산 -->
+        ORDER BY (bond_profit_amount / bond_invest_amount) DESC
+        LIMIT 1
+    </select>
+
+</mapper>
