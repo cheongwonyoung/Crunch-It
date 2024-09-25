@@ -17,6 +17,7 @@
         <mapper resource="com/kb/crunchit/mapper/UserBondMapper.xml"/>
         <mapper resource="com/kb/crunchit/mapper/UserFundMapper.xml"/>
         <mapper resource="com/kb/crunchit/mapper/UserStockMapper.xml"/>
+        <mapper resource="com/kb/crunchit/mapper/ChatRoomMapper.xml"/>
         <mapper resource="com/kb/crunchit/mapper/UserMapper.xml"/>
     </mappers>
 

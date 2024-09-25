@@ -117,6 +117,11 @@ dependencies {
     // Apache Commons FileUpload (MultipartResolver 사용을 위한 의존성)
     implementation 'commons-fileupload:commons-fileupload:1.4'
 
+
+    // WebSocket 및 STOMP 메시징을 위한 의존성
+    implementation 'org.springframework:spring-messaging:5.3.37'
+    implementation 'org.springframework:spring-websocket:5.3.37'
+
     // 이메일 인증
     // https://mvnrepository.com/artifact/org.springframework.boot/spring-boot-starter-mail
     implementation group: 'org.springframework.boot', name: 'spring-boot-starter-mail', version: '2.7.18'
