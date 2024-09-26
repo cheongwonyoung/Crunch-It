@@ -39,7 +39,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         Map<String, String> resultMap = new HashMap<>();
         try{
             String accessToken = jwtService.extractAccessToken(request);
-            if(accessToken == null|| jwtTokenUtil.validateToken(accessToken)){
+            if(accessToken == null|| !jwtTokenUtil.validateToken(accessToken)){
                 throw new AuthenticationException("invalid token"){};
             }
             Authentication authentication = jwtService.getAuthentication(accessToken);

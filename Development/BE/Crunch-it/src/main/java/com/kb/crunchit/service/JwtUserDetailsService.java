@@ -22,8 +22,12 @@ public class JwtUserDetailsService implements UserDetailsService {
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
         UserDto userDto = userMapper.findByEmail(email);
         if(userDto == null){
+            log.error("User not found with email");
             throw new UsernameNotFoundException("User not found with email : " + email);
         }
+
+        log.error(userDto.getEmail());
+        log.error(userDto.getPassword());
 
         return new CustomUserDetails(
                 userDto.getEmail(),
