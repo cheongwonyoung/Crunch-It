@@ -13,7 +13,7 @@ public class Account {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer accountId;
-    private Integer accountType;
+    private String accountType;
 
     private String accountNumber;
 

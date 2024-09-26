@@ -10,7 +10,7 @@ public class AccountResponseDto {
     public static class Info {
         private int accountId;
         private int userId;
-        private int accountType;
+        private String accountType;
         private String accountNumber;
         private String bankName;
         private String accountName;
