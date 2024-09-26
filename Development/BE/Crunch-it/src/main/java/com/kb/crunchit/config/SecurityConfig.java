@@ -83,7 +83,7 @@ public class SecurityConfig {
 //                        .accessDeniedHandler(jwtAccessDeniedHandler())
 //                        .authenticationEntryPoint(jwtAuthenticationEntryPoint()))
 //                .authorizeHttpRequests(auth -> auth
-//                        .requestMatchers(new AntPathRequestMatcher("/auth/login")).permitAll()
+//                        .requestMatchers(new AntPathRequestMatcher("/auth/**")).permitAll()
 //                        .anyRequest().authenticated()
 //                )
 //                .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
