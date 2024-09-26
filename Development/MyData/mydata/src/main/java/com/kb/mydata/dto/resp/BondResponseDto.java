@@ -9,7 +9,7 @@ public class BondResponseDto {
     @Builder
     public static class Info {
         private String bondCode;
-        private String userName;              // MdUser의 user_name
+        private int userId;
         private String bondName;
         private Integer averagePurchasePrice;
         private Integer quantity;
@@ -18,7 +18,7 @@ public class BondResponseDto {
         public static Info fromEntity(UserBond userBond) {
             return Info.builder()
                     .bondCode(userBond.getBondCode())
-                    .userName(userBond.getUser().getUser_name()) // 사용자 이름
+                    .userId(userBond.getUser().getUserId())
                     .bondName(userBond.getBondName())
                     .averagePurchasePrice(userBond.getAveragePurchasePrice())
                     .quantity(userBond.getQuantity())

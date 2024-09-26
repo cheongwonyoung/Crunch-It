@@ -9,7 +9,7 @@ public class AccountResponseDto {
     @Builder
     public static class Info {
         private int accountId;
-        private String userName; // userId대신 userName
+        private int userId;
         private int accountType;
         private String accountNumber;
         private String bankName;
@@ -19,7 +19,7 @@ public class AccountResponseDto {
         public static Info fromEntity(Account account) {
             return Info.builder()
                     .accountId(account.getAccountId())
-                    .userName(account.getUser().getUser_name())
+                    .userId(account.getUser().getUserId())
                     .accountType(account.getAccountType())
                     .accountNumber(account.getAccountNumber())
                     .bankName(account.getBankName())

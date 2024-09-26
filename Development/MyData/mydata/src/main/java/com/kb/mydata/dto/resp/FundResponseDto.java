@@ -9,7 +9,7 @@ public class FundResponseDto {
     @Builder
     public static class Info {
         private String fundCode;
-        private String userName;              // MdUser의 user_name
+        private int userId;
         private String fundType;
         private String fundName;
         private Integer evaluationAmount;
@@ -18,7 +18,7 @@ public class FundResponseDto {
         public static Info fromEntity(UserFund userFund) {
             return Info.builder()
                     .fundCode(userFund.getFundCode())
-                    .userName(userFund.getUser().getUser_name()) // 사용자 이름
+                    .userId(userFund.getUser().getUserId())
                     .fundType(userFund.getFundType())
                     .fundName(userFund.getFundName())
                     .evaluationAmount(userFund.getEvaluationAmount())
