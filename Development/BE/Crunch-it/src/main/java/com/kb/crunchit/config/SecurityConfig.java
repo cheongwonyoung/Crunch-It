@@ -74,6 +74,25 @@ public class SecurityConfig {
         return jsonUsernamePasswordAuthenticationFilter;
     }
 
+    // jwt 필터 적용
+//    @Bean
+//    public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+//        http
+//                .csrf().disable()
+//                .exceptionHandling(exceptionHandling -> exceptionHandling
+//                        .accessDeniedHandler(jwtAccessDeniedHandler())
+//                        .authenticationEntryPoint(jwtAuthenticationEntryPoint()))
+//                .authorizeHttpRequests(auth -> auth
+//                        .requestMatchers(new AntPathRequestMatcher("/auth/login")).permitAll()
+//                        .anyRequest().authenticated()
+//                )
+//                .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+//
+//                .and()
+//                .addFilterBefore(jwtAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class)
+//                .addFilterAt(jsonUsernamePasswordAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class);
+//        return http.build();
+//    }
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
@@ -88,7 +107,6 @@ public class SecurityConfig {
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
 
                 .and()
-                .addFilterBefore(jwtAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class)
                 .addFilterAt(jsonUsernamePasswordAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class);
         return http.build();
     }
