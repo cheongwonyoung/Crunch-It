@@ -8,10 +8,6 @@ import java.util.List;
 
 @Mapper
 public interface UserBondMapper {
-
-    // 채권 수익률이 가장 높은 user_id 조회
-    Integer findTopProfitUserIdByType(@Param("type") String type);
-
-    // 특정 user_id가 보유한 채권 조회
-    List<UserBondResponseDTO> selectBondsByUserId(@Param("userId") int userId);
+    // 채권 상위 3개 조회 메서드
+    List<UserBondResponseDTO> findTop3BondsByUserId(int userId);
 }

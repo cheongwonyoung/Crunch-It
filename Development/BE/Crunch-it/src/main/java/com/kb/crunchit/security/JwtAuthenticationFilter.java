@@ -32,14 +32,14 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
         String requestURI = request.getRequestURI();
-        if(requestURI.contains("/auth/login")){
+        if(requestURI.contains("/auth")){
             filterChain.doFilter(request, response);
             return;
         }
         Map<String, String> resultMap = new HashMap<>();
         try{
             String accessToken = jwtService.extractAccessToken(request);
-            if(accessToken == null|| jwtTokenUtil.validateToken(accessToken)){
+            if(accessToken == null|| !jwtTokenUtil.validateToken(accessToken)){
                 throw new AuthenticationException("invalid token"){};
             }
             Authentication authentication = jwtService.getAuthentication(accessToken);
