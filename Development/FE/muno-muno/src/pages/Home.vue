@@ -52,16 +52,18 @@
     <!-- 환율/증시 카드 -->
     <section class="currency-stock-card">
       <div class="tabs">
+        <!-- 환율 탭 -->
         <button
           class="tab"
-          :class="{ active: selectedTab === '환율' }"
+          :class="{ 'active-tab': selectedTab === '환율' }"
           @click="selectTab('환율')"
         >
           환율
         </button>
+        <!-- 증시 탭 -->
         <button
           class="tab"
-          :class="{ active: selectedTab === '증시' }"
+          :class="{ 'active-tab': selectedTab === '증시' }"
           @click="selectTab('증시')"
         >
           증시
@@ -161,6 +163,7 @@ export default {
   left: 0;
   width: 100%;
   z-index: 1000;
+  box-sizing: border-box;
 }
 
 .mypage-icon {
@@ -311,11 +314,11 @@ export default {
   border-top: 1px solid var(--gr80);
 }
 
-/* 환율,증시 카드 */
+/* 환율/증시 카드 */
 .currency-stock-card {
-  background-color: var(--gr100);
-  border: 0.5px solid var(--gr60);
-  border-radius: 10px;
+  background-color: #ffffff;
+  border: 0.5px solid #e0e0e0;
+  border-radius: 15px;
   padding: 20px;
   margin: 20px;
   box-shadow: 0px 2px 10px rgba(0, 0, 0, 0.05);
@@ -324,25 +327,34 @@ export default {
 .tabs {
   display: flex;
   justify-content: center;
-  margin-bottom: 10px;
+  background-color: var(--gr70);
+  border-radius: 30px;
+  height: 38px;
+  width: 300px;
+  margin: 0 auto 20px;
+  white-space: nowrap;
 }
 
 .tab {
-  background-color: var(--gr70);
+  background-color: transparent;
   border: none;
-  padding: 10px 20px;
-  font-size: 14px;
-  color: var(--gr40);
-  border-radius: 20px;
+  padding: 9px 60px;
+  font-size: 16px;
+  color: var(--gr50);
+  border-radius: 30px;
   cursor: pointer;
-  margin: 0 5px;
-  transition: background-color 0.2s ease;
+  transition: background-color 0.2s ease, color 0.5s ease;
+  flex-grow: 1;
+  text-align: center;
+  font-weight: 600;
+  line-height: 100%;
 }
 
-.tab.active {
+.tab.active-tab {
+  border: 0.5px solid var(--gr60);
   background-color: var(--gr100);
-  color: var(--gr10);
-  font-weight: bold;
+  color: var(--gr20);
+  margin: 2px 0 2px 2px;
 }
 
 .currency-stock-content {
@@ -361,13 +373,13 @@ export default {
 
 .market-title {
   font-size: 14px;
-  color: var(--gr50);
+  color: #8e9aaf;
 }
 
 .market-value {
   font-size: 22px;
   font-weight: 600;
-  color: var(--gr10);
+  color: #1f2937;
 }
 
 .market-change {
@@ -388,6 +400,6 @@ export default {
 .date-time {
   margin-top: 10px;
   font-size: 12px;
-  color: var(--gr40);
+  color: #8e9aaf;
 }
 </style>

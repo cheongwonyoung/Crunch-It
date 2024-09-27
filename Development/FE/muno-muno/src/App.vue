@@ -46,7 +46,7 @@ body {
   --gr40: #616b79;
   --gr50: #8892a0;
   --gr60: #d6dae0;
-  --gr70: #ebf3ff;
+  --gr70: #edeff2;
   --gr80: #f5f6f7;
   --gr90: #fbfbfc;
   --gr100: #ffffff;
@@ -58,11 +58,6 @@ body {
   --p60: #b2d1ff;
   --p70: #ebf3ff;
   --p80: #f0f6ff;
-  --gd10: linear-gradient(
-    90deg,
-    hsla(216, 76%, 100%, 1),
-    hsla(216, 60%, 100%, 1)
-  );
 }
 
 /* content 부분 스크롤 발생 설정 */
