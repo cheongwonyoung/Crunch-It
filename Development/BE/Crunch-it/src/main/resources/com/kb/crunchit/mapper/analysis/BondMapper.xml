@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.kb.crunchit.mapper.analysis.BondMapper">
+
+    <!-- 마이데이터의 md_user_id로 메인 DB의 user_id를 조회 -->
+    <select id="getUserIdByMdUserId" resultType="int" parameterType="int">
+        SELECT user_id FROM user WHERE md_user_id = #{mdUserId}
+    </select>
+
+    <!-- 채권이 특정 user_id에 대해 메인 DB에 존재하는지 확인 -->
+    <select id="exists" resultType="boolean" parameterType="map">
+        SELECT COUNT(1)
+        FROM user_bond
+        WHERE bond_code = #{bondCode} AND user_id = #{userId}
+    </select>
+
+    <!-- 사용자가 보유한 채권 업데이트 -->
+    <update id="updateBond" parameterType="map">
+        UPDATE user_bond
+        SET bond_name = #{bond.bondName},
+            average_purchase_price = #{bond.averagePurchasePrice},
+            quantity = #{bond.quantity},
+            interest_rate = #{bond.interestRate}
+        WHERE bond_code = #{bond.bondCode} AND user_id = #{userId}
+    </update>
+
+    <!-- 새로 산 채권 추가 -->
+    <insert id="insertBond" parameterType="map">
+        INSERT INTO user_bond (bond_code, user_id, bond_name, average_purchase_price, quantity, interest_rate)
+        VALUES (#{bond.bondCode}, #{userId}, #{bond.bondName}, #{bond.averagePurchasePrice}, #{bond.quantity}, #{bond.interestRate})
+    </insert>
+
+    <!-- 판매한 채권 정보 삭제 -->
+    <delete id="deleteBond" parameterType="map">
+        DELETE FROM user_bond
+        WHERE bond_code = #{bondCode} AND user_id = #{userId}
+    </delete>
+
+    <!-- 특정 사용자의 모든 채권코드 가져오기 -->
+    <select id="getAllBondCodes" resultType="String" parameterType="int">
+        SELECT bond_code
+        FROM user_bond
+        WHERE user_id = #{userId}
+    </select>
+
+</mapper>

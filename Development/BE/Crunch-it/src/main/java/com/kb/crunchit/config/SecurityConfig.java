@@ -34,12 +34,12 @@ import org.springframework.stereotype.Component;
 @EnableWebSecurity
 @ComponentScan(basePackages = "com.kb.crunchit.security")
 public class SecurityConfig {
+
     private final UserDetailsService userDetailsService;
     private final JwtLoginSuccessHandler loginSuccessHandler;
     private final JwtLoginFailureHandler loginFailureHandler;
     private final JwtService jwtService;
     private final JwtTokenUtil jwtTokenUtil;
-
 
     @Bean
     public JwtAccessDeniedHandler jwtAccessDeniedHandler(){
