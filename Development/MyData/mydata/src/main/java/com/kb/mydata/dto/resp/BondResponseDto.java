@@ -1,6 +1,6 @@
 package com.kb.mydata.dto.resp;
 
-import com.kb.mydata.entity.UserBond; // UserBond 엔티티를 임포트합니다.
+import com.kb.mydata.entity.UserBond;
 import lombok.Builder;
 import lombok.Data;
 

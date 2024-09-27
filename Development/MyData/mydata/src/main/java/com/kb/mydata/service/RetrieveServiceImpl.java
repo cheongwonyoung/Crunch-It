@@ -25,9 +25,9 @@ public class RetrieveServiceImpl implements RetrieveService {
 
         List<AccountResponseDto.Info> res = new ArrayList<>();
 
-        List<Account> accountList = accountRepository.findByUser_UserId(userId);
+        List<UserAccount> accountList = accountRepository.findByUser_UserId(userId);
 
-        for(Account account : accountList){
+        for(UserAccount account : accountList){
             AccountResponseDto.Info info = AccountResponseDto.Info.fromEntity(account);
             res.add(info);
         }
@@ -40,9 +40,9 @@ public class RetrieveServiceImpl implements RetrieveService {
     public List<IncomeOutcomeTransactionResponseDto.Info> getTransactionInfo(Long userId) {
         List<IncomeOutcomeTransactionResponseDto.Info> res = new ArrayList<>();
 
-        List<IncomeOutcomeTransaction> transactionList = transactionRepository.findByUser_UserId(userId);
+        List<UserIncomeOutcomeTransaction> transactionList = transactionRepository.findByUser_UserId(userId);
 
-        for(IncomeOutcomeTransaction transaction : transactionList){
+        for(UserIncomeOutcomeTransaction transaction : transactionList){
             IncomeOutcomeTransactionResponseDto.Info info = IncomeOutcomeTransactionResponseDto.Info.fromEntity(transaction);
             res.add(info);
         }

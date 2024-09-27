@@ -1,8 +1,10 @@
 package com.kb.mydata.dto.resp;
 
-import com.kb.mydata.entity.Account; // Account 엔티티를 임포트합니다.
+import com.kb.mydata.entity.UserAccount;
 import lombok.Builder;
 import lombok.Data;
+
+import java.math.BigInteger;
 
 public class AccountResponseDto {
     @Data
@@ -14,9 +16,9 @@ public class AccountResponseDto {
         private String accountNumber;
         private String bankName;
         private String accountName;
-        private long balance;
+        private BigInteger balance;
 
-        public static Info fromEntity(Account account) {
+        public static Info fromEntity(UserAccount account) {
             return Info.builder()
                     .accountId(account.getAccountId())
                     .userId(account.getUser().getUserId())
