@@ -9,6 +9,7 @@ import MyPage from '@/pages/MyPage.vue';
 import MyPageEdit from '@/pages/MyPageEdit.vue';
 import Search from '@/pages/Search.vue';
 import Modal from '@/components/Modal.vue';
+import ChatP from '@/pages/ChatPage.vue';
 
 const routes = [
   { path: '/', name: 'Home', component: HomeP },
