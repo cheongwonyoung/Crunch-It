@@ -1,7 +1,6 @@
 package com.kb.mydata.api;
 
 import com.kb.mydata.service.RetrieveService;
-import com.kb.mydata.service.TestService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
