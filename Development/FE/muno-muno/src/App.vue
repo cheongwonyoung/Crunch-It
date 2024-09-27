@@ -27,8 +27,8 @@ body {
 
 html,
 body {
-  width: 375px;
-  height: 812px;
+  width: 100%;
+  height: 100%;
   margin: 0;
   padding: 0;
   overflow: hidden;
@@ -56,14 +56,31 @@ body {
   --p40: #99c1ff;
   --p50: #b2d1ff;
   --p60: #b2d1ff;
-  --p70: #cce0ff;
-  --p80: #ebf3ff;
-  --p90: #f0f6ff;
+  --p70: #ebf3ff;
+  --p80: #f0f6ff;
 }
 
+/* content 부분 스크롤 발생 설정 */
 .content {
-  padding-top: 20px;
-  height: calc(100% - 86px - 20px);
+  padding-top: 44px;
+  height: calc(100% - 86px - 44px);
   overflow-y: auto;
+}
+
+/* 스크롤바 숨김 처리 */
+.content::-webkit-scrollbar {
+  width: 0;
+  display: none;
+}
+
+html,
+body {
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+
+html::-webkit-scrollbar,
+body::-webkit-scrollbar {
+  display: none;
 }
 </style>

@@ -1,8 +1,10 @@
 package com.kb.mydata.dto.resp;
 
-import com.kb.mydata.entity.UserFund; // UserFund 엔티티를 임포트합니다.
+import com.kb.mydata.entity.UserFund;
 import lombok.Builder;
 import lombok.Data;
+
+import java.math.BigInteger;
 
 public class FundResponseDto {
     @Data
@@ -12,8 +14,8 @@ public class FundResponseDto {
         private int userId;
         private String fundType;
         private String fundName;
-        private Integer evaluationAmount;
-        private Integer investingAmount;
+        private BigInteger evaluationAmount;
+        private BigInteger investingAmount;
 
         public static Info fromEntity(UserFund userFund) {
             return Info.builder()

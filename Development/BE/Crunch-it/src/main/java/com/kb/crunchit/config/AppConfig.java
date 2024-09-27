@@ -11,6 +11,7 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.web.reactive.function.client.WebClient;
 
 import javax.sql.DataSource;
 import java.io.IOException;
@@ -19,7 +20,7 @@ import java.util.Properties;
 
 @Configuration
 @ComponentScan(basePackages = {"com.kb.crunchit.util", "com.kb.crunchit.service"})
-@MapperScan(basePackages = "com.kb.crunchit.mapper")
+@MapperScan(basePackages = {"com.kb.crunchit.mapper", "com.kb.crunchit.mapper.analysis"})
 public class AppConfig {
     @Bean  //(destroyMethod="close")
     public DataSource dataSource() {
@@ -55,5 +56,11 @@ public class AppConfig {
     @Bean
     public SqlSessionTemplate sqlSessionTemplate(SqlSessionFactory sqlSessionFactory) {
         return new SqlSessionTemplate(sqlSessionFactory);
+    }
+
+    // WebClient.Builder 빈 추가
+    @Bean
+    public WebClient.Builder webClientBuilder() {
+        return WebClient.builder();
     }
 }

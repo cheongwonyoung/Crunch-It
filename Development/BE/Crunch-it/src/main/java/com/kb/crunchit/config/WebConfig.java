@@ -45,4 +45,17 @@ public class WebConfig implements WebMvcConfigurer {
         mapper.disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
         return mapper;
     }
+
+
+    //LocalDateTime 타입 처리 관련
+    @Bean
+    public ObjectMapper objectMapper() {
+        JavaTimeModule module=new JavaTimeModule();
+        ObjectMapper mapper= Jackson2ObjectMapperBuilder.json()
+                .modules(new JavaTimeModule())
+                .build();
+
+        mapper.disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
+        return mapper;
+    }
 }
