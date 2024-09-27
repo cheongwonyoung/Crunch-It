@@ -48,7 +48,7 @@ export default {
   },
   methods: {
     connect() {
-      const socket = new SockJS('/ws');
+      const socket = new SockJS('http://localhost:8080/ws');
       this.stompClient = Stomp.over(socket);
       this.stompClient.connect({}, this.onConnected, this.onError);
     },
