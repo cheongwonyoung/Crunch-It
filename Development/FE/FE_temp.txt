@@ -1,3 +1,4 @@
 npm install -g @vue/cli
+npm install axios
 cd muno-muno
 npm run serve
