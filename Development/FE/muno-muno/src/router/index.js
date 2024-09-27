@@ -21,6 +21,7 @@ const routes = [
   { path: '/mypageedit', name: 'MyPageEdit', component: MyPageEdit },
   { path: '/search', name: 'Search', component: Search },
   { path: '/modal', name: 'Modal', component: Modal },
+  { path: '/chat', name: 'Chat', component: ChatP },
 ];
 
 const router = createRouter({
