@@ -1,4 +1,4 @@
-package entity;
+package com.kb.crunchit.entity;
 
 import lombok.Getter;
 
