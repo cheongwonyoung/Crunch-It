@@ -2,6 +2,9 @@ package com.kb.crunchit.dto.response;
 
 
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+
+import entity.Board;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -16,5 +19,8 @@ public class BoardResponseDTO {   //게시물 조회
     private LocalDateTime registerDate;
     private LocalDateTime modifyDate;
     private int likes;
+
+
+
 
 }

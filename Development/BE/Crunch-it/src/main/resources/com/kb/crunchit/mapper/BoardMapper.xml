@@ -13,7 +13,7 @@
             content,
             category,
             register_date AS registerDate,
-            modify_date As modifyDate,
+            modify_date AS modifyDate,
             likes
         FROM board
     </select>
@@ -27,7 +27,7 @@
             content,
             category,
             register_date AS registerDate,
-            modify_date As modifyDate,
+            modify_date AS modifyDate,
             likes
         FROM board
         WHERE board_id=#{boardId}

@@ -2,13 +2,15 @@ import { createRouter, createWebHistory } from 'vue-router';
 import HomeP from '@/pages/Home.vue';
 import ProductP from '@/pages/Product.vue';
 import PropertyP from '@/pages/Property.vue';
-import CommunityP from '@/pages/Community.vue';
+import CommunityP from '@/pages/CommunityPage.vue';
+import PostDetailP from "@/pages/PostDetailPage.vue";
 
 const routes = [
   { path: '/', name: 'Home', component: HomeP },
   { path: '/product', name: 'Product', component: ProductP },
   { path: '/property', name: 'Property', component: PropertyP },
   { path: '/community', name: 'Community', component: CommunityP },
+  { path: '/community/:id', name: 'PostDetail', component: PostDetailP, props:true }
 ];
 
 const router = createRouter({

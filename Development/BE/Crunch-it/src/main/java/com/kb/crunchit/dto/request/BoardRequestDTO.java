@@ -1,8 +1,10 @@
 package com.kb.crunchit.dto.request;
 
 
+import entity.Board;
 import lombok.Getter;
 import lombok.Setter;
+
 
 @Getter
 @Setter
@@ -13,6 +15,10 @@ public class BoardRequestDTO {
     private String title;
     private String content;
     private String category;
+
+
+    // DTO to Entity
+
 
 
 }
