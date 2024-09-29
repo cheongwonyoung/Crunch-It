@@ -25,22 +25,23 @@
           :key="post.boardId"
           :v-if="post && post.boardId"
           class="post-item"
-
           @click="goToDetail(post.boardId)"
-
       >
-      <div class="post-header">
-        <span class="category">{{ post.category }}</span>
-        <span class="user">{{ post.writerId }}</span>
-      </div>
-      <h3 class="post-title">{{ post.title }}</h3>
-      <p class="post-content">{{ post.content }}</p>
-      <div class="post-footer">
-        <span class="date">{{ post.date }}</span>
-        <span class="comments">{{ post.comments }} 댓글</span>
+        <div class="post-header">
+          <span class="category">{{ post.category }}</span>
+          <span class="user">{{ post.writerId }}</span>
+        </div>
+        <h3 class="post-title">{{ post.title }}</h3>
+        <p class="post-content">{{ post.content }}</p>
+        <div class="post-footer">
+          <span class="date">{{ post.date }}</span>
+          <span class="comments">{{ post.comments }} 댓글</span>
+        </div>
       </div>
     </div>
-  </div>
+
+    <!-- 하단 + 버튼 -->
+    <button class="floating-button" @click="goToWritePage">+</button>
   </div>
 </template>
 
@@ -48,28 +49,22 @@
 import { ref, computed, onMounted } from 'vue';
 import axios from 'axios';
 import { useRouter } from 'vue-router';
-import PostDetailPage from "@/pages/PostDetailPage.vue"; // 라우터 사용을 위해 useRouter import
 
 export default {
   name: 'CommunityPage',
-  computed: {
-    PostDetailPage() {
-      return PostDetailPage
-    }
-  },
   setup() {
     const categories = ref([
-      {name: '전체'},
-      {name: '지출'},
-      {name: '예적금'},
-      {name: '펀드'},
-      {name: '주식'},
-      {name: '채권'}
+      { name: '전체' },
+      { name: '지출' },
+      { name: '예적금' },
+      { name: '펀드' },
+      { name: '주식' },
+      { name: '채권' }
     ]);
 
     const selectedCategory = ref('전체');
     const posts = ref([]);
-    const router = useRouter(); // useRouter로 라우터 객체 사용
+    const router = useRouter();
 
     const fetchPosts = async () => {
       try {
@@ -93,8 +88,12 @@ export default {
 
     // 클릭 시 상세 페이지로 이동
     const goToDetail = (board_id) => {
-      console.log('boardId:',board_id);
-      router.push({name: 'PostDetail', params: {id: board_id}}); // 라우트 이동
+      router.push({ name: 'PostDetail', params: { id: board_id }}); // 라우트 이동
+    };
+
+    // 글쓰기 페이지로 이동
+    const goToWritePage = () => {
+      router.push({ name: 'WritePost' }); // WritePostPage.vue로 이동
     };
 
     onMounted(() => {
@@ -106,7 +105,8 @@ export default {
       selectedCategory,
       filteredPosts,
       selectCategory,
-      goToDetail
+      goToDetail,
+      goToWritePage
     };
   }
 };
@@ -173,5 +173,27 @@ export default {
   justify-content: space-between;
   font-size: 12px;
   color: #aaa;
+}
+
+.floating-button {
+  position: fixed;
+  bottom: 100px; /* TabBar 위에 위치하도록 하단 위치 조정 */
+  right: 20px;
+  background-color: #007BFF;
+  color: white;
+  border: none;
+  border-radius: 50%;
+  width: 60px;
+  height: 60px;
+  font-size: 36px;
+  line-height: 60px;
+  text-align: center;
+  cursor: pointer;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+  z-index: 1100; /* TabBar보다 높은 z-index 설정 */
+}
+
+.floating-button:hover {
+  background-color: #0056b3;
 }
 </style>
