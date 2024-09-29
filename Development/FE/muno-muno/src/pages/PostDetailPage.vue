@@ -1,12 +1,11 @@
 <template>
   <div class="post-detail-page">
     <header class="header">
-      <h1>{{ post.title }}</h1>
+      <h1 class="title">{{ post.title }}</h1>
       <div class="post-meta">
-        <span class="category">카테고리: {{ post.category }}</span>
-        <span class="user">작성자: {{ post.writerId }}</span>
-        <span class="date">작성일: {{ formatDate(post.registerDate) }}</span>
-        <span class="modified-date" v-if="post.modifyDate && post.modifyDate.length > 0">수정일: {{ formatDate(post.modifyDate) }}</span>
+        <span class="category">{{ post.category }}</span> |
+        <span class="user">{{ post.writerId }}</span> |
+        <span class="date">{{ post.modifyDate ? formatDate(post.modifyDate) : formatDate(post.registerDate) }}</span>
       </div>
     </header>
 
@@ -15,10 +14,10 @@
     </div>
 
     <div class="post-likes">
-      <span>좋아요: {{ post.likes }}</span>
+      <span>❤️ 좋아요 {{ post.likes }}</span>
     </div>
 
-    <router-link to="/community" class="back-link">← 목록</router-link>
+    <router-link to="/community" class="back-link">← 목록으로 돌아가기</router-link>
   </div>
 </template>
 
@@ -54,9 +53,9 @@ export default {
     };
 
     const formatDate = (dateArray) => {
-      if (!dateArray || dateArray.length < 6) return '날짜 없음'; // 날짜 배열이 올바른지 확인
-      const [year, month, day, hour] = dateArray;
-      return `${year}년 ${month}월 ${day}일 ${hour}시`;
+      if (!dateArray || dateArray.length < 3) return '날짜 없음';
+      const [year, month, day] = dateArray;
+      return `${year}. ${String(month).padStart(2, '0')}. ${String(day).padStart(2, '0')}`;
     };
 
     onMounted(() => {
@@ -76,44 +75,52 @@ export default {
   padding: 20px;
   max-width: 800px;
   margin: 0 auto;
+  font-family: Arial, sans-serif;
+  color: #333;
+  //background-color: #f9f9f9;
+  border: 1px solid #ddd;
+  border-radius: 4px;
 }
 
 .header {
-  margin-bottom: 20px;
+  border-bottom: 1px solid #ddd;
+  margin-bottom: 15px;
+  padding-bottom: 10px;
+}
+
+.title {
+  font-size: 24px;
+  margin: 0 0 10px 0;
 }
 
 .post-meta {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 10px;
-  font-size: 14px;
-  color: #888;
-  margin-bottom: 10px;
+  font-size: 12px;
+  color: #666;
 }
 
 .post-content {
   font-size: 16px;
+  line-height: 1.8;
+  min-height: 20px;
+  padding:10px 0;
   margin-bottom: 20px;
 }
 
 .post-likes {
   font-size: 14px;
-  color: #444;
+  color: #666;
   margin-bottom: 20px;
 }
 
 .back-link {
-  display: block;
-  margin-top: 20px;
+  display: inline-block;
   color: #007BFF;
   text-decoration: none;
+  margin-top: 20px;
+  font-size: 14px;
 }
 
 .back-link:hover {
   text-decoration: underline;
-}
-
-.modified-date {
-  color: #444;
 }
 </style>

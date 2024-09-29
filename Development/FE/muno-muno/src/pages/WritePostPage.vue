@@ -1,7 +1,7 @@
 <template>
   <div class="write-post-page">
-    <h1>글쓰기</h1>
-    <form @submit.prevent="submitPost"> <!-- 바로 서버로 전송 -->
+    <h1 class="page-title">글쓰기</h1>
+    <form @submit.prevent="submitPost">
       <div class="form-group">
         <label for="title">제목</label>
         <input type="text" v-model="title" id="title" required />
@@ -17,12 +17,12 @@
 
       <div class="form-group">
         <label for="content">내용</label>
-        <textarea v-model="content" id="content" rows="10" required></textarea>
+        <textarea v-model="content" id="content" rows="8" required></textarea>
       </div>
 
       <div class="form-actions">
-        <button type="submit">확인</button> <!-- DB로 전송하는 버튼 -->
-        <button type="button" @click="cancelPost">취소</button> <!-- 취소 버튼 -->
+        <button type="submit" class="submit-button">확인</button>
+        <button type="button" class="cancel-button" @click="cancelPost">취소</button>
       </div>
     </form>
   </div>
@@ -43,27 +43,25 @@ export default {
 
     const categories = ['지출', '예적금', '펀드', '주식', '채권'];
 
-    // 사용자가 글을 최종적으로 제출하는 함수
     const submitPost = async () => {
       const postData = {
         title: title.value,
         category: category.value,
         content: content.value,
-        writerId: 1, // 임시 작성자 ID (로그인 시스템이 있다면 동적으로 설정 가능)
+        writerId: 1,
       };
 
       try {
-        await axios.post('http://localhost:8080/community/create', postData); // 서버로 데이터 전송
-        router.push('/community'); // 게시글 작성 후 목록으로 이동
+        await axios.post('http://localhost:8080/community/create', postData);
+        router.push('/community');
       } catch (error) {
         console.error('게시글 작성 중 오류 발생:', error);
       }
     };
 
-    // 작성 취소 함수
     const cancelPost = () => {
       if (confirm('작성한 내용을 취소하시겠습니까?')) {
-        router.push('/community'); // 커뮤니티 페이지로 이동
+        router.push('/community');
       }
     };
 
@@ -81,9 +79,20 @@ export default {
 
 <style scoped>
 .write-post-page {
-  max-width: 800px;
+  max-width: 600px;
   margin: 0 auto;
   padding: 20px;
+  background-color: #f9f9f9;
+  border-radius: 8px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  font-family: Arial, sans-serif;
+}
+
+.page-title {
+  text-align: center;
+  font-size: 24px;
+  margin-bottom: 20px;
+  color: #333;
 }
 
 .form-group {
@@ -94,41 +103,62 @@ label {
   display: block;
   margin-bottom: 8px;
   font-weight: bold;
+  color: #555;
 }
 
 input[type="text"],
 select,
 textarea {
   width: 100%;
-  padding: 10px;
+  padding: 12px;
   border: 1px solid #ccc;
-  border-radius: 5px;
+  border-radius: 4px;
+  font-size: 16px;
+  color: #333;
+  box-sizing: border-box; /* 모든 요소의 크기를 일관되게 유지 */
 }
 
-button {
-  padding: 10px 20px;
-  background-color: #007BFF;
-  color: white;
-  border: none;
-  border-radius: 5px;
-  cursor: pointer;
+textarea {
+  resize: vertical;
 }
 
-button:hover {
-  background-color: #0056b3;
+input:focus,
+select:focus,
+textarea:focus {
+  outline: none;
+  border-color: #007BFF;
 }
 
 .form-actions {
   display: flex;
-  gap: 10px;
+  justify-content: center;
+  gap: 20px;
   margin-top: 20px;
 }
 
-button[type="button"] {
-  background-color:#D6DAE0 ; /* 취소 버튼 색상 */
+button {
+  padding: 10px 40px;
+  border: none;
+  border-radius: 4px;
+  font-size: 16px;
+  cursor: pointer;
 }
 
-button[type="button"]:hover {
+.submit-button {
+  background-color: #007BFF;
+  color: white;
+}
+
+.submit-button:hover {
+  background-color: #0056b3;
+}
+
+.cancel-button {
+  background-color: #D6DAE0;
+  color: black;
+}
+
+.cancel-button:hover {
   background-color: #bdc0c6;
 }
 </style>

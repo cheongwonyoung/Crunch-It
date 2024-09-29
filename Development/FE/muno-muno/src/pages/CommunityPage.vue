@@ -34,8 +34,9 @@
         <h3 class="post-title">{{ post.title }}</h3>
         <p class="post-content">{{ post.content }}</p>
         <div class="post-footer">
-          <span class="date">{{ post.date }}</span>
-          <span class="comments">{{ post.comments }} 댓글</span>
+          <!-- modifyDate가 있으면 그걸 사용, 없으면 registerDate 사용 -->
+          <span class="date">{{ post.modifyDate ? formatDate(post.modifyDate) : formatDate(post.registerDate) }}</span>
+          <span class="comments">댓글 {{ post.comments }}</span>
         </div>
       </div>
     </div>
@@ -87,13 +88,20 @@ export default {
     };
 
     // 클릭 시 상세 페이지로 이동
-    const goToDetail = (board_id) => {
-      router.push({ name: 'PostDetail', params: { id: board_id }}); // 라우트 이동
+    const goToDetail = (boardId) => {
+      router.push({ name: 'PostDetail', params: { id: boardId }}); // 라우트 이동
     };
 
     // 글쓰기 페이지로 이동
     const goToWritePage = () => {
       router.push({ name: 'WritePost' }); // WritePostPage.vue로 이동
+    };
+
+    // 날짜 포맷 함수
+    const formatDate = (dateArray) => {
+      if (!dateArray || dateArray.length < 3) return '날짜 없음'; // 날짜 배열이 올바른지 확인
+      const [year, month, day] = dateArray;
+      return `${year}. ${String(month).padStart(2, '0')}. ${String(day).padStart(2, '0')}`; // "2024. 10. 03" 형식으로 변환
     };
 
     onMounted(() => {
@@ -106,7 +114,8 @@ export default {
       filteredPosts,
       selectCategory,
       goToDetail,
-      goToWritePage
+      goToWritePage,
+      formatDate
     };
   }
 };
@@ -146,9 +155,17 @@ export default {
 
 .post-list .post-item {
   margin-bottom: 20px;
-  border-bottom: 1px solid #e0e0e0;
-  padding-bottom: 10px;
-  cursor: pointer; /* 클릭할 수 있음을 나타내는 포인터 커서 */
+  border: 1px solid #e0e0e0;
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  background-color: #fff;
+  cursor: pointer;
+  transition: transform 0.2s ease;
+}
+
+.post-list .post-item:hover {
+  transform: scale(1.02);
 }
 
 .post-header {
@@ -161,11 +178,14 @@ export default {
 .post-title {
   font-size: 18px;
   margin: 5px 0;
+  font-weight: bold;
+  color: #333;
 }
 
 .post-content {
   font-size: 16px;
   color: #555;
+  margin-bottom: 10px;
 }
 
 .post-footer {
@@ -177,7 +197,7 @@ export default {
 
 .floating-button {
   position: fixed;
-  bottom: 100px; /* TabBar 위에 위치하도록 하단 위치 조정 */
+  bottom: 100px;
   right: 20px;
   background-color: #007BFF;
   color: white;
@@ -190,7 +210,7 @@ export default {
   text-align: center;
   cursor: pointer;
   box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
-  z-index: 1100; /* TabBar보다 높은 z-index 설정 */
+  z-index: 1100;
 }
 
 .floating-button:hover {
