@@ -1,7 +1,7 @@
 package com.kb.crunchit.dto.request;
 
 
-import entity.Board;
+
 import lombok.Getter;
 import lombok.Setter;
 

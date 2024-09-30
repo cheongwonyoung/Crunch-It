@@ -4,7 +4,7 @@ package com.kb.crunchit.dto.response;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
-import entity.Board;
+
 import lombok.Getter;
 import lombok.Setter;
 
