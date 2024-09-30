@@ -5,21 +5,27 @@
 
 <mapper namespace="com.kb.crunchit.mapper.UserMapper">
 
-    <select id="findByEmail" resultType="com.kb.crunchit.dto.response.UserDto" parameterType="string">
+    <select id="findByEmail" resultType="com.kb.crunchit.entity.User" parameterType="string">
         select *
         from user
         where email = #{email};
     </select>
 
-    <select id="findByNickname" resultType="com.kb.crunchit.dto.response.UserDto" parameterType="string">
+    <select id="findByNickname" resultType="com.kb.crunchit.entity.User" parameterType="string">
         select *
         from user
         where nickname = #{nickname};
     </select>
 
-    <insert id="insertUser" parameterType="com.kb.crunchit.dto.response.UserDto">
+    <insert id="insertUser" parameterType="com.kb.crunchit.entity.User">
         insert into user (nickname, password, phone_number, email)
         values (#{nickname}, #{password}, #{phone_number}, #{email})
     </insert>
+
+    <update id="updateUser" parameterType="com.kb.crunchit.entity.User">
+        update user
+        set nickname = #{nickname}
+        where email = #{email}
+    </update>
 
 </mapper>
