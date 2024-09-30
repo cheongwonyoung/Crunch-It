@@ -9,8 +9,12 @@
         <typeAlias alias="UserBondResponseDTO" type="com.kb.crunchit.dto.response.UserBondResponseDTO"/>
         <typeAlias alias="UserFundResponseDTO" type="com.kb.crunchit.dto.response.UserFundResponseDTO"/>
 
+        <typeAlias alias="Board" type="com.kb.crunchit.entity.Board"/>
         <typeAlias alias="BoardRequest" type="com.kb.crunchit.dto.request.BoardRequestDTO"/>
         <typeAlias alias="BoardResponse" type="com.kb.crunchit.dto.response.BoardResponseDTO"/>
+        <typeAlias alias="Comment" type="com.kb.crunchit.entity.Comment"/>
+        <typeAlias alias="CommentRequest" type="com.kb.crunchit.dto.request.CommentRequestDTO"/>
+        <typeAlias alias="CommentResponse" type="com.kb.crunchit.dto.response.CommentResponseDTO"/>
     </typeAliases>
 
     <!-- 데이터베이스 환경 설정 -->

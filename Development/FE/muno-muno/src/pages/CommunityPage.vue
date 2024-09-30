@@ -36,7 +36,7 @@
         <div class="post-footer">
           <!-- modifyDate가 있으면 그걸 사용, 없으면 registerDate 사용 -->
           <span class="date">{{ post.modifyDate ? formatDate(post.modifyDate) : formatDate(post.registerDate) }}</span>
-          <span class="comments">댓글 {{ post.comments }}</span>
+<!--          <span class="comments">댓글 {{ post.comments }}</span>-->
         </div>
       </div>
     </div>

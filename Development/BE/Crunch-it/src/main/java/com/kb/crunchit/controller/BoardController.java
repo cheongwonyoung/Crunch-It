@@ -3,7 +3,10 @@ package com.kb.crunchit.controller;
 
 import com.kb.crunchit.dto.request.BoardRequestDTO;
 import com.kb.crunchit.dto.response.BoardResponseDTO;
+import com.kb.crunchit.entity.Board;
+import com.kb.crunchit.entity.Comment;
 import com.kb.crunchit.service.BoardService;
+import com.kb.crunchit.service.CommentService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -16,6 +19,8 @@ public class BoardController {
 
     @Autowired
     private BoardService boardService;
+    @Autowired
+    private CommentService commentService;
 
     @PostMapping("/create")
     public ResponseEntity<String> createPost(@RequestBody BoardRequestDTO boardRequestDTO){
@@ -25,14 +30,15 @@ public class BoardController {
 
     //특정 게시글 조회
     @GetMapping("/{boardId}")
-    public ResponseEntity<BoardResponseDTO> getPost(@PathVariable int boardId){
-        BoardResponseDTO boardResponseDTO= boardService.getPost(boardId);
-        return ResponseEntity.ok(boardResponseDTO);
+    public ResponseEntity<Board> getPost(@PathVariable int boardId){
+        Board board= boardService.getPost(boardId);
+
+        return ResponseEntity.ok(board);
     }
 
     @GetMapping
-    public ResponseEntity<List<BoardResponseDTO>> getAllPost(){
-        List<BoardResponseDTO> boardList=boardService.getAllPosts();
+    public ResponseEntity<List<Board>> getAllPost(){
+        List<Board> boardList=boardService.getAllPosts();
         return ResponseEntity.ok(boardList);
     }
 

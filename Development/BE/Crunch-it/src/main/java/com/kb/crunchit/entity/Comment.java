@@ -2,17 +2,18 @@ package com.kb.crunchit.entity;
 
 import lombok.Getter;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Getter
 public class Comment {
-    public int comment_id;
-    public int board_id;
-    public int user_id;
+    public int commentId;
+    public int boardId;
+    public int writerId;
     public String content;
     public int likes;
-    public String register_date;
-    public String modify_date;
+    public LocalDateTime registerDate;
+    public LocalDateTime modifyDate;
 
     public List<Reply> replyList;
 

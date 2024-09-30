@@ -11,5 +11,6 @@
         <module name="Crunch-it.main" />
       </profile>
     </annotationProcessing>
+    <bytecodeTargetLevel target="17" />
   </component>
 </project>
