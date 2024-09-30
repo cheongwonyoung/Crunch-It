@@ -28,6 +28,9 @@ import org.springframework.security.web.authentication.AuthenticationSuccessHand
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 import org.springframework.stereotype.Component;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
+import org.springframework.web.filter.CorsFilter;
 
 @Configuration
 @RequiredArgsConstructor
@@ -75,24 +78,6 @@ public class SecurityConfig {
     }
 
     // jwt 필터 적용
-//    @Bean
-//    public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-//        http
-//                .csrf().disable()
-//                .exceptionHandling(exceptionHandling -> exceptionHandling
-//                        .accessDeniedHandler(jwtAccessDeniedHandler())
-//                        .authenticationEntryPoint(jwtAuthenticationEntryPoint()))
-//                .authorizeHttpRequests(auth -> auth
-//                        .requestMatchers(new AntPathRequestMatcher("/auth/**")).permitAll()
-//                        .anyRequest().authenticated()
-//                )
-//                .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
-//
-//                .and()
-//                .addFilterBefore(jwtAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class)
-//                .addFilterAt(jsonUsernamePasswordAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class);
-//        return http.build();
-//    }
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
@@ -101,11 +86,42 @@ public class SecurityConfig {
                         .accessDeniedHandler(jwtAccessDeniedHandler())
                         .authenticationEntryPoint(jwtAuthenticationEntryPoint()))
                 .authorizeHttpRequests(auth -> auth
-                        .anyRequest().permitAll()
+                        .requestMatchers(new AntPathRequestMatcher("/auth/**")).permitAll()
+                        .anyRequest().authenticated()
                 )
-                .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
+                .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
 
+                .and()
+                .addFilter(corsFilter())
+                .addFilterBefore(jwtAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class)
+                .addFilterAt(jsonUsernamePasswordAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class);
         return http.build();
     }
+
+    @Bean
+    public CorsFilter corsFilter() {
+        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+        CorsConfiguration config = new CorsConfiguration();
+        config.setAllowCredentials(true);
+        config.addAllowedOriginPattern("*");
+        config.addAllowedHeader("*");
+        config.addAllowedMethod("*");
+        source.registerCorsConfiguration("/**",config);
+        return new CorsFilter(source);
+    }
+//    @Bean
+//    public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+//        http
+//                .csrf().disable()
+//                .exceptionHandling(exceptionHandling -> exceptionHandling
+//                        .accessDeniedHandler(jwtAccessDeniedHandler())
+//                        .authenticationEntryPoint(jwtAuthenticationEntryPoint()))
+//                .authorizeHttpRequests(auth -> auth
+//                        .anyRequest().permitAll()
+//                )
+//                .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
+//
+//        return http.build();
+//    }
 
 }
