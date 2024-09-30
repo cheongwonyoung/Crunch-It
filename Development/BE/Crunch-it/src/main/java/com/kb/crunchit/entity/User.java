@@ -1,9 +1,11 @@
 package com.kb.crunchit.entity;
 
+import lombok.Builder;
 import lombok.Getter;
 
 import java.util.List;
 @Getter
+@Builder
 public class User {
     public int user_id;
     public String nickname;

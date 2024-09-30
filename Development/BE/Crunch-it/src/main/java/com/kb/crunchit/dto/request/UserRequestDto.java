@@ -1,15 +1,12 @@
-package com.kb.crunchit.dto.response;
+package com.kb.crunchit.dto.request;
 
-import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 
 @Getter
 @Setter
-@Builder
-@JsonInclude(JsonInclude.Include.NON_NULL)
-public class UserDto {
+public class UserRequestDto {
     public int user_id;
     public String nickname;
     public String password;

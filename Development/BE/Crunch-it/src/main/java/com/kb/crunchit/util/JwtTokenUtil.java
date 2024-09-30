@@ -55,15 +55,15 @@ public class JwtTokenUtil {
                 .sign(Algorithm.HMAC256(secretKey));
     }
 
-    public Optional<String> extractEmail(String accessToken){
+    public String extractEmail(String accessToken){
         try{
-            return Optional.ofNullable(JWT.require(Algorithm.HMAC256(secretKey))
+            return JWT.require(Algorithm.HMAC256(secretKey))
                     .build()
                     .verify(accessToken)
                     .getClaim(EMAIL_CLAIM)
-                    .asString());
+                    .asString();
         } catch(Exception e){
-            return Optional.empty();
+            return null;
         }
     }
 

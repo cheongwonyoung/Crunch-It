@@ -1,6 +1,8 @@
 package com.kb.crunchit.controller;
 
+import com.kb.crunchit.dto.request.UserRequestDto;
 import com.kb.crunchit.dto.response.UserDto;
+import com.kb.crunchit.entity.User;
 import com.kb.crunchit.service.AuthService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Required;
@@ -46,7 +48,7 @@ public class AuthController {
     }
 
     @PostMapping("/signUp")
-    public ResponseEntity<Map<String, Object>> signUp(@RequestBody UserDto dto){
+    public ResponseEntity<Map<String, Object>> signUp(@RequestBody UserRequestDto dto){
         Map<String, Object> resultMap = new HashMap<>();
         String password = dto.getPassword();
         if(dto.getPassword() == null || dto.getEmail() == null || dto.getNickname() == null || dto.getPhone_number() == null){
@@ -54,8 +56,14 @@ public class AuthController {
             resultMap.put("message", "제대로 입력해주세요");
         }
         BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
-        dto.setPassword(encoder.encode(password));
-        if(authService.singUp(dto)) resultMap.put("code" , 200);
+        String encodedPassword = encoder.encode(password);
+        User user = User.builder()
+                .email(dto.getEmail())
+                .password(encodedPassword)
+                .nickname(dto.getNickname())
+                .build();
+
+        if(authService.singUp(user)) resultMap.put("code" , 200);
         else resultMap.put("code" , 500);
         return ResponseEntity.ok(resultMap);
     }
