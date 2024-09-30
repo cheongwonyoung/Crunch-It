@@ -42,7 +42,20 @@
                         password: this.password,
                     })
                     .then((res) => {
-                        console.log(res);
+                        if (res.status != 200) {
+                            console.log("Server Error");
+                            return;
+                        }
+                        const authHeader = res.headers["authorization"];
+                        console.log(authHeader);
+                        if (authHeader && authHeader.startsWith("Bearer ")) {
+                            const token = authHeader.substring(7); // 'Bearer ' 이후의 문자열을 추출
+                            console.log("JWT Token:", token);
+                            localStorage.setItem("JwtToken", token);
+                            this.$router.push("/");
+                        } else {
+                            console.error("Authorization 헤더가 존재하지 않거나 잘못된 형식입니다.");
+                        }
                     })
                     .catch((error) => {
                         console.log(error);
