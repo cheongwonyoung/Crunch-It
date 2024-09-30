@@ -37,9 +37,10 @@ public class MypageController {
         Map<String,Object> result = new HashMap<>();
         CustomUserDetails customUserDetails = (CustomUserDetails) auth.getPrincipal();
         String email = customUserDetails.getUsername();
-        mypageService.updateUser(dto, email);
+        dto.setEmail(email);
+        mypageService.updateUser(dto);
         result.put("code" , 200);
-        result.put("message", "수정되었습니다");
+        result.put("message", "수정되었습니다.");
         return ResponseEntity.ok(result);
     }
 }

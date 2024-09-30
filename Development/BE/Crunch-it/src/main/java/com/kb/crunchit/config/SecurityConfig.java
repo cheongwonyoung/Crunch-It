@@ -75,24 +75,6 @@ public class SecurityConfig {
     }
 
     // jwt 필터 적용
-    @Bean
-    public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-        http
-                .csrf().disable()
-                .exceptionHandling(exceptionHandling -> exceptionHandling
-                        .accessDeniedHandler(jwtAccessDeniedHandler())
-                        .authenticationEntryPoint(jwtAuthenticationEntryPoint()))
-                .authorizeHttpRequests(auth -> auth
-                        .requestMatchers(new AntPathRequestMatcher("/auth/**")).permitAll()
-                        .anyRequest().authenticated()
-                )
-                .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
-
-                .and()
-                .addFilterBefore(jwtAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class)
-                .addFilterAt(jsonUsernamePasswordAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class);
-        return http.build();
-    }
 //    @Bean
 //    public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
 //        http
@@ -101,11 +83,29 @@ public class SecurityConfig {
 //                        .accessDeniedHandler(jwtAccessDeniedHandler())
 //                        .authenticationEntryPoint(jwtAuthenticationEntryPoint()))
 //                .authorizeHttpRequests(auth -> auth
-//                        .anyRequest().permitAll()
+//                        .requestMatchers(new AntPathRequestMatcher("/auth/**")).permitAll()
+//                        .anyRequest().authenticated()
 //                )
-//                .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
+//                .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
 //
+//                .and()
+//                .addFilterBefore(jwtAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class)
+//                .addFilterAt(jsonUsernamePasswordAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class);
 //        return http.build();
 //    }
+    @Bean
+    public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+        http
+                .csrf().disable()
+                .exceptionHandling(exceptionHandling -> exceptionHandling
+                        .accessDeniedHandler(jwtAccessDeniedHandler())
+                        .authenticationEntryPoint(jwtAuthenticationEntryPoint()))
+                .authorizeHttpRequests(auth -> auth
+                        .anyRequest().permitAll()
+                )
+                .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
+
+        return http.build();
+    }
 
 }

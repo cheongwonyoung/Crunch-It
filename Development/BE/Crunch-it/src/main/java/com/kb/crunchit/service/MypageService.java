@@ -22,9 +22,9 @@ public class MypageService {
                 .build();
     }
 
-    public void updateUser(UserRequestDto dto, String email){
+    public void updateUser(UserRequestDto dto){
         userMapper.updateUser(User.builder()
-                        .email(email)
+                        .email(dto.getEmail())
                         .nickname(dto.getNickname())
                 .build());
     }

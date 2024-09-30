@@ -2,8 +2,10 @@ package com.kb.crunchit.dto.request;
 
 import lombok.Builder;
 import lombok.Getter;
+import lombok.Setter;
 
 @Getter
+@Setter
 public class UserRequestDto {
     public int user_id;
     public String nickname;
