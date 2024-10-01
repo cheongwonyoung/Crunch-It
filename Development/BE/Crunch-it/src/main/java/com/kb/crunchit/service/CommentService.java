@@ -24,7 +24,8 @@ public class CommentService {
     }
 
     public void updateComment(int commentId,CommentRequestDTO commentRequestDTO){
-        commentMapper.modifyComment(commentId,commentRequestDTO);
+        commentRequestDTO.setCommentId(commentId);
+        commentMapper.modifyComment(commentRequestDTO);
     }
 
     public void deleteComment(int commentId){

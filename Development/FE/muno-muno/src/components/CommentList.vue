@@ -2,14 +2,23 @@
   <div class="comment-list">
     <h4>댓글 {{ comments.length }}개</h4>
     <ul v-if="comments.length > 0" class="comment-list-items">
-      <li v-for="comment in comments" :key="comment.commentId" class="comment-item">
-        <div class="comment-content">
+      <li v-for="(comment, index) in comments" :key="comment.commentId" class="comment-item">
+        <div v-if="editIndex === index" class="edit-comment">
+          <textarea v-model="editContent" class="edit-textarea"></textarea>
+          <button @click="updateComment(comment.commentId, editContent)">저장</button>
+          <button @click="cancelEdit">취소</button>
+        </div>
+        <div v-else class="comment-content">
           <p>{{ comment.content }}</p>
         </div>
         <div class="comment-meta">
           <span class="writer">작성자: {{ comment.writerId }}</span>
           <span class="separator">|</span>
           <span class="date">{{ formatDate(comment.registerDate) }}</span>
+        </div>
+        <div class="comment-actions">
+          <button @click="enableEdit(index, comment.content)">수정</button>
+          <button @click="deleteComment(comment.commentId)">삭제</button>
         </div>
       </li>
     </ul>
@@ -26,11 +35,43 @@ export default {
       required: true
     }
   },
+  data() {
+    return {
+      editIndex: null,
+      editContent: ''
+    };
+  },
   methods: {
     formatDate(dateArray) {
       if (!dateArray || dateArray.length < 3) return '날짜 없음';
       const [year, month, day] = dateArray;
       return `${year}. ${String(month).padStart(2, '0')}. ${String(day).padStart(2, '0')}`;
+    },
+    enableEdit(index, content) {
+      this.editIndex = index;
+      this.editContent = content;
+    },
+    cancelEdit() {
+      this.editIndex = null;
+      this.editContent = '';
+    },
+    async updateComment(commentId, content) {
+      try {
+        // 서버에 수정된 댓글을 보내는 API 요청
+        await this.$emit('update-comment', { commentId, content });
+        this.editIndex = null;
+        this.editContent = '';
+      } catch (error) {
+        console.error('댓글 수정 중 오류 발생:', error);
+      }
+    },
+    async deleteComment(commentId) {
+      try {
+        // 서버에 댓글 삭제 요청
+        await this.$emit('delete-comment', commentId);
+      } catch (error) {
+        console.error('댓글 삭제 중 오류 발생:', error);
+      }
     }
   }
 };
@@ -43,8 +84,8 @@ export default {
 }
 
 .comment-list-items {
-  list-style: none; /* 목록의 기본 점 제거 */
-  padding-left: 0;  /* 왼쪽 기본 여백 제거 */
+  list-style: none;
+  padding-left: 0;
 }
 
 .comment-item {
@@ -73,5 +114,44 @@ export default {
 
 .separator {
   color: #ddd;
+}
+
+.comment-actions {
+  margin-top: 10px;
+  display: flex;
+  gap: 10px;
+}
+
+.comment-actions button {
+  font-size: 12px;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  padding: 5px 10px;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.comment-actions button:hover {
+  background-color: #0056b3;
+}
+
+.edit-comment {
+  margin-bottom: 10px;
+}
+
+.edit-textarea {
+  width: 100%;
+  height: 80px;
+  padding: 10px;
+  font-size: 14px;
+  border-radius: 4px;
+  border: 1px solid #ddd;
+}
+
+.edit-comment button {
+  margin-top: 10px;
+  margin-right: 10px;
+  padding: 5px 10px;
 }
 </style>

@@ -17,7 +17,7 @@
       <div class="post-meta">
         <span class="category">{{ post.category }}</span> |
         <span class="user">{{ post.writerId }}</span> |
-        <span class="date">{{ post.modifyDate ? formatDate(post.modifyDate) : formatDate(post.registerDate) }}</span>
+        <span class="date">{{ formattedDate }}</span>
       </div>
     </header>
 
@@ -29,7 +29,8 @@
       <span>❤️ {{ post.likes }}</span>
     </div>
 
-    <CommentList :comments="comments" />
+    <!-- 댓글 리스트 및 수정/삭제 기능 추가 -->
+    <CommentList :comments="comments" @update-comment="handleUpdateComment" @delete-comment="handleDeleteComment" />
 
     <!-- 댓글 입력 -->
     <div class="comment-input">
@@ -46,7 +47,7 @@
 </template>
 
 <script>
-import { ref, onMounted } from 'vue';
+import { ref, computed, onMounted } from 'vue';
 import axios from 'axios';
 import { useRoute, useRouter } from 'vue-router';
 import CommentList from "@/components/CommentList.vue";
@@ -58,6 +59,7 @@ export default {
     const route = useRoute();
     const router = useRouter();
     const postId = route.params.id;
+    const API_URL = `http://localhost:8080/community/${postId}`; // API 경로 상수화
 
     const post = ref({
       title: '',
@@ -67,23 +69,35 @@ export default {
       registerDate: '',
       modifyDate: '',
       likes: 0,
-      comments: []
     });
 
     const comments = ref([]);
     const newComment = ref('');
-    const showSettingsMenu = ref(false); // 설정 메뉴 보이기 상태
+    const showSettingsMenu = ref(false);
 
-    const fetchPostAndComments = async () => {
+    // 날짜 포맷팅 함수 직접 포함
+    const formatDate = (dateArray) => {
+      if (!dateArray || dateArray.length < 3) return 'No date';
+      const [year, month, day] = dateArray;
+      return `${year}-${String(month).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
+    };
+
+    const formattedDate = computed(() =>
+        post.value.modifyDate ? formatDate(post.value.modifyDate) : formatDate(post.value.registerDate)
+    );
+
+    const fetchData = async (url, callback) => {
       try {
-        const response = await axios.get(`http://localhost:8080/community/${postId}`);
-        post.value = response.data;
-
-        const commentResponse = await axios.get(`http://localhost:8080/community/${postId}/comments`);
-        comments.value = commentResponse.data;
+        const response = await axios.get(url);
+        callback(response.data);
       } catch (error) {
-        console.error('Error fetching post and comments:', error);
+        console.error('Error fetching data:', error);
       }
+    };
+
+    const fetchPostAndComments = () => {
+      fetchData(API_URL, (data) => (post.value = data));
+      fetchData(`${API_URL}/comments`, (data) => (comments.value = data));
     };
 
     const toggleSettingsMenu = () => {
@@ -91,13 +105,13 @@ export default {
     };
 
     const goToEditPage = () => {
-      router.push({name: 'EditPost', params: {id: postId}});
+      router.push({ name: 'EditPost', params: { id: postId } });
     };
 
     const deletePost = async () => {
       if (confirm("정말 삭제하시겠습니까?")) {
         try {
-          await axios.delete(`http://localhost:8080/community/delete/${postId}`);
+          await axios.delete(`${API_URL}/delete`);
           alert('게시글이 삭제되었습니다.');
           router.push('/community');
         } catch (error) {
@@ -107,51 +121,59 @@ export default {
     };
 
     const submitComment = async () => {
-      if (newComment.value.trim() === '') return;
+      if (!newComment.value.trim()) return;
 
       try {
-        // Submit the comment using POST
-        await axios.post(`http://localhost:8080/community/${postId}/comments/create`, {
+        await axios.post(`${API_URL}/comments/create`, {
           content: newComment.value,
-          writerId: 1001, // 임의의 사용자 ID 예시, 실제론 로그인한 사용자 ID 사용
+          writerId: 1001, // 실제 로그인된 사용자 ID 사용
           boardId: postId
         });
-
-        // Clear the input after submitting
         newComment.value = '';
-
-        // Fetch the updated list of comments
-        await fetchPostAndComments();
+        fetchPostAndComments();
       } catch (error) {
         console.error('Error submitting comment:', error);
       }
     };
 
-    const formatDate = (dateArray) => {
-      if (!dateArray || dateArray.length < 3) return 'No date';
-      const [year, month, day] = dateArray;
-      return `${year}-${String(month).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
+    const handleUpdateComment = async ({ commentId, content }) => {
+      try {
+        await axios.put(`${API_URL}/comments/modify/${commentId}`, { content });
+        fetchPostAndComments();
+      } catch (error) {
+        console.error('Error updating comment:', error);
+      }
     };
 
-    onMounted(() => {
-      fetchPostAndComments();
-    });
+    const handleDeleteComment = async (commentId) => {
+      if (confirm("정말 이 댓글을 삭제하시겠습니까?")) {
+        try {
+          await axios.delete(`${API_URL}/comments/delete/${commentId}`);
+          fetchPostAndComments();
+        } catch (error) {
+          console.error('Error deleting comment:', error);
+        }
+      }
+    };
+
+    onMounted(fetchPostAndComments);
 
     return {
       post,
       comments,
       newComment,
       showSettingsMenu,
-      formatDate,
+      formattedDate,
       submitComment,
       toggleSettingsMenu,
       goToEditPage,
-      deletePost
+      deletePost,
+      handleUpdateComment,
+      handleDeleteComment
     };
   },
 };
 </script>
-
 <style scoped>
 .post-detail-page {
   padding: 16px;

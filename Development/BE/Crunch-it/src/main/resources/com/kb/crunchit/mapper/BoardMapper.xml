@@ -54,41 +54,8 @@
         DELETE FROM board WHERE board_id=#{boardId}
     </delete>
 
-    <!--    게시판 좋아요 기능-->
-    <insert id="addLikes" parameterType="BoardRequest">
-        INSERT INTO board(likes)
-        VALUES (#{likes})
-    </insert>
 
-    <!--    댓글-->
-    <select id="selectAllComments" parameterType="Comment">
-        SELECT
-            comment_id AS commentId,
-            board_id AS boardId,
-            writer_id AS writerId,
-            content,
-            likes,
-            register_date AS registerDate,
-            modify_date AS modifyDate,
-            likes
-        FROM comment
-        WHERE board_id=#{boardId}
-    </select>
 
-    <insert id="insertComment" parameterType="CommentRequest">
-        INSERT INTO comment(comment_id, board_id, writer_id, content, register_date )
-        VALUES (#{commentId},#{boardId},#{writerId},#{content}, NOW())
-    </insert>
 
-    <update id="modifyComment" parameterType="CommentRequest">
-        UPDATE comment
-        SET content=#{content},
-            modify_date=NOW()
-        WHERE comment_id=#{commentId}
-    </update>
-
-    <delete id="deleteComment" parameterType="int">
-        DELETE FROM comment WHERE comment_id=#{commentId}
-    </delete>
 
 </mapper>
