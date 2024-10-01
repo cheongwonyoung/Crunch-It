@@ -1,6 +1,6 @@
 package com.kb.mydata.dto.resp;
 
-import com.kb.mydata.entity.IncomeOutcomeTransaction;
+import com.kb.mydata.entity.UserIncomeOutcomeTransaction;
 import lombok.Builder;
 import lombok.Data;
 
@@ -13,13 +13,13 @@ public class IncomeOutcomeTransactionResponseDto {
         private int transactionId;  // IncomeOutcomeTransactionId
         private int userId;
         private int accountId;       // Account의 accountId
-        private Boolean transactionType;
+        private byte transactionType;
         private Integer amount;
         private LocalDateTime registerDate;
 
-        public static Info fromEntity(IncomeOutcomeTransaction transaction) {
+        public static Info fromEntity(UserIncomeOutcomeTransaction transaction) {
             return Info.builder()
-                    .transactionId(transaction.getIncomeOutcomeTransactionId())
+                    .transactionId(transaction.getTransactionId())
                     .userId(transaction.getUser().getUserId())
                     .accountId(transaction.getAccount().getAccountId()) // 계좌 ID
                     .transactionType(transaction.getTransactionType())

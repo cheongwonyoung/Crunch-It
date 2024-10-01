@@ -1,0 +1,7 @@
+nn:
+  file:
+    input: C:/FinalProject/Crunch-It/Crunch-It/Development/AI/recommendationAI/src/main/resources/CUST_INVESTMENT.csv
+    output: C:/FinalProject/Crunch-It/Crunch-It/Development/AI/recommendationAI/output/data_reference.csv
+  checkpoint: C:/FinalProject/Crunch-It/Crunch-It/Development/AI/recommendationAI/output/
+  model: C:/FinalProject/Crunch-It/Crunch-It/Development/AI/recommendationAI/output/recommendation_system_model.h5
+# 경로 변경 주의!

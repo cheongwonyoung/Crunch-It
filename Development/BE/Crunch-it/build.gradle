@@ -89,6 +89,15 @@ dependencies {
     runtimeOnly group: 'io.jsonwebtoken', name: 'jjwt-impl', version: '0.11.5'
     runtimeOnly group: 'io.jsonwebtoken', name: 'jjwt-jackson', version: '0.11.5'
 
+    // Spring WebFlux 의존성 추가 (Spring Legacy에서는 Spring Web 대신 WebFlux 의존성 추가)
+    implementation 'org.springframework:spring-webflux:5.3.10'
+    implementation 'io.projectreactor.netty:reactor-netty:1.0.0'
+    // Reactor Core (비동기 스트림을 처리하기 위한 필수 라이브러리)
+    implementation 'io.projectreactor:reactor-core:3.4.9'
+    // Jackson (JSON 직렬화/역직렬화를 위한 라이브러리)
+    implementation 'com.fasterxml.jackson.core:jackson-databind:2.12.4'
+    implementation 'com.fasterxml.jackson.datatype:jackson-datatype-jsr310:2.12.4'
+
     //test
     testImplementation("org.junit.jupiter:junit-jupiter-api:${junitVersion}")
     testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:${junitVersion}")
@@ -98,6 +107,15 @@ dependencies {
     testAnnotationProcessor "org.projectlombok:lombok:${lombokVersion}"
 
     implementation 'com.auth0:java-jwt:4.2.1'
+    implementation 'javax.servlet:javax.servlet-api:4.0.1'
+
+    implementation 'com.fasterxml.jackson.dataformat:jackson-dataformat-xml'
+    // AWS SDK S3
+    implementation 'software.amazon.awssdk:s3:2.20.39'
+    implementation 'software.amazon.awssdk:sts:2.20.39'
+
+    // Apache Commons FileUpload (MultipartResolver 사용을 위한 의존성)
+    implementation 'commons-fileupload:commons-fileupload:1.4'
 }
 
 test {

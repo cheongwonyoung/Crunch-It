@@ -1,6 +1,7 @@
 package com.kb.crunchit.service;
 
 import com.kb.crunchit.dto.response.UserDto;
+import com.kb.crunchit.entity.User;
 import com.kb.crunchit.mapper.UserMapper;
 import com.kb.crunchit.security.CustomUserDetails;
 import lombok.RequiredArgsConstructor;
@@ -20,18 +21,15 @@ public class JwtUserDetailsService implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
-        UserDto userDto = userMapper.findByEmail(email);
-        if(userDto == null){
+        User user = userMapper.findByEmail(email);
+        if(user == null){
             log.error("User not found with email");
             throw new UsernameNotFoundException("User not found with email : " + email);
         }
 
-        log.error(userDto.getEmail());
-        log.error(userDto.getPassword());
-
         return new CustomUserDetails(
-                userDto.getEmail(),
-                userDto.getPassword()
+                user.getEmail(),
+                user.getPassword()
         );
 
     }
