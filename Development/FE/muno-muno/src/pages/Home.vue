@@ -1,5 +1,14 @@
 <template>
   <div class="homepage">
+    <!-- Status Bar -->
+    <div class="status-bar">
+      <img
+        src="@/assets/statusBar.svg"
+        alt="Status Bar"
+        class="status-bar-svg"
+      />
+    </div>
+
     <!-- 헤더 -->
     <div class="header">
       <img src="@/assets/munoLogo.svg" alt="Muno 로고" class="logo" />
@@ -98,7 +107,6 @@ export default {
   },
   methods: {
     selectOctopus(octopus) {
-      // 선택한 문어에 맞게 이미지와 레벨 텍스트 업데이트
       this.currentOctopus = {
         name: octopus.name,
         image: octopus.levelImages[this.currentLevel - 1],
@@ -109,14 +117,12 @@ export default {
       this.$router.push('/product');
     },
     updateOctopusLevel(newLevel) {
-      // 백엔드로부터 새로운 레벨을 받아 문어 레벨 업데이트
       this.currentLevel = newLevel;
       this.currentOctopus.image =
         this.currentOctopus.levelImages[this.currentLevel - 1];
       this.levelText = `Lv.${this.currentLevel} ${this.currentOctopus.name}`;
     },
     fetchLevelFromBackend() {
-      // 백엔드에서 레벨을 받아오는 함수 (API 호출 예시)
       fetch('/api/octopus/level')
         .then((response) => response.json())
         .then((data) => {
@@ -127,13 +133,12 @@ export default {
         });
     },
     setInitialOctopus() {
-      // 예적금 기본 설정
       const initialOctopus = this.octopuses[0];
       this.selectOctopus(initialOctopus);
     },
   },
   mounted() {
-    this.fetchLevelFromBackend(); // 백엔드에서 초기 레벨 가져오기
+    this.fetchLevelFromBackend();
     this.setInitialOctopus();
   },
 };
@@ -149,7 +154,24 @@ export default {
   height: 100vh;
 }
 
-/* 헤더 유지 */
+/* Status Bar*/
+.status-bar {
+  background-color: var(--p70);
+  height: 44px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: fixed;
+  top: 0;
+  width: 100%;
+  z-index: 1000;
+}
+
+.status-bar-svg {
+  width: 375px;
+  height: 44px;
+}
+
 .header {
   display: flex;
   justify-content: space-between;
