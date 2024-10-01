@@ -22,6 +22,9 @@ public class MyDataFetchTestController {
     @PostMapping("/update/{mdUserId}")
     public ResponseEntity<String> updateAllData(@PathVariable int mdUserId) {
         // 이 마이데이터 업데이트를 사용자가 새로 고침하거나 하루 단위로 스케줄링 할 때 하면 될 것 같음..!
+        // user 테이블에서 로그인한 사용자 이메일로 mdUserId 찾기
+        // CustomUserDetails customUserDetails = (CustomUserDetails) auth.getPrincipal();
+        // String email = customUserDetails.getUsername();
         myDataService.updateAccountData(mdUserId);
         myDataService.updateTransactionData(mdUserId);
         myDataService.updateStockData(mdUserId);

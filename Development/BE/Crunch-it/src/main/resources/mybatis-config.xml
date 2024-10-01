@@ -8,6 +8,7 @@
         <typeAlias alias="UserStockResponseDTO" type="com.kb.crunchit.dto.response.UserStockResponseDTO"/>
         <typeAlias alias="UserBondResponseDTO" type="com.kb.crunchit.dto.response.UserBondResponseDTO"/>
         <typeAlias alias="UserFundResponseDTO" type="com.kb.crunchit.dto.response.UserFundResponseDTO"/>
+        <typeAlias alias="StockPriceInfo" type="com.kb.crunchit.entity.StockPriceInfo"/>
         <typeAlias alias="User" type="com.kb.crunchit.entity.User"/>
     </typeAliases>
 

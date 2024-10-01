@@ -71,6 +71,10 @@ public class AppConfig {
         return WebClient.builder();
     }
 
+    @Bean
+    public WebClient webClient() {
+        return WebClient.builder().build();
+      
     // S3Client 설정 추가
     @Bean
     public S3Client s3Client() {
