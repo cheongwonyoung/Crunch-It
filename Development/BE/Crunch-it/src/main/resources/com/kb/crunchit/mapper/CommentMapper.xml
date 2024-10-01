@@ -24,6 +24,20 @@
         VALUES (#{commentId},#{boardId},#{writerId},#{content}, NOW())
     </insert>
 
+    <select id="selectLastInsertComment" resultType="Comment">
+        SELECT
+            comment_id AS commentId,
+            board_id AS boardId,
+            writer_id AS writerId,
+            content,
+            likes,
+            register_date AS registerDate,
+            modify_date AS modifyDate,
+            likes
+        FROM comment
+        WHERE comment_id =LAST_INSERT_ID()
+    </select>
+
     <update id="modifyComment" parameterType="CommentRequest">
         UPDATE comment
         SET content=#{content},

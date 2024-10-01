@@ -1,11 +1,16 @@
 package com.kb.crunchit.entity;
 
+import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.RequiredArgsConstructor;
 
 import java.time.LocalDateTime;
 import java.util.List;
 
 @Getter
+//@Builder
+//@RequiredArgsConstructor
 public class Board {
     public int boardId;
     public int writerId;

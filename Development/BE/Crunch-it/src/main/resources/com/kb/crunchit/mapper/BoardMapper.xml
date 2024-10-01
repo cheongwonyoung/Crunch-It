@@ -54,6 +54,11 @@
         DELETE FROM board WHERE board_id=#{boardId}
     </delete>
 
+    <!--    게시판 좋아요 기능-->
+    <insert id="addLikes" parameterType="BoardRequest">
+        INSERT INTO board(likes)
+        VALUES (#{likes})
+    </insert>
 
     <!--    댓글-->
     <select id="selectAllComments" parameterType="Comment">

@@ -4,6 +4,7 @@ import com.kb.crunchit.dto.request.BoardRequestDTO;
 import com.kb.crunchit.dto.request.CommentRequestDTO;
 import com.kb.crunchit.dto.response.BoardResponseDTO;
 import com.kb.crunchit.mapper.BoardMapper;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.kb.crunchit.entity.Board;
@@ -13,10 +14,10 @@ import com.kb.crunchit.entity.Comment;
 import java.util.List;
 
 @Service
+@RequiredArgsConstructor
 public class BoardService {
-
-    @Autowired
-    private BoardMapper boardMapper;
+    
+    private final BoardMapper boardMapper;
 
     public void createPost(BoardRequestDTO boardRequestDTO) {
         boardMapper.insertBoard(boardRequestDTO);

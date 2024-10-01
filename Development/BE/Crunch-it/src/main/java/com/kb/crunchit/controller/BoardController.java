@@ -25,6 +25,8 @@ public class BoardController {
     @PostMapping("/create")
     public ResponseEntity<String> createPost(@RequestBody BoardRequestDTO boardRequestDTO){
         boardService.createPost(boardRequestDTO);
+
+
         return ResponseEntity.ok("게시글 생성 성공");
     }
 

@@ -20,6 +20,10 @@ public interface BoardMapper {
     void modifyBoard(BoardRequestDTO boardRequestDTO);
     void deleteBoard(int boardId);
 
+    //좋아요 누름 혹은 취소
+    void addLikes(BoardRequestDTO boardRequestDTO);
+    void cancelLikes(BoardRequestDTO boardRequestDTO);
+
 
 
 }

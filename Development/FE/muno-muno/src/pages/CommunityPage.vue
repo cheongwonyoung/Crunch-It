@@ -136,15 +136,15 @@ export default {
 
 .category-tabs {
   display: flex;
-  gap: 10px;
+  gap: 5px;
   margin-bottom: 20px;
 }
 
 .category-tabs button {
   padding: 10px;
   border: none;
-  background-color: #f0f0f0;
-  border-radius: 20px;
+  //background-color: #f0f0f0;
+  border-radius: 10px;
   cursor: pointer;
 }
 

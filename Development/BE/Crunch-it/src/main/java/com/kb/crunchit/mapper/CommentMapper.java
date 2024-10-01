@@ -10,6 +10,7 @@ public interface CommentMapper {
     //댓글
     List<Comment> selectAllComments(int boardId);
     void insertComment(CommentRequestDTO commentRequestDTO);
+    Comment selectLastInsertedComment();
     void modifyComment(int commentId,CommentRequestDTO commentRequestDTO);
     void deleteComment(int commentId);
 }

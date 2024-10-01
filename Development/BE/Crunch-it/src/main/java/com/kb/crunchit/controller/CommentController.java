@@ -24,9 +24,10 @@ public class CommentController {
     }
 
     @PostMapping("/create")
-    public ResponseEntity<String> createComment(@RequestBody CommentRequestDTO commentRequestDTO){
+    public ResponseEntity<String> createComment(@PathVariable int boardId,@RequestBody CommentRequestDTO commentRequestDTO){
+        commentRequestDTO.setBoardId(boardId);
         commentService.createComment(commentRequestDTO);
-        return ResponseEntity.ok("댓글 생성");
+        return ResponseEntity.ok("댓글 생성 성공");
     }
 
     @PutMapping("/modify/{commentId}")
