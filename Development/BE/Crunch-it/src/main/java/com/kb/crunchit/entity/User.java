@@ -1,23 +1,27 @@
 package com.kb.crunchit.entity;
 
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 import java.util.List;
 @Getter
 @Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class User {
-    public int user_id;
+    public Integer user_id;
     public String nickname;
     public String password;
     public String pin_number;
     public String birth;
-    public int gender;
+    public Integer gender;
     public String phone_number;
     public String email;
-    public int md_user_id;
+    public Integer md_user_id;
     public String profile_url;
-    public int salary;
+    public Integer salary;
 
     public List<Account> accounts;
     public List<Stock> stocks;
