@@ -5,6 +5,7 @@ import com.kb.crunchit.service.JwtService;
 import com.kb.crunchit.util.JwtTokenUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -32,12 +33,20 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
         String requestURI = request.getRequestURI();
-        if(requestURI.contains("/auth")){
-            filterChain.doFilter(request, response);
-            return;
-        }
         Map<String, String> resultMap = new HashMap<>();
         try{
+            if(requestURI.contains("/auth/authenticate")){
+                String accessToken = jwtService.extractAccessToken(request);
+                if(accessToken == null|| !jwtTokenUtil.validateToken(accessToken)){
+                    throw new AuthenticationException("invalid token"){};
+                }
+                response.setStatus(HttpStatus.OK.value());
+                return;
+            }
+            if(requestURI.contains("/auth")){
+                filterChain.doFilter(request, response);
+                return;
+            }
             String accessToken = jwtService.extractAccessToken(request);
             if(accessToken == null|| !jwtTokenUtil.validateToken(accessToken)){
                 throw new AuthenticationException("invalid token"){};

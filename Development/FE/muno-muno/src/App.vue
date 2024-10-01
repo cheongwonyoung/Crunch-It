@@ -4,7 +4,7 @@
     <div class="content">
       <router-view></router-view>
     </div>
-    <TabBar />
+    <TabBar v-if="showTabBar" />
   </div>
 </template>
 
@@ -16,6 +16,17 @@ export default {
   components: {
     TabBar,
     StatusBar,
+  },
+  data() {
+    return {
+      hideRoutes: ['/login', '/signup'], // TabBar를 숨길 경로 설정
+    };
+  },
+  computed: {
+    showTabBar() {
+      const route = this.$route; // 현재 라우트 정보
+      return !this.hideRoutes.includes(route.path); // 숨길 경로에 포함되지 않으면 true 반환
+    },
   },
 };
 </script>
