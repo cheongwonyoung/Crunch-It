@@ -20,12 +20,22 @@
                     {{ buttonText }}
                 </button>
             </div>
-            <input
-                type="number"
-                class="input-long"
-                placeholder="인증번호 입력"
-                v-model="authcode"
-                :disabled="!authcodeSended" />
+            <div class="input-flex">
+                <input
+                    type="number"
+                    class="input-short"
+                    placeholder="인증번호 입력"
+                    v-model="authcode"
+                    :disabled="!authcodeSended" />
+                <button
+                    v-if="authcodeSended"
+                    type="button"
+                    class="certification-btn"
+                    @click="startTimer"
+                    :disabled="emailError || email === ''">
+                    인증 확인
+                </button>
+            </div>
             <span v-if="emailError" class="error-text">이미 사용중인 이메일입니다.</span>
             <span v-if="!emailError && email !== ''" class="correct-text">사용 가능한 이메일입니다.</span>
         </div>
