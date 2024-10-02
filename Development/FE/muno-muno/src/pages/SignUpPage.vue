@@ -4,17 +4,19 @@
         <headerX title="회원가입" @close="handleClose" />
         <div class="input-container" style="margin-top: 80px">
             <div class="input-title">닉네임</div>
-            <input type="text" class="input-long" placeholder="닉네임 입력" v-model="nickname" />
-            <span v-if="passwordError" class="error-text2">이미 사용중인 닉네임입니다.</span>
+            <input type="text" class="input-long" placeholder="닉네임 입력" v-model="nickname" @blur="nicknameCheck" />
+            <span v-if="nicknameError" class="error-text2">이미 사용중인 닉네임입니다.</span>
+            <span v-if="!nicknameError && nickname !== ''" class="correct-text2">사용 가능한 닉네임입니다.</span>
         </div>
         <div class="input-container">
             <div class="input-title">이메일 인증</div>
             <div class="input-flex">
-                <input type="email" class="input-short" placeholder="이메일 인증" v-model="authcode" />
+                <input type="email" class="input-short" placeholder="이메일 입력" v-model="email" @blur="emailCheck" />
                 <button type="button" class="certification-btn">인증번호</button>
             </div>
-            <input type="password" class="input-long" placeholder="인증번호 입력" v-model="passwordCheck" />
-            <span v-if="passwordError" class="error-text">이미 사용중인 이메일입니다.</span>
+            <input type="number" class="input-long" placeholder="인증번호 입력" v-model="authcode" />
+            <span v-if="emailError" class="error-text">이미 사용중인 이메일입니다.</span>
+            <span v-if="!emailError && email !== ''" class="correct-text">사용 가능한 이메일입니다.</span>
         </div>
         <div class="input-container">
             <div class="input-title">비밀번호</div>
@@ -28,7 +30,7 @@
             <input
                 type="text"
                 class="input-long"
-                placeholder="000-0000-0000"
+                placeholder="010-1234-5678"
                 v-model="formattedPhoneNum"
                 @input="formatPhoneNumber"
                 maxlength="13" />
@@ -58,6 +60,9 @@
                 nickname: "",
                 phoneNum: "",
                 selectedDate: "",
+                emailError: false,
+                nicknameError: false,
+                authcodeSended: false,
             };
         },
         computed: {
@@ -69,7 +74,11 @@
                     this.password === "" ||
                     this.passwordCheck === "" ||
                     this.nickname === "" ||
-                    this.passwordError // 비밀번호 확인 오류가 있는 경우 비활성화
+                    this.phoneNum === "" ||
+                    this.selectedDate === "" ||
+                    this.passwordError || // 비밀번호 확인 오류가 있는 경우 비활성화
+                    this.emailError ||
+                    this.nicknameError
                 );
             },
             passwordError() {
@@ -102,6 +111,26 @@
                 if (value.length <= 3) return value; // 3자리까지는 그대로
                 if (value.length <= 7) return `${value.slice(0, 3)}-${value.slice(3)}`; // 000-0000
                 return `${value.slice(0, 3)}-${value.slice(3, 7)}-${value.slice(7, 11)}`; // 000-0000-0000
+            },
+            emailCheck() {
+                const params = { email: this.email };
+                apiClient
+                    .get("/auth/checkEmail", {
+                        params,
+                    })
+                    .then((res) => {
+                        this.emailError = res.data["code"] == 422;
+                    });
+            },
+            nicknameCheck() {
+                const params = { nickname: this.nickname };
+                apiClient
+                    .get("/auth/checkNickname", {
+                        params,
+                    })
+                    .then((res) => {
+                        this.nicknameError = res.data["code"] == 422;
+                    });
             },
         },
     };
@@ -239,6 +268,33 @@
     }
     .error-text2 {
         color: #f00;
+        padding-left: 5px;
+        font-family: Pretendard;
+        font-style: normal;
+        font-weight: 400;
+        line-height: 100%; /* 12px */
+        font-size: 12px;
+        position: absolute; /* 위치를 절대적으로 설정하여 요소가 레이아웃을 밀지 않음 */
+        top: 90%; /* 입력 필드 바로 아래에 위치 */
+        left: 0;
+        margin-top: 5px;
+    }
+    .correct-text {
+        color: rgb(8, 0, 255);
+        padding-left: 5px;
+        font-family: Pretendard;
+        font-style: normal;
+        font-weight: 400;
+        line-height: 100%; /* 12px */
+        font-size: 12px;
+        position: absolute; /* 위치를 절대적으로 설정하여 요소가 레이아웃을 밀지 않음 */
+        top: 90%; /* 입력 필드 바로 아래에 위치 */
+        left: 0;
+        margin-top: 10px;
+    }
+
+    .correct-text2 {
+        color: rgb(8, 0, 255);
         padding-left: 5px;
         font-family: Pretendard;
         font-style: normal;
