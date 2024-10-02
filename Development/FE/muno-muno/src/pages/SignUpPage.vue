@@ -12,9 +12,20 @@
             <div class="input-title">이메일 인증</div>
             <div class="input-flex">
                 <input type="email" class="input-short" placeholder="이메일 입력" v-model="email" @blur="emailCheck" />
-                <button type="button" class="certification-btn">인증번호</button>
+                <button
+                    type="button"
+                    class="certification-btn"
+                    @click="startTimer"
+                    :disabled="emailError || email === ''">
+                    {{ buttonText }}
+                </button>
             </div>
-            <input type="number" class="input-long" placeholder="인증번호 입력" v-model="authcode" />
+            <input
+                type="number"
+                class="input-long"
+                placeholder="인증번호 입력"
+                v-model="authcode"
+                :disabled="!authcodeSended" />
             <span v-if="emailError" class="error-text">이미 사용중인 이메일입니다.</span>
             <span v-if="!emailError && email !== ''" class="correct-text">사용 가능한 이메일입니다.</span>
         </div>
@@ -63,9 +74,14 @@
                 emailError: false,
                 nicknameError: false,
                 authcodeSended: false,
+                isTimerRunning: false,
+                timeLeft: 180,
             };
         },
         computed: {
+            authBtnDisabled() {
+                return this.emailError;
+            },
             isDisabled() {
                 // 모든 필드가 채워져 있는지 확인
                 return (
@@ -93,13 +109,16 @@
                     this.phoneNum = value.replace(/[^0-9]/g, "").slice(0, 11);
                 },
             },
+            buttonText() {
+                return this.isTimerRunning ? `${Math.floor(this.timeLeft / 60)}:${this.timeLeft % 60}` : "인증번호";
+            },
         },
         methods: {
             handleClose() {
                 this.$router.push({ name: "Login" });
             },
             getAuthCode() {
-                apiClient.get("/auth/");
+                this.authcodeSended = true;
             },
             signUp() {
                 apiClient;
@@ -131,6 +150,21 @@
                     .then((res) => {
                         this.nicknameError = res.data["code"] == 422;
                     });
+            },
+            startTimer() {
+                if (!this.isTimerRunning) {
+                    this.isTimerRunning = true;
+                    this.getAuthCode();
+                    this.timeLeft = 180;
+                    const timer = setInterval(() => {
+                        if (this.timeLeft > 0) {
+                            this.timeLeft--;
+                        } else {
+                            clearInterval(timer);
+                            this.isTimerRunning = false;
+                        }
+                    }, 1000);
+                }
             },
         },
     };
@@ -178,6 +212,24 @@
         width: 93px;
         height: 56px;
         background: #3e8aff;
+        border-radius: 12px;
+        border: none; /* 버튼 기본 테두리 제거 */
+        cursor: pointer; /* 마우스를 올렸을 때 포인터 모양 변경 */
+        font-family: "Pretendard", sans-serif;
+        font-style: normal;
+        font-weight: 500px;
+        font-size: 16px;
+        color: #ffffff;
+        display: flex;
+        justify-content: center; /* 수평 중앙 정렬 */
+        align-items: center; /* 수직 중앙 정렬 */
+        text-align: center;
+        margin-bottom: 12px; /* 입력 필드 간 간격 추가 */
+    }
+    .certification-btn:disabled {
+        width: 93px;
+        height: 56px;
+        background: #cce0ff;
         border-radius: 12px;
         border: none; /* 버튼 기본 테두리 제거 */
         cursor: pointer; /* 마우스를 올렸을 때 포인터 모양 변경 */
