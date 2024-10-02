@@ -15,6 +15,9 @@
         <typeAlias alias="Comment" type="com.kb.crunchit.entity.Comment"/>
         <typeAlias alias="CommentRequest" type="com.kb.crunchit.dto.request.CommentRequestDTO"/>
         <typeAlias alias="CommentResponse" type="com.kb.crunchit.dto.response.CommentResponseDTO"/>
+        <typeAlias alias="Reply" type="com.kb.crunchit.entity.Reply"/>
+        <typeAlias alias="ReplyRequest" type="com.kb.crunchit.dto.request.ReplyRequestDTO"/>
+        <typeAlias alias="ReplyResponse" type="com.kb.crunchit.dto.response.ReplyResponseDTO"/>
     </typeAliases>
 
     <!-- 데이터베이스 환경 설정 -->

@@ -10,10 +10,9 @@ import java.util.List;
 @Mapper
 public interface CommentMapper {
 
-    //댓글
     List<Comment> selectAllComments(int boardId);
+    Comment selectCommentById(int commentId);
     void insertComment(CommentRequestDTO commentRequestDTO);
-    Comment selectLastInsertedComment();
     void modifyComment(CommentRequestDTO commentRequestDTO);
 
     void deleteComment(int commentId);

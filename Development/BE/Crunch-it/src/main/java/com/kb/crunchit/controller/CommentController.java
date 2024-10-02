@@ -23,6 +23,12 @@ public class CommentController {
         return ResponseEntity.ok(comments);
     }
 
+    @GetMapping("/{commentId}")
+    public ResponseEntity<Comment> getCommentWithReply(@PathVariable int commentId){
+        Comment comment= commentService.getCommentWithReply(commentId);
+        return ResponseEntity.ok(comment);
+    }
+
     @PostMapping("/create")
     public ResponseEntity<String> createComment(@PathVariable int boardId,@RequestBody CommentRequestDTO commentRequestDTO){
         commentRequestDTO.setBoardId(boardId);

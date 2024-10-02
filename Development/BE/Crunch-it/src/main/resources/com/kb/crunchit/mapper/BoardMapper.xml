@@ -54,8 +54,4 @@
         DELETE FROM board WHERE board_id=#{boardId}
     </delete>
 
-
-
-
-
 </mapper>

@@ -15,6 +15,14 @@ public class CommentService {
 
     private final CommentMapper commentMapper;
 
+    public Comment getCommentWithReply(int commentId){
+        //댓글 조회
+        Comment comment =commentMapper.selectCommentById(commentId);
+        comment.addReplyList(comment.replyList);
+        return comment;
+    }
+
+
     public void createComment(CommentRequestDTO commentRequestDTO){
         commentMapper.insertComment(commentRequestDTO);
     }

@@ -20,6 +20,14 @@
           <button @click="enableEdit(index, comment.content)">수정</button>
           <button @click="deleteComment(comment.commentId)">삭제</button>
         </div>
+
+        <!-- replyList가 있을 경우 답글 리스트 표시 -->
+        <div v-if="comment.replyList && comment.replyList.length" class="reply-list">
+          <div v-for="reply in comment.replyList" :key="reply.replyId" class="reply-item">
+            <p>{{ reply.content }}</p>
+            <small>답글 작성자: {{ reply.writerId }}</small>
+          </div>
+        </div>
       </li>
     </ul>
     <p v-else>댓글이 없습니다.</p>
@@ -57,7 +65,6 @@ export default {
     },
     async updateComment(commentId, content) {
       try {
-        // 서버에 수정된 댓글을 보내는 API 요청
         await this.$emit('update-comment', { commentId, content });
         this.editIndex = null;
         this.editContent = '';
@@ -67,7 +74,6 @@ export default {
     },
     async deleteComment(commentId) {
       try {
-        // 서버에 댓글 삭제 요청
         await this.$emit('delete-comment', commentId);
       } catch (error) {
         console.error('댓글 삭제 중 오류 발생:', error);
@@ -153,5 +159,16 @@ export default {
   margin-top: 10px;
   margin-right: 10px;
   padding: 5px 10px;
+}
+
+/* 추가된 reply-list 스타일 */
+.reply-list {
+  margin-top: 10px;
+  padding-left: 20px;
+  border-left: 2px solid #ddd;
+}
+
+.reply-item {
+  margin-top: 5px;
 }
 </style>

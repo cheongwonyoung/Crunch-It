@@ -13,18 +13,12 @@
             content,
             likes,
             register_date AS registerDate,
-            modify_date AS modifyDate,
-            likes
+            modify_date AS modifyDate
         FROM comment
         WHERE board_id=#{boardId}
     </select>
 
-    <insert id="insertComment" parameterType="CommentRequest">
-        INSERT INTO comment(comment_id, board_id, writer_id, content, register_date )
-        VALUES (#{commentId},#{boardId},#{writerId},#{content}, NOW())
-    </insert>
-
-    <select id="selectLastInsertComment" resultType="Comment">
+    <select id="selectCommentById" resultType="Comment">
         SELECT
             comment_id AS commentId,
             board_id AS boardId,
@@ -32,11 +26,15 @@
             content,
             likes,
             register_date AS registerDate,
-            modify_date AS modifyDate,
-            likes
+            modify_date AS modifyDate
         FROM comment
-        WHERE comment_id =LAST_INSERT_ID()
+        WHERE comment_id=#{commmentId}
     </select>
+
+    <insert id="insertComment" parameterType="CommentRequest">
+        INSERT INTO comment(comment_id, board_id, writer_id, content, register_date )
+        VALUES (#{commentId},#{boardId},#{writerId},#{content}, NOW())
+    </insert>
 
     <update id="modifyComment" parameterType="CommentRequest">
         UPDATE comment
