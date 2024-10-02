@@ -6,9 +6,9 @@
         <button class="button" @click="login">로그인</button>
 
         <div class="link-container">
-            <a href="#">아이디 / 비밀번호 찾기</a>
+            <router-link class="router-link" to="/findID">아이디 / 비밀번호 찾기</router-link>
             <span>|</span>
-            <a href="#">회원가입</a>
+            <router-link class="router-link" to="/signup">회원가입</router-link>
         </div>
         <div class="sns-login-container">
             <div class="separator"></div>
@@ -133,12 +133,12 @@
     }
 
     /* 링크 스타일 */
-    .link-container a {
+    .router-link {
         text-decoration: none; /* 밑줄 제거 */
         color: #8892a0; /* 링크 색상 */
     }
 
-    .link-container a:hover {
+    .router-link:hover {
         color: #3e8aff; /* 마우스를 올렸을 때 링크 색상 */
     }
 

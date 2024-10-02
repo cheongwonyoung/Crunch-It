@@ -1,29 +1,44 @@
-<template lang="">
+<template>
     <div class="container">
         <!-- <HeaderComponent title="회원가입" @close="handleClose" /> -->
         <headerX title="회원가입" @close="handleClose" />
         <div class="input-container" style="margin-top: 80px">
-            <div class="input-title">이메일</div>
-            <input type="email" class="input-long" placeholder="이메일 입력" v-model="email" />
+            <div class="input-title">닉네임</div>
+            <input type="text" class="input-long" placeholder="닉네임 입력" v-model="nickname" />
+            <span v-if="passwordError" class="error-text2">이미 사용중인 닉네임입니다.</span>
         </div>
         <div class="input-container">
             <div class="input-title">이메일 인증</div>
             <div class="input-flex">
-                <input type="email" class="input-short" placeholder="인증번호 입력" v-model="email" />
+                <input type="email" class="input-short" placeholder="이메일 인증" v-model="authcode" />
                 <button type="button" class="certification-btn">인증번호</button>
             </div>
+            <input type="password" class="input-long" placeholder="인증번호 입력" v-model="passwordCheck" />
+            <span v-if="passwordError" class="error-text">이미 사용중인 이메일입니다.</span>
         </div>
         <div class="input-container">
             <div class="input-title">비밀번호</div>
-            <input type="password" class="input-long" placeholder="비밀번호 입력" v-model="email" />
-            <input type="password" class="input-long" placeholder="비밀번호 확인" v-model="email" />
+            <input type="password" class="input-long" placeholder="비밀번호 입력" v-model="password" />
+            <input type="password" class="input-long" placeholder="비밀번호 확인" v-model="passwordCheck" />
+            <span v-if="passwordError" class="error-text">비밀번호가 일치하지 않습니다.</span>
+        </div>
+
+        <div class="input-container">
+            <div class="input-title">휴대폰 번호</div>
+            <input
+                type="text"
+                class="input-long"
+                placeholder="000-0000-0000"
+                v-model="formattedPhoneNum"
+                @input="formatPhoneNumber"
+                maxlength="13" />
         </div>
         <div class="input-container">
-            <div class="input-title">닉네임</div>
-            <input type="text" class="input-long" placeholder="닉네임 입력" v-model="email" />
+            <div class="input-title">생년월일</div>
+            <input type="date" v-model="selectedDate" placeholder="" class="input-short" />
         </div>
         <div class="button-container">
-            <button type="button" class="signup-btn">가입하기</button>
+            <button type="button" class="signup-btn" :disabled="isDisabled" @click="signUp">가입하기</button>
         </div>
     </div>
 </template>
@@ -34,13 +49,59 @@
         components: {
             headerX,
         },
-        data() {},
+        data() {
+            return {
+                email: "",
+                authcode: "",
+                password: "",
+                passwordCheck: "",
+                nickname: "",
+                phoneNum: "",
+                selectedDate: "",
+            };
+        },
+        computed: {
+            isDisabled() {
+                // 모든 필드가 채워져 있는지 확인
+                return (
+                    this.email === "" ||
+                    this.authcode === "" ||
+                    this.password === "" ||
+                    this.passwordCheck === "" ||
+                    this.nickname === "" ||
+                    this.passwordError // 비밀번호 확인 오류가 있는 경우 비활성화
+                );
+            },
+            passwordError() {
+                // 비밀번호와 비밀번호 확인이 일치하는지 확인
+                return this.password !== "" && this.passwordCheck !== "" && this.password !== this.passwordCheck;
+            },
+            formattedPhoneNum: {
+                get() {
+                    return this.formatAsPhone(this.phoneNum);
+                },
+                set(value) {
+                    this.phoneNum = value.replace(/[^0-9]/g, "").slice(0, 11);
+                },
+            },
+        },
         methods: {
             handleClose() {
                 this.$router.push({ name: "Login" });
             },
+            getAuthCode() {
+                apiClient.get("/auth/");
+            },
             signUp() {
                 apiClient;
+            },
+            formatPhoneNumber() {
+                this.phoneNum = this.phoneNum.replace(/[^0-9]/g, ""); // 숫자만 남김
+            },
+            formatAsPhone(value) {
+                if (value.length <= 3) return value; // 3자리까지는 그대로
+                if (value.length <= 7) return `${value.slice(0, 3)}-${value.slice(3)}`; // 000-0000
+                return `${value.slice(0, 3)}-${value.slice(3, 7)}-${value.slice(7, 11)}`; // 000-0000-0000
             },
         },
     };
@@ -58,6 +119,7 @@
         width: 335px;
         flex-shrink: 0;
         margin-bottom: 20px;
+        position: relative;
     }
     .input-title {
         color: var(--gray-40, #616b79);
@@ -161,5 +223,31 @@
     }
     .button-container {
         margin-top: 30px;
+    }
+    .error-text {
+        color: #f00;
+        padding-left: 5px;
+        font-family: Pretendard;
+        font-style: normal;
+        font-weight: 400;
+        line-height: 100%; /* 12px */
+        font-size: 12px;
+        position: absolute; /* 위치를 절대적으로 설정하여 요소가 레이아웃을 밀지 않음 */
+        top: 90%; /* 입력 필드 바로 아래에 위치 */
+        left: 0;
+        margin-top: 10px;
+    }
+    .error-text2 {
+        color: #f00;
+        padding-left: 5px;
+        font-family: Pretendard;
+        font-style: normal;
+        font-weight: 400;
+        line-height: 100%; /* 12px */
+        font-size: 12px;
+        position: absolute; /* 위치를 절대적으로 설정하여 요소가 레이아웃을 밀지 않음 */
+        top: 90%; /* 입력 필드 바로 아래에 위치 */
+        left: 0;
+        margin-top: 5px;
     }
 </style>
