@@ -199,8 +199,8 @@ def main():
 
     # 모델 저장 및 출력 데이터 저장
     model.save(Config.getNNModel())
-    // 여기가 pkl 저장하는 곳
-    // spring에서 joblib 라이브러리로 pkl 파일을 불러와서 사용
+    # // 여기가 pkl 저장하는 곳
+    # // spring에서 joblib 라이브러리로 pkl 파일을 불러와서 사용
     
     df.to_csv(Config.getNNFileOutput(), index=False)
 
