@@ -28,9 +28,10 @@ public class ReplyService {
         return reply;
     }
 
-    public List<Reply> getAllReply(int commentId){
-        return replyMapper.selectAllReply(commentId);
+    public List<Reply> getAllReply(){
+        return replyMapper.selectAllReply();
     }
+    public List<Reply> getReplyByCommentId(int commentId){return replyMapper.selectReplyById(commentId);}
 
     public void createReply(int commentId,ReplyRequestDTO replyRequestDTO){
         //해당 comment 조회

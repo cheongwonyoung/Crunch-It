@@ -30,7 +30,7 @@
     </div>
 
     <!-- 댓글 리스트 및 수정/삭제 기능 추가 -->
-    <CommentList :comments="comments" @update-comment="handleUpdateComment" @delete-comment="handleDeleteComment" />
+    <CommentList :comments="comments" :replies="replies" @update-comment="handleUpdateComment" @delete-comment="handleDeleteComment" />
 
     <!-- 댓글 입력 -->
     <div class="comment-input">
@@ -54,12 +54,13 @@ import CommentList from "@/components/CommentList.vue";
 
 export default {
   name: 'PostDetailP',
-  components: { CommentList },
+  components: {CommentList},
   setup() {
     const route = useRoute();
     const router = useRouter();
     const postId = route.params.id;
     const API_URL = `http://localhost:8080/community/${postId}`; // API 경로 상수화
+    const REPLY_API_URL = `http://localhost:8080/api/replies`; // 답글 API 경로 상수화
 
     const post = ref({
       title: '',
@@ -72,10 +73,10 @@ export default {
     });
 
     const comments = ref([]);
+    const replies = ref([]); // 모든 답글 데이터를 저장
     const newComment = ref('');
     const showSettingsMenu = ref(false);
 
-    // 날짜 포맷팅 함수 직접 포함
     const formatDate = (dateArray) => {
       if (!dateArray || dateArray.length < 3) return 'No date';
       const [year, month, day] = dateArray;
@@ -98,6 +99,7 @@ export default {
     const fetchPostAndComments = () => {
       fetchData(API_URL, (data) => (post.value = data));
       fetchData(`${API_URL}/comments`, (data) => (comments.value = data));
+      fetchData(`${REPLY_API_URL}`, (data) => (replies.value = data)); // 모든 답글 데이터를 가져옴
     };
 
     const toggleSettingsMenu = () => {
@@ -105,7 +107,7 @@ export default {
     };
 
     const goToEditPage = () => {
-      router.push({ name: 'EditPost', params: { id: postId } });
+      router.push({name: 'EditPost', params: {id: postId}});
     };
 
     const deletePost = async () => {
@@ -126,19 +128,19 @@ export default {
       try {
         await axios.post(`${API_URL}/comments/create`, {
           content: newComment.value,
-          writerId: 1001, // 실제 로그인된 사용자 ID 사용
+          writerId: 1, // 실제 로그인된 사용자 ID 사용해야함
           boardId: postId
         });
         newComment.value = '';
         fetchPostAndComments();
       } catch (error) {
-        console.error('Error submitting comment:', error);
+        console.error('Error submitting comment:', error.response ? error.response.data : error.message);
       }
     };
 
-    const handleUpdateComment = async ({ commentId, content }) => {
+    const handleUpdateComment = async ({commentId, content}) => {
       try {
-        await axios.put(`${API_URL}/comments/modify/${commentId}`, { content });
+        await axios.put(`${API_URL}/comments/modify/${commentId}`, {content});
         fetchPostAndComments();
       } catch (error) {
         console.error('Error updating comment:', error);
@@ -155,15 +157,28 @@ export default {
         }
       }
     };
+    const submitReply = async ({ commentId, content }) => {
+      try {
+        const response = await axios.post(`${REPLY_API_URL}/${commentId}`, {
+          writerId: 1, // 로그인된 사용자 ID로 수정해야 합니다.
+          content: content,
+        });
+        replies.value.push(response.data); // 새로 등록한 답글을 즉시 화면에 반영
+      } catch (error) {
+        console.error('Error submitting reply:', error);
+      }
+    };
 
     onMounted(fetchPostAndComments);
 
     return {
       post,
       comments,
+      replies, // replies 데이터를 추가로 반환
       newComment,
       showSettingsMenu,
       formattedDate,
+      submitReply,
       submitComment,
       toggleSettingsMenu,
       goToEditPage,
@@ -174,6 +189,7 @@ export default {
   },
 };
 </script>
+
 <style scoped>
 .post-detail-page {
   padding: 16px;
@@ -186,7 +202,7 @@ export default {
 .header {
   border-bottom: 2px solid #eee;
   margin-bottom: 20px;
-  padding:5px;
+  padding: 5px;
   position: relative;
 }
 
@@ -233,7 +249,6 @@ export default {
   background-color: #f0f0f0;
 }
 
-
 .post-meta {
   font-size: 14px;
   color: #999;
@@ -257,11 +272,10 @@ export default {
   display: flex;
   flex-direction: column;
   margin-top: 20px;
-  padding:10px;
+  padding: 10px;
 }
 
 .comment-input textarea {
-  //width: 100%;
   padding: 10px;
   border: 1px solid #ddd;
   border-radius: 5px;

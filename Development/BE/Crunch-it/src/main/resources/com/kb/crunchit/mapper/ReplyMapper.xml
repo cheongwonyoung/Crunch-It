@@ -3,7 +3,6 @@
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.kb.crunchit.mapper.ReplyMapper">
-
     <select id="selectAllReply" resultType="Reply">
         SELECT
             reply_id AS replyId,
@@ -12,15 +11,26 @@
             content,
             likes,
             register_date AS registerDate,
-            modify_date AS modifyDate,
+            modify_date AS modifyDate
+        FROM reply
+    </select>
+
+    <select id="selectReplyById" resultType="Reply">
+        SELECT
+            reply_id AS replyId,
+            comment_id AS commentId,
+            writer_id AS writerId,
+            content,
+            likes,
+            register_date AS registerDate,
+            modify_date AS modifyDate
         FROM reply
         WHERE comment_id=#{commentId}
-
     </select>
 
     <insert id="insertReply" parameterType="ReplyRequest">
-        INSERT INTO reply(reply_id,comment_id, writer_id, content, register_date )
-        VALUES (#{replyId},#{commentId},#{writerId},#{content}, NOW())
+        INSERT INTO reply(comment_id, writer_id, content, register_date )
+        VALUES (#{commentId},#{writerId},#{content}, NOW())
     </insert>
 
     <update id="modifyReply" parameterType="ReplyRequest">

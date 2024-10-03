@@ -11,10 +11,12 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/replies")
-public class ReplyController {
+public class ReplyController
+{
 
     @Autowired
     private ReplyService replyService;
+
 
     @PostMapping("/{commentId}")
     public ResponseEntity<String> createReply(@PathVariable int commentId, @RequestBody ReplyRequestDTO replyRequestDTO){
@@ -23,8 +25,25 @@ public class ReplyController {
     }
 
     @GetMapping("/{commentId}")
-    public ResponseEntity<List<Reply>> getAllReply(@PathVariable int commentId){
-        return ResponseEntity.ok(replyService.getAllReply(commentId));
+    public ResponseEntity<List<Reply>> getReplyByCommentId(@PathVariable int commentId){
+        return ResponseEntity.ok(replyService.getReplyByCommentId(commentId));
+    }
+
+    @GetMapping
+    public ResponseEntity<List<Reply>> getAllReply(){
+        return ResponseEntity.ok(replyService.getAllReply());
+    }
+
+    @PutMapping("/modify/{replyId}")
+    public ResponseEntity<String> modifyReply(@PathVariable int replyId,@RequestBody ReplyRequestDTO replyRequestDTO){
+        replyService.modifyReply(replyId,replyRequestDTO);
+        return ResponseEntity.ok("답글 수정 성공");
+    }
+
+    @DeleteMapping("/delete/{replyId}")
+    public ResponseEntity<String> deleteReply(@PathVariable int replyId){
+        replyService.deleteReply(replyId);
+        return ResponseEntity.ok("답글 삭제 성공");
     }
 
 

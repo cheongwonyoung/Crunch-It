@@ -32,8 +32,8 @@
     </select>
 
     <insert id="insertComment" parameterType="CommentRequest">
-        INSERT INTO comment(comment_id, board_id, writer_id, content, register_date )
-        VALUES (#{commentId},#{boardId},#{writerId},#{content}, NOW())
+        INSERT INTO comment(board_id, writer_id, content, register_date )
+        VALUES (#{boardId},#{writerId},#{content}, NOW())
     </insert>
 
     <update id="modifyComment" parameterType="CommentRequest">

@@ -8,7 +8,8 @@ import java.util.List;
 public interface ReplyMapper {
 
     //각 댓글에 대한 모든 답글을 가져와서 service에서 comment Entity에 replyList설정
-    List<Reply> selectAllReply(int commentId);
+    List<Reply> selectAllReply();
+    List<Reply> selectReplyById(int commentId);
     void insertReplyToReplyList(int commentId,Reply reply);
 
     void insertReply(ReplyRequestDTO ReplyRequestDTO);
