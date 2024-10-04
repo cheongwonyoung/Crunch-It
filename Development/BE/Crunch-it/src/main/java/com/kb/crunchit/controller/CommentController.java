@@ -11,25 +11,25 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/community/{boardId}/comments")
+@RequestMapping("/api/comments")
 public class CommentController {
 
     @Autowired
     private CommentService commentService;
 
-    @GetMapping
+    @GetMapping("/board/{boardId}")
     public ResponseEntity<List<Comment>> getComments(@PathVariable int boardId){
         List<Comment> comments=commentService.getAllComments(boardId);
         return ResponseEntity.ok(comments);
     }
 
-    @GetMapping("/{commentId}")
+    @GetMapping("/comment/{commentId}")
     public ResponseEntity<Comment> getCommentWithReply(@PathVariable int commentId){
         Comment comment= commentService.getCommentWithReply(commentId);
         return ResponseEntity.ok(comment);
     }
 
-    @PostMapping("/create")
+    @PostMapping("/create/{boardId}")
     public ResponseEntity<String> createComment(@PathVariable int boardId,@RequestBody CommentRequestDTO commentRequestDTO){
         commentRequestDTO.setBoardId(boardId);
         commentService.createComment(commentRequestDTO);

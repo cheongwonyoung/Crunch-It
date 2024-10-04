@@ -20,15 +20,18 @@
           <div v-else>
             <div class="comment-header">
               <span class="writer">{{ comment.writerId }}</span>
+
               <div class="settings-menu">
-                <i class="fas fa-ellipsis-v" @click="toggleSettingsMenu(index)"></i>
-                <div v-if="showSettingsMenuIndex === index" class="dropdown-menu">
+                <i class="fas fa-ellipsis-v" @click="toggleCommentSettingsMenu(index)"></i>
+                <div v-if="showCommentSettingsMenuIndex === index" class="dropdown-menu">
                   <ul>
                     <li @click="enableEdit(index, comment.content)">수정</li>
                     <li @click="deleteComment(comment.commentId)">삭제</li>
                   </ul>
                 </div>
               </div>
+
+
             </div>
             <div class="comment-content">
               <p>{{ comment.content }}</p>
@@ -54,15 +57,35 @@
         <div v-if="getRepliesByCommentId(comment.commentId).length" class="reply-list">
           <ul>
             <li v-for="reply in getRepliesByCommentId(comment.commentId)" :key="reply.replyId" class="reply-item">
-              <div class="reply-wrapper">
+              <div v-if="editReplyIndex === reply.replyId" class="edit-reply">
+                <textarea v-model="editReplyContent" class="edit-textarea"></textarea>
+                <div class="edit-actions">
+                  <button @click="updateReply(reply.replyId, editReplyContent)" class="submit-edit-btn">저장</button>
+                  <button @click="cancelReplyEdit" class="cancel-edit-btn">취소</button>
+                </div>
+              </div>
+              <div v-else class="reply-wrapper">
                 <div class="reply-header">
                   <span class="writer">{{ reply.writerId }}</span>
+
+                  <div class="settings-menu">
+                    <i class="fas fa-ellipsis-v" @click="toggleReplySettingsMenu(reply.replyId)"></i>
+                    <div v-if="showReplySettingsMenuIndex === reply.replyId" class="dropdown-menu">
+                      <ul>
+                        <li @click="enableReplyEdit(reply.replyId, reply.content)">수정</li>
+                        <li @click="deleteReply(reply.replyId)">삭제</li>
+                      </ul>
+                    </div>
+                  </div>
+
                 </div>
                 <div class="reply-content">
                   <p>{{ reply.content }}</p>
                   <span class="date">{{ formatDate(reply.registerDate) }}</span>
                 </div>
               </div>
+
+
             </li>
           </ul>
         </div>
@@ -90,9 +113,12 @@ export default {
     return {
       editIndex: null, // 수정 중인 댓글 인덱스
       editContent: '', // 수정할 댓글의 내용
-      showSettingsMenuIndex: null, // 메뉴를 열기 위한 인덱스
+      showCommentSettingsMenuIndex: null, // 댓글의 설정 메뉴를 열기 위한 인덱스
+      showReplySettingsMenuIndex: null, // 답글의 설정 메뉴를 열기 위한 인덱스
       showReplyInputIndex: null, // 답글 입력창을 열기 위한 인덱스
       replyContent: '', // 답글 내용
+      editReplyIndex: null, // 수정 중인 답글 인덱스
+      editReplyContent: '', // 수정할 답글의 내용
     };
   },
   methods: {
@@ -110,27 +136,44 @@ export default {
       this.editContent = ''; // 입력된 수정 내용을 초기화
       this.showSettingsMenuIndex = null;
     },
+    enableReplyEdit(replyIndex, replyContent) {
+      this.editReplyIndex = replyIndex;
+      this.editReplyContent = replyContent;
+    },
+    cancelReplyEdit() {
+      this.editReplyIndex = null;
+      this.editReplyContent = '';
+    },
     async updateComment(commentId, content) {
       try {
         await this.$emit('update-comment', { commentId, content });
         this.editIndex = null; // 수정 완료 후 수정 모드 종료
         this.editContent = '';
-        this.showSettingsMenuIndex = null; // 수정 완료 후 설정 메뉴 닫기
+        this.showCommentSettingsMenuIndex = null; // 설정 메뉴 닫기
       } catch (error) {
         console.error('댓글 수정 중 오류 발생:', error);
       }
     },
-    toggleSettingsMenu(index) {
-      if (this.showSettingsMenuIndex === index) {
-        this.showSettingsMenuIndex = null; // 설정 메뉴 닫기
+    toggleCommentSettingsMenu(index) {
+      if (this.showCommentSettingsMenuIndex === index) {
+        this.showCommentSettingsMenuIndex = null; // 설정 메뉴 닫기
       } else {
-        this.showSettingsMenuIndex = index; // 설정 메뉴 열기
+        this.showCommentSettingsMenuIndex = index; // 설정 메뉴 열기
       }
     },
+    toggleReplySettingsMenu(index) {
+      if (this.showReplySettingsMenuIndex === index) {
+        this.showReplySettingsMenuIndex = null; // 설정 메뉴 닫기
+      } else {
+        this.showReplySettingsMenuIndex = index; // 설정 메뉴 열기
+      }
+    },
+
+
     async deleteComment(commentId) {
       try {
         await this.$emit('delete-comment', commentId);
-        this.showSettingsMenuIndex = null; // 댓글 삭제 후 설정 메뉴 닫기
+        this.showCommentSettingsMenuIndex = null; // 설정 메뉴 닫기
       } catch (error) {
         console.error('댓글 삭제 중 오류 발생:', error);
       }
@@ -155,12 +198,30 @@ export default {
     },
     getRepliesByCommentId(commentId) {
       return this.replies.filter(reply => reply.commentId === commentId);
-    }
+    },
+    async updateReply(replyId, content) {
+      try {
+        await this.$emit('update-reply', { replyId, content });
+        this.editReplyIndex = null;
+        this.editReplyContent = '';
+        this.showReplySettingsMenuIndex = null; // 설정 메뉴 닫기
+      } catch (error) {
+        console.error('답글 수정 중 오류 발생:', error);
+        this.showReplySettingsMenuIndex = null; // 설정 메뉴 닫기
+      }
+    },
+    async deleteReply(replyId) {
+      try {
+        await this.$emit('delete-reply', replyId);
+        this.showReplySettingsMenuIndex = null; // 설정 메뉴 닫기
+      } catch (error) {
+        console.error('답글 삭제 중 오류 발생:', error);
+        this.showReplySettingsMenuIndex = null; // 설정 메뉴 닫기
+      }
+    },
   }
 };
 </script>
-
-
 
 <style scoped>
 /* 댓글 리스트 스타일 */
