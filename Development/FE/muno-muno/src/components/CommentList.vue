@@ -84,8 +84,6 @@
                   <span class="date">{{ formatDate(reply.registerDate) }}</span>
                 </div>
               </div>
-
-
             </li>
           </ul>
         </div>

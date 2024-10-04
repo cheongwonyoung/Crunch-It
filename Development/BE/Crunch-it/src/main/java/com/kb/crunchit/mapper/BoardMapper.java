@@ -2,6 +2,7 @@ package com.kb.crunchit.mapper;
 
 import com.kb.crunchit.dto.request.CommentRequestDTO;
 import com.kb.crunchit.dto.request.BoardRequestDTO;
+import com.kb.crunchit.dto.response.BoardResponseDTO;
 import com.kb.crunchit.entity.Board;
 import com.kb.crunchit.entity.Comment;
 import org.apache.ibatis.annotations.Mapper;
@@ -20,9 +21,11 @@ public interface BoardMapper {
     void modifyBoard(BoardRequestDTO boardRequestDTO);
     void deleteBoard(int boardId);
 
-    //좋아요 누름 혹은 취소
-    void addLikes(BoardRequestDTO boardRequestDTO);
-    void cancelLikes(BoardRequestDTO boardRequestDTO);
+    BoardResponseDTO selectBoardForLikes(int boardId);
+
+
+
+
 
 
 

@@ -18,6 +18,9 @@
         <typeAlias alias="Reply" type="com.kb.crunchit.entity.Reply"/>
         <typeAlias alias="ReplyRequest" type="com.kb.crunchit.dto.request.ReplyRequestDTO"/>
         <typeAlias alias="ReplyResponse" type="com.kb.crunchit.dto.response.ReplyResponseDTO"/>
+        <typeAlias alias="Like" type="com.kb.crunchit.entity.Like"/>
+        <typeAlias alias="LikeRequest" type="com.kb.crunchit.dto.request.LikeRequestDTO"/>
+        <typeAlias alias="LikeResponse" type="com.kb.crunchit.dto.response.LikeResponseDTO"/>
     </typeAliases>
 
     <!-- 데이터베이스 환경 설정 -->

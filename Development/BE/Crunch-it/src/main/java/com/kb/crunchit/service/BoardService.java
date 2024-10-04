@@ -40,4 +40,6 @@ public class BoardService {
         boardMapper.deleteBoard(boardId);
     }
 
+    public BoardResponseDTO getBoardForLikes(int boarId){return boardMapper.selectBoardForLikes(boarId);}
+
 }

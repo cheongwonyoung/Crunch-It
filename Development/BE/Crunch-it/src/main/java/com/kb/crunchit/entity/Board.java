@@ -26,4 +26,5 @@ public class Board {
     public void addCommentList(List<Comment> commentList){
         this.commentList = commentList;
     }
+
 }

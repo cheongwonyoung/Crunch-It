@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.kb.crunchit.mapper.LikeMapper">
+
+    <select id="getLikeById" parameterType="int">
+        SELECT COUNT(*)
+        FROM board_likes
+        WHERE board_id=#{boardId}
+    </select>
+
+    <insert id="addLike" parameterType="LikeRequest">
+        INSERT INTO board_likes(board_id,writer_id,user_id)
+        VALUES (#{boardId},#{writerId},#{userId})
+    </insert>
+
+    <delete id="removeLike" parameterType="int">
+        DELETE *
+        FROM board_likes
+        WHERE like_id=#{likeId}
+    </delete>
+
+</mapper>

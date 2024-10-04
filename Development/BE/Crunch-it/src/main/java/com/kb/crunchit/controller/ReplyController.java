@@ -45,12 +45,4 @@ public class ReplyController
         replyService.deleteReply(replyId);
         return ResponseEntity.ok("답글 삭제 성공");
     }
-
-
-
-
-
-
-
-
 }

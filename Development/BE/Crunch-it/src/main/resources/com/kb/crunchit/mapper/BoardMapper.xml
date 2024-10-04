@@ -54,4 +54,20 @@
         DELETE FROM board WHERE board_id=#{boardId}
     </delete>
 
+    <select id="selectBoardForLikes" parameterType="int">
+        SELECT
+            board_id AS boardId,
+            writer_id AS writerId,
+            title,
+            content,
+            category,
+            register_date AS registerDate,
+            modify_date AS modifyDate,
+            likes
+        FROM board
+        WHERE board_id=#{boardId}
+    </select>
+
+
+
 </mapper>

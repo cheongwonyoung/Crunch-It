@@ -20,7 +20,4 @@ public class BoardResponseDTO {   //게시물 조회
     private LocalDateTime modifyDate;
     private int likes;
 
-
-
-
 }
