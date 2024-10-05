@@ -1,6 +1,5 @@
 <template>
     <div class="container">
-        <!-- <HeaderComponent title="회원가입" @close="handleClose" /> -->
         <headerX title="회원가입" @close="handleClose" />
         <div class="input-container" style="margin-top: 80px">
             <div class="input-title">닉네임</div>
@@ -31,13 +30,16 @@
                     v-if="authcodeSended"
                     type="button"
                     class="certification-btn"
-                    @click="startTimer"
-                    :disabled="emailError || email === ''">
+                    @click="checkAuthCode"
+                    :disabled="authCheckBtnDisabled">
                     인증 확인
                 </button>
             </div>
             <span v-if="emailError" class="error-text">이미 사용중인 이메일입니다.</span>
-            <span v-if="!emailError && email !== ''" class="correct-text">사용 가능한 이메일입니다.</span>
+            <span v-if="!emailError && email !== '' && !authcodeChecked" class="correct-text"
+                >사용 가능한 이메일입니다.</span
+            >
+            <span v-if="authcodeChecked" class="correct-text">인증 완료되었습니다.</span>
         </div>
         <div class="input-container">
             <div class="input-title">비밀번호</div>
@@ -84,13 +86,17 @@
                 emailError: false,
                 nicknameError: false,
                 authcodeSended: false,
+                authcodeChecked: false,
                 isTimerRunning: false,
                 timeLeft: 180,
             };
         },
         computed: {
-            authBtnDisabled() {
+            authSendBtnDisabled() {
                 return this.emailError;
+            },
+            authCheckBtnDisabled() {
+                return this.authcodeChecked;
             },
             isDisabled() {
                 // 모든 필드가 채워져 있는지 확인
@@ -128,10 +134,48 @@
                 this.$router.push({ name: "Login" });
             },
             getAuthCode() {
-                this.authcodeSended = true;
+                apiClient
+                    .post("/auth/sendAuthCode", {
+                        email: this.email,
+                    })
+                    .catch((err) => {
+                        console.log(err);
+                    });
+            },
+            checkAuthCode() {
+                const params = {
+                    email: this.email,
+                    authCode: this.authcode,
+                };
+                apiClient
+                    .get("/auth/checkAuthCode", { params })
+                    .then((res) => {
+                        if (res.status == 200) {
+                            this.authcodeChecked = true;
+                        }
+                    })
+                    .catch((err) => {
+                        console.log(err);
+                    });
             },
             signUp() {
-                apiClient;
+                apiClient
+                    .post("/auth/signUp", {
+                        nickname: this.nickname,
+                        email: this.email,
+                        phone_number: this.phoneNum,
+                        password: this.password,
+                        birth: this.selectedDate,
+                    })
+                    .then((res) => {
+                        if (res.status == 200) {
+                            console.log(res.data);
+                            this.$router.push("/login");
+                        }
+                    })
+                    .catch((err) => {
+                        console.log(err);
+                    });
             },
             formatPhoneNumber() {
                 this.phoneNum = this.phoneNum.replace(/[^0-9]/g, ""); // 숫자만 남김
@@ -161,11 +205,22 @@
                         this.nicknameError = res.data["code"] == 422;
                     });
             },
-            startTimer() {
+            async startTimer() {
+                const params = { email: this.email };
+                try {
+                    const res = await apiClient.get("/auth/checkEmail", { params });
+                    this.emailError = res.data["code"] == 422;
+
+                    // API 요청이 완료된 후 실행할 코드
+                } catch (error) {
+                    console.error("API 요청 중 오류 발생:", error);
+                }
+                if (this.emailError) return;
                 if (!this.isTimerRunning) {
                     this.isTimerRunning = true;
-                    this.getAuthCode();
                     this.timeLeft = 180;
+                    this.authcodeSended = true;
+                    this.getAuthCode();
                     const timer = setInterval(() => {
                         if (this.timeLeft > 0) {
                             this.timeLeft--;
