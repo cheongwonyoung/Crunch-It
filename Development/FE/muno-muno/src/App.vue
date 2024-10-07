@@ -19,13 +19,13 @@ export default {
   },
   data() {
     return {
-      hideRoutes: ['/login', '/signup'], // TabBar를 숨길 경로 설정
+      hideRoutes: ['/login', '/signup', '/mypage', '/mypageedit', '/search'],
     };
   },
   computed: {
     showTabBar() {
-      const route = this.$route; // 현재 라우트 정보
-      return !this.hideRoutes.includes(route.path); // 숨길 경로에 포함되지 않으면 true 반환
+      const route = this.$route;
+      return !this.hideRoutes.includes(route.path);
     },
   },
 };
