@@ -5,7 +5,9 @@ import PropertyP from '@/pages/Property.vue';
 import CommunityP from '@/pages/Community.vue';
 import LoginP from '@/pages/LoginPage.vue';
 import SignupP from '@/pages/SignUpPage.vue';
-// import apiClient from '@/axios';
+import MyPage from '@/pages/MyPage.vue';
+import MyPageEdit from '@/pages/MyPageEdit.vue';
+import Search from '@/pages/Search.vue';
 
 const routes = [
   { path: '/', name: 'Home', component: HomeP },
@@ -14,6 +16,9 @@ const routes = [
   { path: '/community', name: 'Community', component: CommunityP },
   { path: '/login', name: 'Login', component: LoginP },
   { path: '/signup', name: 'SignUp', component: SignupP },
+  { path: '/mypage', name: 'MyPage', component: MyPage },
+  { path: '/mypageedit', name: 'MyPageEdit', component: MyPageEdit },
+  { path: '/search', name: 'Search', component: Search },
 ];
 
 const router = createRouter({
