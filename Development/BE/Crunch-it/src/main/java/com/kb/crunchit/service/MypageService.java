@@ -14,10 +14,10 @@ public class MypageService {
     public UserDto getUserInfo(String email){
         User user = userMapper.findByEmail(email);
         return UserDto.builder()
-                .user_id(user.getUser_id())
+                .user_id(user.getUserId())
                 .email(user.getEmail())
                 .birth(user.getBirth())
-                .phone_number(user.getPhone_number())
+                .phone_number(user.getPhoneNumber())
                 .profile_url(user.getProfile_url())
                 .build();
     }
