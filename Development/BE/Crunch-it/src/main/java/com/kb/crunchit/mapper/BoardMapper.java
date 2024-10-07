@@ -21,7 +21,7 @@ public interface BoardMapper {
     void modifyBoard(BoardRequestDTO boardRequestDTO);
     void deleteBoard(int boardId);
 
-    BoardResponseDTO selectBoardForLikes(int boardId);
+//    int selectBoardForLikes(int boardId);
 
 
 

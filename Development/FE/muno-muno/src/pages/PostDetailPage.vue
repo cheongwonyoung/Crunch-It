@@ -25,9 +25,10 @@
       <p>{{ post.content }}</p>
     </div>
 
-    <div class="post-likes">
+    <div class="post-likes" @click="likePost">
       <span>❤️ {{ post.likes }}</span>
     </div>
+
 
     <!-- 댓글 리스트 및 수정/삭제 기능 추가 -->
     <CommentList :comments="comments" :replies="replies"
@@ -66,7 +67,8 @@ export default {
     const postId = route.params.id;
     const API_URL = `http://localhost:8080/community/${postId}`; // API 경로 상수화
     const REPLY_API_URL = `http://localhost:8080/api/replies`; // 답글 API 경로 상수화
-    const COMMENT_API_URL = `http://localhost:8080/api/comments`; // 답글 API 경로 상수화
+    const COMMENT_API_URL = `http://localhost:8080/api/comments`; // 댓글 API 경로 상수화
+    const LIKE_API_URL = `http://localhost:8080/api/likes`; // 답글 API 경로 상수화
 
     const post = ref({
       title: '',
@@ -195,8 +197,18 @@ export default {
         }
       }
     };
-
-
+    const likePost = async () => {
+      try {
+        await axios.post(`${LIKE_API_URL}`,{
+          writerId: post.value.writerId,  // 글의 데이터를 가져올 때 설정된 writer_id로
+          boardId:postId,
+          userId: 1, // 로그인된 사용자 ID로 수정해야
+        });
+        post.value.likes += 1; // Increment the likes in the frontend for immediate feedback
+      } catch (error) {
+        console.error('Error liking the post:', error);
+      }
+    };
 
     onMounted(fetchPostAndComments);
 
@@ -215,7 +227,8 @@ export default {
       handleUpdateComment,
       handleDeleteComment,
       handleUpdateReply,
-      handleDeleteReply
+      handleDeleteReply,
+      likePost
     };
   },
 };

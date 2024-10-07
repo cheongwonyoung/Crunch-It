@@ -56,11 +56,10 @@ public class BoardController {
         return ResponseEntity.ok("게시글 삭제 성공");
     }
 
-    //특정 게시글 조회 -likes
-    @GetMapping("/likes/{boardId}")
-    public ResponseEntity<BoardResponseDTO> getBoardForLikes(@PathVariable int boardId){
-        BoardResponseDTO boardResponseDTO= boardService.getBoardForLikes(boardId);
-
-        return ResponseEntity.ok(boardResponseDTO);
-    }
+    //좋아요 수 count
+//    @GetMapping("/likes/{boardId}")
+//    public ResponseEntity<Integer> getBoardForLikes(@PathVariable int boardId){
+//        Integer LikeCount= boardService.getBoardForLikes(boardId);
+//        return ResponseEntity.ok(LikeCount);
+//    }
 }

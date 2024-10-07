@@ -27,13 +27,13 @@ public class LikeController {
     }
 
     //like수를 board의 likes 컬럼에도 반영 - entity는 setter가 없어서 DTO사용
-    @GetMapping("/board/{boardId}")
-    public ResponseEntity<BoardResponseDTO> setLikesToBoard(@PathVariable int boardId){
-        BoardResponseDTO boardResponseDTO=boardService.getBoardForLikes(boardId);
-        int likeCount= likeService.getLikeById(boardId);
-        boardResponseDTO.setLikes(likeCount);
-        return ResponseEntity.ok(boardResponseDTO);
-    }
+//    @GetMapping("/board/{boardId}")
+//    public ResponseEntity<BoardResponseDTO> setLikesToBoard(@PathVariable int boardId){
+//        BoardResponseDTO boardResponseDTO=boardService.getBoardForLikes(boardId);
+//        int likeCount= likeService.getLikeById(boardId);
+//        boardResponseDTO.setLikes(likeCount);
+//        return ResponseEntity.ok(boardResponseDTO);
+//    }
 
     @PostMapping()
     public ResponseEntity<String> addLike(@RequestBody LikeRequestDTO likeRequestDTO){
