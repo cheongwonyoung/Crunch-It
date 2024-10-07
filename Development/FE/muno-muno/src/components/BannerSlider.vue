@@ -13,10 +13,11 @@
         v-for="(banner, index) in displayBanners"
         :key="index"
         class="banner"
+        @click="onBannerClick(banner)"
       >
         <div class="banner-content">
-          <h3>{{ banner.title }}</h3>
           <p>{{ banner.subtitle }}</p>
+          <h3>{{ banner.title }}</h3>
         </div>
 
         <div class="octopus-image">
@@ -38,17 +39,35 @@ export default {
       isAnimating: true,
       autoSlideInterval: null,
       isUserInteracting: false,
-      // 백엔드에서 받은 상품 리스트 예시
+      // 초기 UI 확인 차 임의 데이터. 추후 삭제 바람.
       banners: [
         {
-          title: '웃는 문어들의 선택',
-          subtitle: '쏠편한 입출금통장',
+          bank: 'KB국민',
+          subtitle: '문어들의 선택',
+          title: '쏠편한 입출금통장',
           category: '예금',
+          joinMethods: '영업점, 인터넷, 스마트폰',
+          interestType: '단리',
+          sixMonthRate: '1%',
+          twelveMonthRate: '1.3%',
         },
-        { title: '문어들의 펀드', subtitle: '성장하는 펀드', category: '펀드' },
-        { title: '문어들의 적금', subtitle: '안전한 적금', category: '적금' },
-        { title: '문어들의 주식', subtitle: '주식 투자', category: '주식' },
-        { title: '문어들의 채권', subtitle: '안정적인 채권', category: '채권' },
+        {
+          bank: '신한',
+          subtitle: '문어들의 사랑받는 펀드',
+          title: '신한 글로벌펀드',
+          category: '펀드',
+          fundProduct: '글로벌 주식형 펀드',
+        },
+        {
+          bank: '우리은행',
+          subtitle: '문어들의 채권',
+          title: '우리은행 채권',
+          category: '채권',
+          bondRating: 'AAA',
+          couponRate: '2.0%',
+          maturityDate: '2026-12-31',
+          interestPaymentDate: '매년 12월 31일',
+        },
       ],
     };
   },
@@ -75,6 +94,9 @@ export default {
         case '채권':
           return require('@/assets/octopusProduct_5.svg');
       }
+    },
+    onBannerClick(banner) {
+      this.$emit('banner-click', banner);
     },
     startAutoSlide() {
       this.autoSlideInterval = setInterval(() => {
@@ -151,6 +173,7 @@ export default {
   justify-content: space-between;
   padding-left: 25px;
   box-sizing: border-box;
+  cursor: pointer;
 }
 
 .banner-content {
@@ -159,14 +182,14 @@ export default {
   align-items: flex-start;
 }
 
-.banner-content h3 {
+.banner-content p {
   color: var(--gr100);
   font-size: 14px;
   font-weight: 500;
   margin: 4px 0 6px 2px;
 }
 
-.banner-content p {
+.banner-content h3 {
   color: var(--gr100);
   font-size: 22px;
   font-weight: 600;
