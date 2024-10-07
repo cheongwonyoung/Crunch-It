@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.kb.crunchit.mapper.analysis.StockInfoMapper">
+
+    <!-- 주식이 존재하는지 확인 -->
+    <select id="exists" parameterType="map" resultType="boolean">
+        SELECT COUNT(1)
+        FROM stock_price_info
+        WHERE stock_code = #{stockCode}
+    </select>
+
+    <!-- 주식 정보 업데이트 -->
+    <update id="updateStock" parameterType="StockPriceInfo">
+        UPDATE stock_price_info
+        SET base_dt = #{baseDt}, end_price = #{endPrice}, trade_quantity = #{tradeQuantity}
+        WHERE stock_code = #{stockCode}
+    </update>
+
+    <!-- 새 주식 정보 삽입 -->
+    <insert id="insertStock" parameterType="StockPriceInfo">
+        INSERT INTO stock_price_info (base_dt, stock_code, stock_name, stock_market, end_price, trade_quantity)
+        VALUES (#{baseDt}, #{stockCode}, #{stockName}, #{stockMarket}, #{endPrice}, #{tradeQuantity})
+    </insert>
+</mapper>

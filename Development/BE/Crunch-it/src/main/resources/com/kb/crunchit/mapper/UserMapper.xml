@@ -3,23 +3,30 @@
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
-<mapper namespace="com.kb.crunchit.mapper.UserMapper">
 
-    <select id="findByEmail" resultType="com.kb.crunchit.dto.response.UserDto" parameterType="string">
+
+<mapper namespace="com.kb.crunchit.mapper.UserMapper">
+    <select id="findByEmail" resultType="User" parameterType="string">
         select *
         from user
         where email = #{email};
     </select>
 
-    <select id="findByNickname" resultType="com.kb.crunchit.dto.response.UserDto" parameterType="string">
+    <select id="findByNickname" resultType="User" parameterType="string">
         select *
         from user
         where nickname = #{nickname};
     </select>
 
-    <insert id="insertUser" parameterType="com.kb.crunchit.dto.response.UserDto">
-        insert into user (nickname, password, phone_number, email)
-        values (#{nickname}, #{password}, #{phone_number}, #{email})
+    <insert id="insertUser" parameterType="User">
+        insert into user (nickname, password, phone_number, email, birth)
+        values (#{nickname}, #{password}, #{phone_number}, #{email}, #{birth})
     </insert>
+
+    <update id="updateUser" parameterType="User">
+        update user
+        set nickname = #{nickname}
+        where email = #{email}
+    </update>
 
 </mapper>
