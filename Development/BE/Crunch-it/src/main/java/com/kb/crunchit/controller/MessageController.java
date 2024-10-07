@@ -15,9 +15,11 @@ public class MessageController {
     @SendTo("/topic/chat/1")
     public ChatMessage sendMessage(@DestinationVariable Long roomId, ChatMessage message) {
         // 채팅 메시지를 브로드캐스트합니다.
+        System.out.println("@@@@@");
         log.info("!!!@@");
 //        log.info("Received message for roomId: " + roomId + ", Content: " + message.getContent());
 
         return message;
     }
+
 }

@@ -17,10 +17,12 @@
     <!-- 채팅방 참여 후 채팅 기능 -->
     <div v-if="currentRoomId">
       <h3>Room: {{ currentRoomName }}</h3>
-      <div v-for="message in messages" :key="message.id">
-        <strong>{{ message.sender }}:</strong> {{ message.content }}
+      <div v-for="message in recvMessages" :key="message.id">
+        <strong>[받음]{{ message.sender }}:</strong> {{ message.content }}
       </div>
-
+      <div v-for="message in sentMessages" :key="message.id">
+              <strong>[보냄]{{ message.sender }}:</strong> {{ message.content }}
+      </div>
       <input v-model="messageContent" @keyup.enter="sendMessage" placeholder="Type your message..." />
       <button @click="sendMessage">Send</button>
     </div>
@@ -36,11 +38,13 @@ export default {
   data() {
     return {
       stompClient: null,
-      messages: [],
+      recvMessages: [],
+      sentMessages: [],
       messageContent: '',
       chatRooms: [],         // 채팅방 목록
       currentRoomId: null,   // 현재 참여 중인 채팅방 ID
       currentRoomName: '',   // 현재 참여 중인 채팅방 이름
+      currentSubScription: null
     };
   },
   methods: {
@@ -52,8 +56,7 @@ export default {
       this.stompClient.connect({}, this.onConnected, this.onError);
     },
     onConnected() {
-      console.log("connected to websocket")
-      console.log(this.stompClient.connected)
+      console.log("STOMP Connected:", this.stompClient.connected);
       this.fetchChatRooms();  // 채팅방 목록 로드
     },
     onError(error) {
@@ -68,25 +71,30 @@ export default {
       ];
     },
     joinRoom(roomId) {
-      if (this.stompClient && this.currentRoomId) {
-        this.stompClient.unsubscribe('/topic/chat/' + this.currentRoomId);
+        // 이전 구독 해제
+      if (this.currentSubscription) {
+          this.currentSubscription.unsubscribe();
+          console.log("Unsubscribed from previous room");
       }
 
-      const selectedRoom = this.chatRooms.find(room => room.id === roomId);
+            const selectedRoom = this.chatRooms.find(room => room.id === roomId);
 
       this.currentRoomId = roomId;
       this.currentRoomName = selectedRoom ? selectedRoom.name : 'Unknown Room';
-      this.messages = [];  // 메시지 초기화
+      this.recvMessages = [];  // 메시지 초기화
 
-      console.log("roomID = " + this.currentRoomId)
-
-      this.stompClient.subscribe('/topic/chat/' + this.currentRoomId, this.onMessageReceived);
-      console.log("subscribe !!! ")
-      console.log(this.stompClient)
+      // 새로운 구독
+      this.currentSubscription = this.stompClient.subscribe(`/topic/chat/${this.currentRoomId}`, this.onMessageReceived);
+      console.log("Subscribed to new room:", this.currentRoomId);
     },
     onMessageReceived(payload) {
       const message = JSON.parse(payload.body);
-      this.messages.push(message);
+      this.recvMessages.push(message);
+
+    // 수신된 메시지가 본인(sender가 'User')의 메시지인지 확인
+  if (message.sender !== 'User') {
+    this.messages.push(message);  // 본인의 메시지가 아닌 경우에만 추가
+  }
     },
     sendMessage() {
       if (this.messageContent.trim() !== '' && this.currentRoomId) {
@@ -95,10 +103,18 @@ export default {
             content: this.messageContent,
             roomId: this.currentRoomId,
           };
-
-          // destination, headers, body 순서로 설정
-          this.stompClient.send(`/app/chat/${this.currentRoomId}`, {}, JSON.stringify(message));
-          console.log(this.stompClient)
+          try{
+            
+            // destination, headers, body 순서로 설정
+              this.stompClient.send(`/topic/chat/${this.currentRoomId}`, {}, JSON.stringify(message));
+              this.sentMessages.push(message);  // 보낸 메시지 배열에 추가
+              console.log("Message sent:", message);
+          }catch(errer){
+            console.log("error 발생")
+          }
+    
+      // STOMP 클라이언트 객체 상태 확인
+      console.log("STOMP Client Status after send:", this.stompClient.subscriptions);
           this.messageContent = ''; // 메시지 전송 후 초기화
       }
     },
