@@ -17,6 +17,11 @@
         from user
         where nickname = #{nickname};
     </select>
+    <select id="getUserProfile" resultType="string" parameterType="string">
+        select profile_url
+        from user
+        where email = #{email};
+    </select>
 
     <insert id="insertUser" parameterType="User">
         insert into user (nickname, password, phone_number, email, birth)
@@ -25,7 +30,12 @@
 
     <update id="updateUser" parameterType="User">
         update user
-        set nickname = #{nickname}
+        set nickname = #{nickname}, birth = #{birth}, phone_number = #{phone_number}
+        where email = #{email}
+    </update>
+    <update id="updateUserProfile" parameterType="User">
+        update user
+        set profile_url = #{profile_url}
         where email = #{email}
     </update>
 

@@ -28,4 +28,12 @@ public class MypageService {
                         .nickname(dto.getNickname())
                 .build());
     }
+
+    public String getUserProfile(String email){
+        return userMapper.getUserProfile(email);
+    }
+
+    public void updateUserProfile(User user){
+        userMapper.updateUserProfile(user);
+    }
 }
