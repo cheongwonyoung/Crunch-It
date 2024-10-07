@@ -13,6 +13,8 @@ import software.amazon.awssdk.services.s3.model.PutObjectResponse;
 
 import java.io.File;
 import java.io.InputStream;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 @Service
 @RequiredArgsConstructor
@@ -59,5 +61,18 @@ public class S3Service {
                 .build();
 
         s3Client.deleteObject(deleteObjectRequest);
+    }
+
+    public String extractKeyName(String url){
+        String regex = "https://.+\\.s3\\..+\\.amazonaws\\.com/(.+)";
+
+        Pattern pattern = Pattern.compile(regex);
+        Matcher matcher = pattern.matcher(url);
+        if (matcher.find()) {
+            return matcher.group(1);  // 첫 번째 그룹이 keyName
+
+        } else {
+            return null;
+        }
     }
 }

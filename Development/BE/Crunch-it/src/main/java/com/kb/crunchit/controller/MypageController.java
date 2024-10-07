@@ -14,9 +14,8 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.UUID;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @RestController
 @RequiredArgsConstructor
@@ -63,39 +62,37 @@ public class MypageController {
 
         String extension = fileName.substring(fileName.lastIndexOf(".") + 1).toLowerCase();
         String[] imageExtensions = {"jpg", "jpeg", "png", "gif", "bmp"};
+        Set<String> imageExtensionSet = new HashSet<>(Arrays.asList(imageExtensions));
 
         // 확장자가 이미지 파일 목록에 있는지 확인
-        for (String ext : imageExtensions) {
-            if (ext.equals(extension)) {
-                resultMap.put("message", "지원하지 않는 확장자입니다.");
-                return new ResponseEntity<>(resultMap,HttpStatus.BAD_REQUEST);
-            }
+        if(!imageExtensionSet.contains(extension)){
+            resultMap.put("message", "지원하지 않는 확장자입니다.");
+            return new ResponseEntity<>(resultMap,HttpStatus.BAD_REQUEST);
         }
 
         try{
             File tempFile = File.createTempFile(fileName, null);
             file.transferTo(tempFile);
-            String uuidFileName = UUID.randomUUID() + extension;
+            String uuidFileName = UUID.randomUUID() +"."+extension;
             String userProfile = mypageService.getUserProfile(email);
             if(userProfile != null){
-                s3Service.deleteFile(userProfile);
+                String keyName = s3Service.extractKeyName(userProfile);
+                if(keyName!=null) s3Service.deleteFile(keyName);
             }
-            s3Service.uploadFile(uuidFileName, tempFile);
+            String newProfileUrl = s3Service.uploadFile(uuidFileName, tempFile);
 
             User user = User.builder()
                     .email(email)
-                    .profile_url(uuidFileName)
+                    .profile_url(newProfileUrl)
                     .build();
 
             mypageService.updateUserProfile(user);
             resultMap.put("message", "프로필 변경 완료되었습니다.");
+            resultMap.put("profileURL", newProfileUrl);
         }
         catch(Exception e){
             return new ResponseEntity<>(resultMap,HttpStatus.BAD_REQUEST);
         }
-
-
-
         return ResponseEntity.ok(resultMap);
 
     }
