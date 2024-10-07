@@ -10,8 +10,7 @@ export default {
   props: {
     title: {
       type: String,
-      required: true,
-      default: '제목',
+      required: true, // default 값 제거
     },
   },
   methods: {

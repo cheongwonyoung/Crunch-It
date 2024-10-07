@@ -1,7 +1,5 @@
 <template>
   <div class="product-recommendation">
-    <div class="status-bar"></div>
-
     <HeaderQ title="상품추천" @search="handleSearch" />
 
     <div class="popular-section">
@@ -32,9 +30,18 @@
           v-for="product in products"
           :key="product.id"
           :product="product"
+          @click="openModal(product)"
         />
       </div>
     </div>
+
+    <!-- ProductModal -->
+    <ProductModal
+      v-if="selectedProduct"
+      :show="showModal"
+      :product="selectedProduct"
+      @close="closeModal"
+    />
   </div>
 </template>
 
@@ -43,6 +50,7 @@ import HeaderQ from '@/components/HeaderQ.vue';
 import ProductItem from '@/components/ProductItem.vue';
 import BannerSlider from '@/components/BannerSlider.vue';
 import Category from '@/components/Category.vue';
+import ProductModal from '@/components/Modal.vue';
 
 export default {
   name: 'ProductP',
@@ -51,19 +59,35 @@ export default {
     ProductItem,
     BannerSlider,
     Category,
+    ProductModal,
   },
   data() {
     return {
       selectedCategory: '예금',
+      showModal: false,
+      selectedProduct: null,
       categories: ['예금', '적금', '펀드', '주식', '채권'],
       products: [],
       allProducts: {
         예금: [
-          { id: 1, bank: 'KB국민', title: '국민 입출금 통장' },
-          { id: 2, bank: 'KB국민', title: 'KB스타퀴즈왕적금' },
-          { id: 3, bank: '신한', title: '신한 군인행복 통장' },
-          { id: 4, bank: '신한', title: '쏠편한 입출금통장' },
-          { id: 5, bank: '신한', title: '신한 슈퍼SOL 통장' },
+          {
+            id: 1,
+            bank: 'KB국민',
+            title: '국민 입출금 통장',
+            joinMethods: '영업점, 인터넷, 스마트폰',
+            interestType: '단리',
+            sixMonthRate: '1%',
+            twelveMonthRate: '1.3%',
+          },
+          {
+            id: 2,
+            bank: 'KB국민',
+            title: 'KB스타퀴즈왕적금',
+            joinMethods: '인터넷, 스마트폰',
+            interestType: '복리',
+            sixMonthRate: '1.5%',
+            twelveMonthRate: '1.8%',
+          },
         ],
       },
     };
@@ -78,6 +102,14 @@ export default {
     },
     handleSearch() {
       console.log('Search clicked');
+    },
+    openModal(product) {
+      this.selectedProduct = product;
+      this.showModal = true;
+    },
+    closeModal() {
+      this.showModal = false;
+      this.selectedProduct = null;
     },
   },
   mounted() {
@@ -100,7 +132,6 @@ export default {
 }
 
 .categories {
-  color: var(--gr20);
   text-align: center;
   font-size: 16px;
   font-weight: 600;
@@ -112,15 +143,12 @@ export default {
 .category-buttons {
   padding-left: 20px;
   display: flex;
-  padding-bottom: 0px;
 }
 
 .base-underline {
-  content: '';
   height: 0.5px;
   background: var(--gr70);
   position: absolute;
-  margin: 0;
   width: 100%;
 }
 
