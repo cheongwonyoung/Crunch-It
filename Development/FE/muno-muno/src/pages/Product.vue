@@ -6,7 +6,7 @@
       <h2>가장 인기있는 상품</h2>
     </div>
 
-    <BannerSlider />
+    <BannerSlider @banner-click="openModal" />
 
     <div class="categories">
       <div class="category-buttons">
@@ -35,6 +35,7 @@
       </div>
     </div>
 
+    <!-- ProductModal -->
     <ProductModal
       v-if="selectedProduct"
       :show="showModal"
@@ -50,7 +51,6 @@ import ProductItem from '@/components/ProductItem.vue';
 import BannerSlider from '@/components/BannerSlider.vue';
 import Category from '@/components/Category.vue';
 import ProductModal from '@/components/Modal.vue';
-import axios from 'axios';
 
 export default {
   name: 'ProductP',
@@ -68,8 +68,8 @@ export default {
       selectedProduct: null,
       categories: ['예금', '적금', '펀드', '주식', '채권'],
       products: [],
+      // 초기 UI 확인 차 임의 데이터. 추후 삭제 바람.
       allProducts: {
-        // UI 확인을 위한 임의 데이터
         예금: [
           {
             id: 1,
@@ -126,15 +126,6 @@ export default {
     };
   },
   methods: {
-    async fetchProducts() {
-      try {
-        const response = await axios.get('백엔드_엔드포인트');
-        this.allProducts = response.data;
-        this.updateProducts();
-      } catch (error) {
-        console.error('Error fetching products:', error);
-      }
-    },
     selectCategory(category) {
       this.selectedCategory = category;
       this.updateProducts();
@@ -155,7 +146,7 @@ export default {
     },
   },
   mounted() {
-    this.fetchProducts();
+    this.updateProducts();
   },
 };
 </script>
