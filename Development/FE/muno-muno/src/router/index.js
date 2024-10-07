@@ -8,6 +8,7 @@ import SignupP from '@/pages/SignUpPage.vue';
 import MyPage from '@/pages/MyPage.vue';
 import MyPageEdit from '@/pages/MyPageEdit.vue';
 import Search from '@/pages/Search.vue';
+import Modal from '@/components/Modal.vue';
 
 const routes = [
   { path: '/', name: 'Home', component: HomeP },
@@ -19,6 +20,7 @@ const routes = [
   { path: '/mypage', name: 'MyPage', component: MyPage },
   { path: '/mypageedit', name: 'MyPageEdit', component: MyPageEdit },
   { path: '/search', name: 'Search', component: Search },
+  { path: '/modal', name: 'Modal', component: Modal },
 ];
 
 const router = createRouter({

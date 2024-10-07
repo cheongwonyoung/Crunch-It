@@ -81,7 +81,7 @@ export default {
         if (!this.isUserInteracting) {
           this.nextSlide();
         }
-      }, 3500);
+      }, 4000);
     },
     stopAutoSlide() {
       clearInterval(this.autoSlideInterval);

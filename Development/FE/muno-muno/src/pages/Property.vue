@@ -1,12 +1,9 @@
-<!-- Property.vue -->
 <template>
-  <div>
-    <!-- Property 컴포넌트 내용 -->
-  </div>
+  <div></div>
 </template>
 
 <script>
 export default {
-  name: 'PropertyP', // 다중 단어로 변경
+  name: 'PropertyP',
 };
 </script>
