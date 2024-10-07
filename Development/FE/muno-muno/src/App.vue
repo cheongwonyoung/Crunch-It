@@ -19,30 +19,35 @@ export default {
   },
   data() {
     return {
-      hideRoutes: ['/login', '/signup'], // TabBar를 숨길 경로 설정
+      hideRoutes: [
+        '/login',
+        '/signup',
+        '/mypage',
+        '/mypageedit',
+        '/search',
+        '/modal',
+      ],
     };
   },
   computed: {
     showTabBar() {
-      const route = this.$route; // 현재 라우트 정보
-      return !this.hideRoutes.includes(route.path); // 숨길 경로에 포함되지 않으면 true 반환
+      return !this.hideRoutes.includes(this.$route.path);
     },
   },
 };
 </script>
 
 <style>
-body {
+body,
+html {
   font-family: 'Pretendard', sans-serif;
-}
-
-html,
-body {
   width: 100%;
   height: 100%;
   margin: 0;
   padding: 0;
-  overflow: hidden;
+  overflow: auto;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
 }
 
 #app {
@@ -71,27 +76,16 @@ body {
   --p80: #f0f6ff;
 }
 
-/* content 부분 스크롤 발생 설정 */
 .content {
   padding-top: 44px;
   height: calc(100% - 86px - 44px);
   overflow-y: auto;
 }
 
-/* 스크롤바 숨김 처리 */
-.content::-webkit-scrollbar {
-  width: 0;
-  display: none;
-}
-
-html,
-body {
-  scrollbar-width: none;
-  -ms-overflow-style: none;
-}
-
+.content::-webkit-scrollbar,
 html::-webkit-scrollbar,
 body::-webkit-scrollbar {
+  width: 0;
   display: none;
 }
 </style>

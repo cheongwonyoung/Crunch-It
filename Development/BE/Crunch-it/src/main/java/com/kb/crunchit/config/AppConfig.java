@@ -27,7 +27,7 @@ import software.amazon.awssdk.regions.Region;
 
 @Configuration
 @ComponentScan(basePackages = {"com.kb.crunchit.util", "com.kb.crunchit.service"})
-@MapperScan(basePackages = {"com.kb.crunchit.mapper", "com.kb.crunchit.mapper.analysis"})
+@MapperScan(basePackages = {"com.kb.crunchit.mapper"})
 public class AppConfig {
     @Bean  //(destroyMethod="close")
     public DataSource dataSource() {
