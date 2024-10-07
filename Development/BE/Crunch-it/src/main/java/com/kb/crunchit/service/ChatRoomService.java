@@ -14,10 +14,6 @@ public class ChatRoomService {
 
     private final ChatRoomMapper chatRoomMapper;
 
-    public void createChatRoom(String name) {
-        chatRoomMapper.insertChatRoom(name);
-    }
-
     public List<ChatRoom> getAllChatRooms() {
         return chatRoomMapper.getChatRooms();
     }

@@ -19,7 +19,7 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
     @Override
     public void registerStompEndpoints(StompEndpointRegistry registry) {
         registry.addEndpoint("/ws") // WebSocket 엔드포인트 설정
-                .setAllowedOrigins("http://localhost:3000", "http://192.168.50.126:3000") // CORS 설정
+                .setAllowedOrigins("http://localhost:3000") // CORS 설정
 //                .setAllowedOriginPatterns("*")
                 .withSockJS(); // SockJS 지원 추가
     }
