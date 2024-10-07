@@ -35,6 +35,10 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         String requestURI = request.getRequestURI();
         Map<String, String> resultMap = new HashMap<>();
         try{
+            if(requestURI.contains("/ws")){
+                filterChain.doFilter(request, response);
+                return;
+            }
             if(requestURI.contains("/auth/authenticate")){
                 String accessToken = jwtService.extractAccessToken(request);
                 if(accessToken == null|| !jwtTokenUtil.validateToken(accessToken)){
