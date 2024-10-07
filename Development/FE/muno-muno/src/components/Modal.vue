@@ -3,10 +3,32 @@
     <div class="modal-content">
       <div class="product-badge">{{ product.bank }}</div>
       <h2>{{ product.title }}</h2>
-      <p>가입 방법: {{ product.joinMethods }}</p>
-      <p>금리 유형: {{ product.interestType }}</p>
-      <p>6개월 저축 금리: {{ product.sixMonthRate }}</p>
-      <p>12개월 저축 금리: {{ product.twelveMonthRate }}</p>
+
+      <!-- 적금 -->
+      <div v-if="product.category === '적금'">
+        <p>가입 방법: {{ product.joinMethods }}</p>
+        <p>금리 유형: {{ product.interestType }}</p>
+        <p>6개월 저축 금리: {{ product.sixMonthRate }}</p>
+        <p>12개월 저축 금리: {{ product.twelveMonthRate }}</p>
+      </div>
+
+      <!-- 펀드 -->
+      <div v-else-if="product.category === '펀드'">
+        <p>펀드 상품: {{ product.fundProduct }}</p>
+      </div>
+
+      <!-- 채권 -->
+      <div v-else-if="product.category === '채권'">
+        <p>등급: {{ product.bondRating }}</p>
+        <p>표면 금리: {{ product.couponRate }}</p>
+        <p>만기일: {{ product.maturityDate }}</p>
+        <p>이자 지급일: {{ product.interestPaymentDate }}</p>
+      </div>
+
+      <!-- 주식 -->
+      <div v-else-if="product.category === '주식'">
+        <p>시가 총액 비중: {{ product.marketCapWeight }}</p>
+      </div>
 
       <div class="modal-buttons">
         <button @click="closeModal">닫기</button>

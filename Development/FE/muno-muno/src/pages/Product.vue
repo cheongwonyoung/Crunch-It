@@ -35,7 +35,6 @@
       </div>
     </div>
 
-    <!-- ProductModal -->
     <ProductModal
       v-if="selectedProduct"
       :show="showModal"
@@ -51,6 +50,7 @@ import ProductItem from '@/components/ProductItem.vue';
 import BannerSlider from '@/components/BannerSlider.vue';
 import Category from '@/components/Category.vue';
 import ProductModal from '@/components/Modal.vue';
+import axios from 'axios';
 
 export default {
   name: 'ProductP',
@@ -69,6 +69,7 @@ export default {
       categories: ['예금', '적금', '펀드', '주식', '채권'],
       products: [],
       allProducts: {
+        // UI 확인을 위한 임의 데이터
         예금: [
           {
             id: 1,
@@ -78,6 +79,7 @@ export default {
             interestType: '단리',
             sixMonthRate: '1%',
             twelveMonthRate: '1.3%',
+            category: '적금',
           },
           {
             id: 2,
@@ -87,12 +89,52 @@ export default {
             interestType: '복리',
             sixMonthRate: '1.5%',
             twelveMonthRate: '1.8%',
+            category: '적금',
+          },
+        ],
+        펀드: [
+          {
+            id: 3,
+            bank: '신한',
+            title: '신한 글로벌펀드',
+            fundProduct: '글로벌 주식형 펀드',
+            category: '펀드',
+          },
+        ],
+        채권: [
+          {
+            id: 4,
+            bank: '우리',
+            title: '우리채권',
+            bondRating: 'AAA',
+            couponRate: '2.0%',
+            maturityDate: '2026-12-31',
+            interestPaymentDate: '매년 12월 31일',
+            category: '채권',
+          },
+        ],
+        주식: [
+          {
+            id: 5,
+            bank: '삼성',
+            title: '삼성전자',
+            marketCapWeight: '15%',
+            category: '주식',
           },
         ],
       },
     };
   },
   methods: {
+    async fetchProducts() {
+      try {
+        const response = await axios.get('백엔드_엔드포인트');
+        this.allProducts = response.data;
+        this.updateProducts();
+      } catch (error) {
+        console.error('Error fetching products:', error);
+      }
+    },
     selectCategory(category) {
       this.selectedCategory = category;
       this.updateProducts();
@@ -113,7 +155,7 @@ export default {
     },
   },
   mounted() {
-    this.updateProducts();
+    this.fetchProducts();
   },
 };
 </script>
