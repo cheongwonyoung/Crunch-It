@@ -96,6 +96,8 @@ public class AuthController {
                 .email(dto.getEmail())
                 .password(encodedPassword)
                 .nickname(dto.getNickname())
+                .phoneNumber(dto.getPhone_number())
+                .birth(dto.getBirth())
                 .build();
 
         if(authService.singUp(user)) resultMap.put("code" , 200);

@@ -20,7 +20,7 @@ public class User {
     public String phoneNumber;
     public String email;
     public Integer mdUserId;
-    public String profile_url;
+    public String profileUrl;
     public Integer salary;
 
     public List<Account> accounts;
