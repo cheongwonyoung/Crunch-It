@@ -62,17 +62,17 @@
             <div class="input-title">생년월일</div>
             <input type="date" v-model="selectedDate" placeholder="" class="input-short" />
         </div>
-        <div class="button-container">
-            <button type="button" class="signup-btn" :disabled="isDisabled" @click="signUp">가입하기</button>
-        </div>
+        <buttonA :disabled="isDisabled" @click="signUp"> 가입하기 </buttonA>
     </div>
 </template>
 <script>
     import apiClient from "@/axios";
     import headerX from "@/components/HeaderX.vue";
+    import buttonA from "@/components/ButtonA.vue";
     export default {
         components: {
             headerX,
+            buttonA,
         },
         data() {
             return {
@@ -308,44 +308,6 @@
         align-items: center; /* 수직 중앙 정렬 */
         text-align: center;
         margin-bottom: 12px; /* 입력 필드 간 간격 추가 */
-    }
-
-    .signup-btn {
-        width: 335px;
-        height: 56px;
-        background: #3e8aff;
-        border-radius: 12px;
-        border: none; /* 버튼 기본 테두리 제거 */
-        cursor: pointer; /* 마우스를 올렸을 때 포인터 모양 변경 */
-        font-family: "Pretendard", sans-serif;
-        font-style: normal;
-        font-weight: 600;
-        font-size: 16px;
-        color: #ffffff;
-        display: flex;
-        justify-content: center; /* 수평 중앙 정렬 */
-        align-items: center; /* 수직 중앙 정렬 */
-        text-align: center;
-        margin-bottom: 20px; /* 버튼 아래 간격 추가 */
-    }
-
-    .signup-btn:disabled {
-        width: 335px;
-        height: 56px;
-        background: #cce0ff;
-        border-radius: 12px;
-        border: none; /* 버튼 기본 테두리 제거 */
-        cursor: pointer; /* 마우스를 올렸을 때 포인터 모양 변경 */
-        font-family: "Pretendard", sans-serif;
-        font-style: normal;
-        font-weight: 600;
-        font-size: 16px;
-        color: #ffffff;
-        display: flex;
-        justify-content: center; /* 수평 중앙 정렬 */
-        align-items: center; /* 수직 중앙 정렬 */
-        text-align: center;
-        margin-bottom: 20px; /* 버튼 아래 간격 추가 */
     }
 
     .input-short {
