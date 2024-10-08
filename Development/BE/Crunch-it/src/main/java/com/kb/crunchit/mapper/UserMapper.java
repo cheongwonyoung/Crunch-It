@@ -11,4 +11,6 @@ public interface UserMapper {
     void insertUser(User dto);
 
     void updateUser(User user);
+    void updateUserProfile(User user);
+    String getUserProfile(String email);
 }
