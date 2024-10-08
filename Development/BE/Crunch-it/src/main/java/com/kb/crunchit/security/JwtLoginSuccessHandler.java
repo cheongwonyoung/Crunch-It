@@ -22,7 +22,9 @@ public class JwtLoginSuccessHandler implements AuthenticationSuccessHandler {
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws IOException, ServletException {
         CustomUserDetails principal = (CustomUserDetails) authentication.getPrincipal();
         String email = principal.getUsername();
-        String accessToken = jwtTokenUtil.createAccessToken(email);
+        String nickname = principal.getNickname();
+        Integer userId = principal.getUserId();
+        String accessToken = jwtTokenUtil.createAccessToken(email, nickname, userId);
         response.setHeader("Authorization", "Bearer " + accessToken);
         log.info("LoginSuccessHandler.onAuthenticationSuccess");
     }

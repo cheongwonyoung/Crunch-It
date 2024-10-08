@@ -5,6 +5,10 @@ import PropertyP from '@/pages/Property.vue';
 import CommunityP from '@/pages/Community.vue';
 import LoginP from '@/pages/LoginPage.vue';
 import SignupP from '@/pages/SignUpPage.vue';
+import MyPage from '@/pages/MyPage.vue';
+import MyPageEdit from '@/pages/MyPageEdit.vue';
+import Search from '@/pages/Search.vue';
+import Modal from '@/components/Modal.vue';
 // import apiClient from '@/axios';
 import CommunityP from '@/pages/CommunityPage.vue';
 import PostDetailP from "@/pages/PostDetailPage.vue";
@@ -18,6 +22,10 @@ const routes = [
   { path: '/community', name: 'Community', component: CommunityP },
   { path: '/login', name: 'Login', component: LoginP },
   { path: '/signup', name: 'SignUp', component: SignupP },
+  { path: '/mypage', name: 'MyPage', component: MyPage },
+  { path: '/mypageedit', name: 'MyPageEdit', component: MyPageEdit },
+  { path: '/search', name: 'Search', component: Search },
+  { path: '/modal', name: 'Modal', component: Modal },
   { path: '/community/:id', name: 'PostDetail', component: PostDetailP, props:true },
   { path: '/community/create', name: 'WritePost', component: WritePostP, props:true },
   { path: '/community//modify/:id', name: 'EditPost', component: EditPostP, props:true }
