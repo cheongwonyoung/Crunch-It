@@ -8,6 +8,7 @@ import SignupP from "@/pages/SignUpPage.vue";
 import MyPage from "@/pages/MyPage.vue";
 import MyPageEdit from "@/pages/MyPageEdit.vue";
 import Search from "@/pages/Search.vue";
+import Message from "@/pages/Message.vue";
 import Modal from "@/components/Modal.vue";
 
 const routes = [
@@ -20,6 +21,7 @@ const routes = [
     { path: "/mypage", name: "MyPage", component: MyPage },
     { path: "/mypageedit", name: "MyPageEdit", component: MyPageEdit },
     { path: "/search", name: "Search", component: Search },
+    { path: "/message", name: "Message", component: Message },
     { path: "/modal", name: "Modal", component: Modal },
 ];
 
