@@ -19,7 +19,14 @@ export default {
   },
   data() {
     return {
-      hideRoutes: ['/login', '/signup', '/mypage', '/mypageedit', '/search'],
+      hideRoutes: [
+        '/login',
+        '/signup',
+        '/mypage',
+        '/mypageedit',
+        '/search',
+        '/message',
+      ],
     };
   },
   computed: {
