@@ -62,7 +62,7 @@
             <div class="input-title">생년월일</div>
             <input type="date" v-model="selectedDate" placeholder="" class="input-short" />
         </div>
-        <buttonA :disabled="isDisabled" @click="signUp"> 가입하기 </buttonA>
+        <buttonA :disabled="isDisabled" @onClick="signUp"> 가입하기 </buttonA>
     </div>
 </template>
 <script>
