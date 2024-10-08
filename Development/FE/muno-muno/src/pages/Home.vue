@@ -147,7 +147,7 @@ export default {
 <style scoped>
 .homepage {
   background-color: var(--p70);
-  overflow-y: hidden;
+  overflow: hidden; /* 스크롤을 완전히 숨기기 */
   display: flex;
   flex-direction: column;
   justify-content: space-between;
