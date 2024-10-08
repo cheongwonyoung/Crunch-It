@@ -37,17 +37,17 @@
 
     <insert id="insertUser" parameterType="User">
         insert into user (nickname, password, phone_number, email, birth)
-        values (#{nickname}, #{password}, #{phone_number}, #{email}, #{birth})
+        values (#{nickname}, #{password}, #{phoneNumber}, #{email}, #{birth})
     </insert>
 
     <update id="updateUser" parameterType="User">
         update user
-        set nickname = #{nickname}, birth = #{birth}, phone_number = #{phone_number}
+        set nickname = #{nickname}, birth = #{birth}, phone_number = #{phoneNumber}
         where email = #{email}
     </update>
     <update id="updateUserProfile" parameterType="User">
         update user
-        set profile_url = #{profile_url}
+        set profile_url = #{profileUrl}
         where email = #{email}
     </update>
 

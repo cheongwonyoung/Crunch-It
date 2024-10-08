@@ -54,8 +54,8 @@
                 type="text"
                 class="input-long"
                 placeholder="010-1234-5678"
-                v-model="formattedPhoneNum"
-                @input="formatPhoneNumber"
+                v-model="phoneNum"
+                @input="formatphoneNum"
                 maxlength="13" />
         </div>
         <div class="input-container">
@@ -117,14 +117,6 @@
                 // 비밀번호와 비밀번호 확인이 일치하는지 확인
                 return this.password !== "" && this.passwordCheck !== "" && this.password !== this.passwordCheck;
             },
-            formattedPhoneNum: {
-                get() {
-                    return this.formatAsPhone(this.phoneNum);
-                },
-                set(value) {
-                    this.phoneNum = value.replace(/[^0-9]/g, "").slice(0, 11);
-                },
-            },
             buttonText() {
                 return this.isTimerRunning ? `${Math.floor(this.timeLeft / 60)}:${this.timeLeft % 60}` : "인증번호";
             },
@@ -177,13 +169,15 @@
                         console.log(err);
                     });
             },
-            formatPhoneNumber() {
-                this.phoneNum = this.phoneNum.replace(/[^0-9]/g, ""); // 숫자만 남김
-            },
-            formatAsPhone(value) {
-                if (value.length <= 3) return value; // 3자리까지는 그대로
-                if (value.length <= 7) return `${value.slice(0, 3)}-${value.slice(3)}`; // 000-0000
-                return `${value.slice(0, 3)}-${value.slice(3, 7)}-${value.slice(7, 11)}`; // 000-0000-0000
+            formatphoneNum() {
+                // 입력 형식: 000-0000-0000
+                let phoneNum = this.phoneNum.replace(/[^0-9]/g, ""); // 숫자만 남기기
+                if (phoneNum.length > 3 && phoneNum.length <= 7) {
+                    phoneNum = `${phoneNum.slice(0, 3)}-${phoneNum.slice(3)}`;
+                } else if (phoneNum.length > 7) {
+                    phoneNum = `${phoneNum.slice(0, 3)}-${phoneNum.slice(3, 7)}-${phoneNum.slice(7, 11)}`;
+                }
+                this.phoneNum = phoneNum; // 포맷된 전화번호로 업데이트
             },
             emailCheck() {
                 const params = { email: this.email };
