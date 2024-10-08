@@ -1,18 +1,21 @@
 <template>
   <div class="message-input">
-    <!-- 이미지 첨부 아이콘 -->
-    <img class="picture" src="@/assets/picture.svg" alt="이미지 첨부" />
+    <img class="icon-image" src="@/assets/picture.svg" alt="이미지 첨부" />
 
-    <!-- 메시지 입력창 -->
     <input
       type="text"
       v-model="message"
       placeholder="메시지를 입력하세요..."
       class="input-field"
+      @keyup.enter="sendMessage"
     />
 
-    <!-- 메시지 전송 아이콘 -->
-    <img class="send" src="@/assets/send.svg" alt="전송" @click="sendMessage" />
+    <img
+      class="icon-send"
+      src="@/assets/send.svg"
+      alt="전송"
+      @click="sendMessage"
+    />
   </div>
 </template>
 
@@ -26,9 +29,8 @@ export default {
   methods: {
     sendMessage() {
       if (this.message.trim()) {
-        // 메시지 전송 로직 추가
-        console.log('Message Sent:', this.message);
-        this.message = ''; // 메시지 전송 후 입력창 초기화
+        this.$emit('send', this.message);
+        this.message = '';
       }
     },
   },
@@ -51,12 +53,11 @@ export default {
 .icon-image {
   width: 24px;
   height: 24px;
-  margin-right: 8px;
   cursor: pointer;
 }
 
 .input-field {
-  width: 276px;
+  width: 278px;
   height: 40px;
   padding: 0 16px;
   border: none;
@@ -66,12 +67,12 @@ export default {
   outline: none;
   margin-right: 8px;
   margin: 0 10px 0 8px;
+  box-sizing: border-box;
 }
 
 .icon-send {
   width: 24px;
   height: 24px;
   cursor: pointer;
-  margin-left: 20px;
 }
 </style>
