@@ -9,6 +9,7 @@ import com.kb.crunchit.entity.Board;
 import com.kb.crunchit.mapper.BoardMapper;
 import com.kb.crunchit.mapper.LikeMapper;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -17,7 +18,22 @@ import java.util.List;
 @RequiredArgsConstructor
 public class LikeService {
 
+    @Autowired
     private final LikeMapper likeMapper;
+
+    public boolean toggleLike(LikeRequestDTO likeRequestDTO){
+        Like existingLike=likeMapper.findLikeByBoardIdAndUserId(likeRequestDTO.getBoardId(),likeRequestDTO.getUserId());
+
+        if(existingLike!=null){
+            //이미 해당 보드에 좋아요가 존재하면 삭제 - 좋아요 취소
+            likeMapper.removeLike(likeRequestDTO.getBoardId(),likeRequestDTO.getUserId());
+            return false;
+        } else {
+            likeMapper.addLike(likeRequestDTO);
+            return true;
+        }
+    }
+
 
     public int getLikeById(int boardId){
 
@@ -33,9 +49,10 @@ public class LikeService {
         likeMapper.addLike(likeRequestDTO);
     }
 
-    public void removeLike(int likeId){
-        likeMapper.removeLike(likeId);
+    public void removeLike(int boardId, int userId){
+        likeMapper.removeLike(boardId,userId);
     }
+
 
 
 }

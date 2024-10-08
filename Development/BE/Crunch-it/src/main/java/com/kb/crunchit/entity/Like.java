@@ -7,5 +7,5 @@ public class Like {
     public int likeId;
     public int boardId;
     public int writerId;
-    public int likeUserId;
+    public int UserId;
 }

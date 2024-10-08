@@ -26,8 +26,9 @@
     </div>
 
     <div class="post-likes" @click="likePost">
-      <span>❤️ {{ post.likes }}</span>
+      <span :class="likedByUser ? 'liked' : ''">❤️ {{ post.likes }}</span>
     </div>
+
 
 
     <!-- 댓글 리스트 및 수정/삭제 기능 추가 -->
@@ -110,7 +111,7 @@ export default {
           console.error('Invalid user_id format:', decodedToken.user_id);
         }
 
-        userId = decodedToken?.user_id || decodedToken?.userId;
+        // userId = decodedToken?.user_id || decodedToken?.userId;
         nickname=decodedToken?.nickname;
         console.log("decoded Token", decodedToken);
 
@@ -239,18 +240,30 @@ export default {
         }
       }
     };
+    const likedByUser = ref(false);
+
     const likePost = async () => {
       try {
-        await apiClient.post(`${LIKE_API_URL}`,{
-          writerId: post.value.writerId,  // 글의 데이터를 가져올 때 설정된 writer_id로
-          boardId:postId,
-          userId: userId, // 로그인된 사용자 ID로 수정해야
-        });
-        post.value.likes += 1; // Increment the likes in the frontend for immediate feedback
+        const payload = {
+          boardId: postId,
+          writerId: post.value.writerId,
+          userId,
+        };
+
+        if(likedByUser.value){
+          await apiClient.post(`${LIKE_API_URL}`,payload);
+          likedByUser.value=false;
+          post.value.likes-=1;
+        } else {
+          const response=await apiClient.post(`${LIKE_API_URL}`, payload);
+          likedByUser.value=response.data;
+          post.value.likes+=1;
+        }
       } catch (error) {
         console.error('Error liking the post:', error);
       }
     };
+
 
     onMounted(fetchPostAndComments);
 
@@ -353,6 +366,10 @@ export default {
   font-size: 16px;
   color: #555;
   margin-bottom: 20px;
+}
+
+.liked {
+  color: red;
 }
 
 .comment-input {

@@ -10,6 +10,12 @@
         WHERE board_id=#{boardId}
     </select>
 
+    <select id="findLikeByBoardIdAndUserId" resultType="Like">
+        SELECT *
+        FROM board_likes
+        WHERE board_id=#{boardId} AND user_id=#{userId}
+    </select>
+
     <insert id="addLike" parameterType="LikeRequest">
         INSERT INTO board_likes(board_id,writer_id,user_id)
         VALUES (#{boardId},#{writerId},#{userId})
@@ -18,7 +24,7 @@
     <delete id="removeLike" parameterType="int">
         DELETE
         FROM board_likes
-        WHERE like_id=#{likeId}
+        WHERE board_id=#{boardId} AND user_id=#{userId}
     </delete>
 
 </mapper>
