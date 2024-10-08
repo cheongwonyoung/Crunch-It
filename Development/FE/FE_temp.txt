@@ -1,5 +1,6 @@
 npm install -g @vue/cli
 npm install axios
+npm install sockjs-client webstomp-client
 cd muno-muno
 이수 전용: cd Development/FE/muno-muno
 npm run serve
