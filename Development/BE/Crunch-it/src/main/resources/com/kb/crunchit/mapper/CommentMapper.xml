@@ -43,9 +43,14 @@
         WHERE comment_id=#{commentId}
     </update>
 
-
     <delete id="deleteComment" parameterType="int">
         DELETE FROM comment WHERE comment_id=#{commentId}
     </delete>
+
+    <select id="getBoardWriter" parameterType="int" resultType="int">
+        SELECT writer_id AS writerId
+        FROM board
+        WHERE board_id=#{boardId}
+    </select>
 
 </mapper>

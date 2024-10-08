@@ -7,7 +7,7 @@ import lombok.Setter;
 @Setter
 public class CommentRequestDTO {
     private int boardId;
-    private int writerId;  //email
+    private int writerId;
     private int commentId;
     private String content;
 }

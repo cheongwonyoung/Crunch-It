@@ -1,5 +1,6 @@
 package com.kb.crunchit.service;
 
+import com.kb.crunchit.controller.NotificationController;
 import com.kb.crunchit.dto.request.CommentRequestDTO;
 import com.kb.crunchit.mapper.CommentMapper;
 import com.kb.crunchit.entity.Comment;
@@ -14,6 +15,7 @@ import java.util.*;
 public class CommentService {
 
     private final CommentMapper commentMapper;
+    private final NotificationController notificationController;
 
     public Comment getCommentWithReply(int commentId){
         //댓글 조회
@@ -22,9 +24,12 @@ public class CommentService {
         return comment;
     }
 
-
     public void createComment(CommentRequestDTO commentRequestDTO){
         commentMapper.insertComment(commentRequestDTO);
+        int boardId=commentRequestDTO.getBoardId();
+        int boardWriterInt=commentMapper.getBoardWriter(boardId);
+        String boardWriter=String.valueOf(boardWriterInt);
+        notificationController.notifyUser(boardWriter,"새로운 댓글이 달렸습니다.");
     }
 
     public List<Comment> getAllComments(int boardId){

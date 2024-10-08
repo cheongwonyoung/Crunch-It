@@ -44,4 +44,6 @@
         DELETE FROM reply WHERE reply_id=#{replyId}
     </delete>
 
+
+
 </mapper>
