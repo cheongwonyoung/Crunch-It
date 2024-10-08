@@ -30,7 +30,7 @@
 
 <script>
 import { ref } from 'vue';
-import axios from 'axios';
+import apiClient from '@/axios';
 import { useRouter } from 'vue-router';
 
 export default {
@@ -43,16 +43,53 @@ export default {
 
     const categories = ['지출', '예적금', '펀드', '주식', '채권'];
 
+    const token=localStorage.getItem('JwtToken');
+    let userId=null;
+    //let nickname='';
+
+    //decode
+    //decode
+    if (token) {
+      try {
+        const base64Url = token.split('.')[1];
+        const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
+        const jsonPayload = decodeURIComponent(
+            atob(base64)
+                .split('')
+                .map(c => `%${('00' + c.charCodeAt(0).toString(16)).slice(-2)}`)
+                .join('')
+        );
+        const decodedToken = JSON.parse(jsonPayload);
+
+        // user_id가 숫자인지 확인하고, 문자열일 경우 정수로 변환
+        if (!isNaN(decodedToken.user_id)) {
+          userId = parseInt(decodedToken.user_id, 10);
+        } else {
+          console.error('Invalid user_id format:', decodedToken.user_id);
+        }
+
+        userId = decodedToken?.user_id || decodedToken?.userId;
+        //nickname=decodedToken?.nickname;
+        //console.log("decoded Token", decodedToken);
+
+      } catch (error) {
+        console.error('Error decoding token manually:', error);
+      }
+    } else {
+      console.error('No JWT token found in localStorage');
+    }
+
     const submitPost = async () => {
       const postData = {
         title: title.value,
         category: category.value,
         content: content.value,
-        writerId: 1,
+        writerId: userId,
       };
+      console.log(postData);
 
       try {
-        await axios.post('http://localhost:8080/community/create', postData);
+        await apiClient.post('http://localhost:8080/community/create', postData);
         router.push('/community');
       } catch (error) {
         console.error('게시글 작성 중 오류 발생:', error);

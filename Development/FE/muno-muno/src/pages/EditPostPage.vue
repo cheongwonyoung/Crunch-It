@@ -25,7 +25,7 @@
 
 <script>
 import { ref, onMounted } from 'vue';
-import axios from 'axios';
+import apiClient from '../axios';
 import { useRoute, useRouter } from 'vue-router';
 
 export default {
@@ -44,7 +44,7 @@ export default {
     // 게시글 정보 가져오기
     const fetchPost = async () => {
       try {
-        const response = await axios.get(`http://localhost:8080/community/${postId}`);
+        const response = await apiClient.get(`http://localhost:8080/community/${postId}`);
         editTitle.value = response.data.title;
         editContent.value = response.data.content;
         category.value = response.data.category; // 카테고리 초기화
@@ -56,7 +56,7 @@ export default {
     // 게시글 수정하기
     const submitEdit = async () => {
       try {
-        await axios.put(`http://localhost:8080/community/modify/${postId}`, {
+        await apiClient.put(`http://localhost:8080/community/${postId}/modify`, {
           title: editTitle.value,
           category: category.value, // 카테고리 포함
           content: editContent.value

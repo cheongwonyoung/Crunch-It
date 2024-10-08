@@ -19,6 +19,7 @@
           <!-- 수정 중이 아닐 때 일반 댓글 표시 -->
           <div v-else>
             <div class="comment-header">
+<!--              writerId가 아닌 닉네임이 뜨도록 해야함-->
               <span class="writer">{{ comment.writerId }}</span>
 
               <div class="settings-menu">

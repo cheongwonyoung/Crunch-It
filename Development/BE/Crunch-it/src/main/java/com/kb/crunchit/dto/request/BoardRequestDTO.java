@@ -11,7 +11,7 @@ import lombok.Setter;
 public class BoardRequestDTO {
 
     private int boardId;
-    private int writerId;
+    private int writerId;   //email
     private String title;
     private String content;
     private String category;

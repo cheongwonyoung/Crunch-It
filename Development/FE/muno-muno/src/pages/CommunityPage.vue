@@ -48,7 +48,8 @@
 
 <script>
 import { ref, computed, onMounted } from 'vue';
-import axios from 'axios';
+//import axios from 'axios';
+import apiClient from '../axios';
 import { useRouter } from 'vue-router';
 
 export default {
@@ -69,7 +70,7 @@ export default {
 
     const fetchPosts = async () => {
       try {
-        const response = await axios.get('http://localhost:8080/community');
+        const response = await apiClient.get('http://localhost:8080/community');
         posts.value = response.data;
       } catch (error) {
         console.error('서버로부터 데이터를 받아오는 중 오류 발생:', error);

@@ -16,7 +16,7 @@
 
       <div class="post-meta">
         <span class="category">{{ post.category }}</span> |
-        <span class="user">{{ post.writerId }}</span> |
+        <span class="user">{{ nickname }}</span> |
         <span class="date">{{ formattedDate }}</span>
       </div>
     </header>
@@ -54,7 +54,8 @@
 
 <script>
 import { ref, computed, onMounted } from 'vue';
-import axios from 'axios';
+import apiClient from '../axios';
+//import axios from 'axios';
 import { useRoute, useRouter } from 'vue-router';
 import CommentList from "@/components/CommentList.vue";
 
@@ -66,9 +67,9 @@ export default {
     const router = useRouter();
     const postId = route.params.id;
     const API_URL = `http://localhost:8080/community/${postId}`; // API 경로 상수화
-    const REPLY_API_URL = `http://localhost:8080/api/replies`; // 답글 API 경로 상수화
-    const COMMENT_API_URL = `http://localhost:8080/api/comments`; // 댓글 API 경로 상수화
-    const LIKE_API_URL = `http://localhost:8080/api/likes`; // 답글 API 경로 상수화
+    const REPLY_API_URL = `http://localhost:8080/apiClient/replies`; // 답글 API 경로 상수화
+    const COMMENT_API_URL = `http://localhost:8080/apiClient/comments`; // 댓글 API 경로 상수화
+    const LIKE_API_URL = `http://localhost:8080/apiClient/likes`; // 답글 API 경로 상수화
 
     const post = ref({
       title: '',
@@ -85,6 +86,41 @@ export default {
     const newComment = ref('');
     const showSettingsMenu = ref(false);
 
+    const token=localStorage.getItem('JwtToken');
+    let userId=null;
+    let nickname='';
+
+    //decode
+    if (token) {
+      try {
+        const base64Url = token.split('.')[1];
+        const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
+        const jsonPayload = decodeURIComponent(
+            atob(base64)
+                .split('')
+                .map(c => `%${('00' + c.charCodeAt(0).toString(16)).slice(-2)}`)
+                .join('')
+        );
+        const decodedToken = JSON.parse(jsonPayload);
+
+        // user_id가 숫자인지 확인하고, 문자열일 경우 정수로 변환
+        if (!isNaN(decodedToken.user_id)) {
+          userId = parseInt(decodedToken.user_id, 10);
+        } else {
+          console.error('Invalid user_id format:', decodedToken.user_id);
+        }
+
+        userId = decodedToken?.user_id || decodedToken?.userId;
+        nickname=decodedToken?.nickname;
+        console.log("decoded Token", decodedToken);
+
+      } catch (error) {
+        console.error('Error decoding token manually:', error);
+      }
+    } else {
+      console.error('No JWT token found in localStorage');
+    }
+
     const formatDate = (dateArray) => {
       if (!dateArray || dateArray.length < 3) return 'No date';
       const [year, month, day] = dateArray;
@@ -97,7 +133,7 @@ export default {
 
     const fetchData = async (url, callback) => {
       try {
-        const response = await axios.get(url);
+        const response = await apiClient.get(url);
         callback(response.data);
       } catch (error) {
         console.error('Error fetching data:', error);
@@ -121,7 +157,7 @@ export default {
     const deletePost = async () => {
       if (confirm("정말 삭제하시겠습니까?")) {
         try {
-          await axios.delete(`${API_URL}/delete`);
+          await apiClient.delete(`${API_URL}/delete`);
           alert('게시글이 삭제되었습니다.');
           router.push('/community');
         } catch (error) {
@@ -134,11 +170,15 @@ export default {
       if (!newComment.value.trim()) return;
 
       try {
-        await axios.post(`${COMMENT_API_URL}/create/${postId}`, {
+        const payload = {
           content: newComment.value,
-          writerId: 1, // 실제 로그인된 사용자 ID 사용해야함
-          boardId: postId
-        });
+          writerId: userId,
+          boardId: postId,
+        };
+        console.log(payload);
+
+        await apiClient.post(`${COMMENT_API_URL}/create/${postId}`, payload);
+
         newComment.value = '';
         fetchPostAndComments();
       } catch (error) {
@@ -146,9 +186,10 @@ export default {
       }
     };
 
+
     const handleUpdateComment = async ({commentId, content}) => {
       try {
-        await axios.put(`${COMMENT_API_URL}/modify/${commentId}`, {content});
+        await apiClient.put(`${COMMENT_API_URL}/modify/${commentId}`, {content});
         fetchPostAndComments();
       } catch (error) {
         console.error('Error updating comment:', error);
@@ -158,17 +199,18 @@ export default {
     const handleDeleteComment = async (commentId) => {
       if (confirm("정말 이 댓글을 삭제하시겠습니까?")) {
         try {
-          await axios.delete(`${COMMENT_API_URL}/delete/${commentId}`);
+          await apiClient.delete(`${COMMENT_API_URL}/delete/${commentId}`);
           fetchPostAndComments();
         } catch (error) {
           console.error('Error deleting comment:', error);
         }
       }
     };
+
     const submitReply = async ({ commentId, content }) => {
       try {
-        const response = await axios.post(`${REPLY_API_URL}/${commentId}`, {
-          writerId: 1, // 로그인된 사용자 ID로 수정해야
+        const response = await apiClient.post(`${REPLY_API_URL}/${commentId}`, {
+          writerId: userId, // 로그인된 사용자 ID로 수정해야
           content: content,
           commentId:commentId
         });
@@ -180,7 +222,7 @@ export default {
     };
     const handleUpdateReply = async ({ replyId, content }) => {
       try {
-        await axios.put(`${REPLY_API_URL}/modify/${replyId}`, { content });
+        await apiClient.put(`${REPLY_API_URL}/modify/${replyId}`, { content });
         fetchPostAndComments(); // 데이터를 다시 불러와서 갱신
       } catch (error) {
         console.error('답글 수정 중 오류 발생:', error);
@@ -190,7 +232,7 @@ export default {
     const handleDeleteReply = async (replyId) => {
       if (confirm('정말 이 답글을 삭제하시겠습니까?')) {
         try {
-          await axios.delete(`${REPLY_API_URL}/delete/${replyId}`);
+          await apiClient.delete(`${REPLY_API_URL}/delete/${replyId}`);
           fetchPostAndComments();
         } catch (error) {
           console.error('답글 삭제 중 오류 발생:', error);
@@ -199,10 +241,10 @@ export default {
     };
     const likePost = async () => {
       try {
-        await axios.post(`${LIKE_API_URL}`,{
+        await apiClient.post(`${LIKE_API_URL}`,{
           writerId: post.value.writerId,  // 글의 데이터를 가져올 때 설정된 writer_id로
           boardId:postId,
-          userId: 1, // 로그인된 사용자 ID로 수정해야
+          userId: userId, // 로그인된 사용자 ID로 수정해야
         });
         post.value.likes += 1; // Increment the likes in the frontend for immediate feedback
       } catch (error) {
@@ -228,7 +270,8 @@ export default {
       handleDeleteComment,
       handleUpdateReply,
       handleDeleteReply,
-      likePost
+      likePost,
+      nickname
     };
   },
 };

@@ -44,13 +44,13 @@ public class BoardController {
         return ResponseEntity.ok(boardList);
     }
 
-    @PutMapping("/modify/{boardId}")
+    @PutMapping("/{boardId}/modify")
     public ResponseEntity<String> updatePost(@PathVariable int boardId,@RequestBody BoardRequestDTO boardRequestDTO){
         boardService.updatePost(boardId,boardRequestDTO);
         return ResponseEntity.ok("게시글 수정 성공");
     }
 
-    @DeleteMapping("/delete/{boardId}")
+    @DeleteMapping("/{boardId}/delete")
     public ResponseEntity<String> deletePost(@PathVariable int boardId){
         boardService.deletePost(boardId);
         return ResponseEntity.ok("게시글 삭제 성공");

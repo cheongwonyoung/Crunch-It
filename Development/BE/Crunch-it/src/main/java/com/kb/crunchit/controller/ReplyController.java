@@ -10,7 +10,7 @@ import com.kb.crunchit.service.ReplyService;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/replies")
+@RequestMapping("/apiClient/replies")
 public class ReplyController
 {
 

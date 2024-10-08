@@ -12,7 +12,7 @@ import com.kb.crunchit.entity.Board;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/likes")
+@RequestMapping("/apiClient/likes")
 public class LikeController {
 
     @Autowired
