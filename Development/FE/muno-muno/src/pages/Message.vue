@@ -92,26 +92,60 @@ export default {
       }
     },
     handleSendImage(file) {
+      const MAX_WIDTH = 800; // 최대 너비
+      const MAX_HEIGHT = 800; // 최대 높이
+      const QUALITY = 0.7; // JPEG 압축 품질 (0에서 1 사이)
+
       const reader = new FileReader();
       reader.onload = (event) => {
-        const base64Image = event.target.result;
-        const message = {
-          sender: this.nickname,
-          content: '', // 이미지 전송 메시지의 경우 텍스트 비우기
-          time: new Date().toLocaleTimeString('ko-KR', {
-            hour: '2-digit',
-            minute: '2-digit',
-          }),
-          roomId: this.currentRoomId,
-          image: base64Image, // Base64 인코딩된 이미지
+        const img = new Image();
+        img.src = event.target.result;
+
+        img.onload = () => {
+          const canvas = document.createElement("canvas");
+          let width = img.width;
+          let height = img.height;
+
+          // 너비와 높이 조정
+          if (width > MAX_WIDTH || height > MAX_HEIGHT) {
+            if (width > height) {
+              height = Math.round((height * MAX_WIDTH) / width);
+              width = MAX_WIDTH;
+            } else {
+              width = Math.round((width * MAX_HEIGHT) / height);
+              height = MAX_HEIGHT;
+            }
+          }
+
+          // Canvas에 이미지 그리기 및 압축
+          canvas.width = width;
+          canvas.height = height;
+          const ctx = canvas.getContext("2d");
+          ctx.drawImage(img, 0, 0, width, height);
+
+          // Base64 인코딩된 이미지 생성
+          const base64Image = canvas.toDataURL("image/jpeg", QUALITY);
+
+          // WebSocket을 통해 이미지 전송
+          const message = {
+            sender: this.nickname,
+            content: '', // 이미지 전송 메시지의 경우 텍스트 비우기
+            time: new Date().toLocaleTimeString('ko-KR', {
+              hour: '2-digit',
+              minute: '2-digit',
+            }),
+            roomId: this.currentRoomId,
+            image: base64Image, // 압축된 Base64 인코딩 이미지
+          };
+
+          this.stompClient.send(
+            `/topic/chat/${this.currentRoomId}`,
+            {},
+            JSON.stringify(message)
+          );
+          this.messages.push(message);
+          this.scrollToBottom();
         };
-        this.stompClient.send(
-          `/topic/chat/${this.currentRoomId}`,
-          {},
-          JSON.stringify(message)
-        );
-        this.messages.push(message);
-        this.scrollToBottom();
       };
       reader.readAsDataURL(file);
     },
