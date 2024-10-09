@@ -26,6 +26,8 @@ export default {
         '/mypageedit',
         '/search',
         '/message',
+        '/mydata',
+        '/incomesetting',
       ],
     };
   },
