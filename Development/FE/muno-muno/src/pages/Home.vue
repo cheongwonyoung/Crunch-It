@@ -48,7 +48,7 @@ import OctopusSelection from '@/components/OctopusSelection.vue';
 import TabBar from '@/components/TabBar.vue';
 
 export default {
-  name: 'HomePage',
+  name: 'HomeP',
   components: {
     ExpenseContainer,
     OctopusLevel,
@@ -147,14 +147,13 @@ export default {
 <style scoped>
 .homepage {
   background-color: var(--p70);
-  overflow-y: hidden;
+  overflow: hidden;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  height: 100vh;
+  height: 570px;
 }
 
-/* Status Bar*/
 .status-bar {
   background-color: var(--p70);
   height: 44px;

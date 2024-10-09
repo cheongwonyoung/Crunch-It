@@ -6,7 +6,7 @@
         <button class="button" @click="login">로그인</button>
 
         <div class="link-container">
-            <router-link class="router-link" to="/findID">아이디 / 비밀번호 찾기</router-link>
+            <router-link class="router-link" to="/findPassword">아이디 / 비밀번호 찾기</router-link>
             <span>|</span>
             <router-link class="router-link" to="/signup">회원가입</router-link>
         </div>

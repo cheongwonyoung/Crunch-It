@@ -37,6 +37,8 @@ export default {
   z-index: 1000;
   box-sizing: border-box;
   font-size: 22px;
+
+  background-color: var(--gr100);
 }
 
 .header-text {

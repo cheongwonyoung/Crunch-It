@@ -14,11 +14,12 @@ public class MypageService {
     public UserDto getUserInfo(String email){
         User user = userMapper.findByEmail(email);
         return UserDto.builder()
+                .nickname(user.getNickname())
                 .user_id(user.getUserId())
                 .email(user.getEmail())
                 .birth(user.getBirth())
                 .phone_number(user.getPhoneNumber())
-                .profile_url(user.getProfile_url())
+                .profile_url(user.getProfileUrl())
                 .build();
     }
 
@@ -26,6 +27,16 @@ public class MypageService {
         userMapper.updateUser(User.builder()
                         .email(dto.getEmail())
                         .nickname(dto.getNickname())
+                        .birth(dto.getBirth())
+                        .phoneNumber(dto.getPhone_number())
                 .build());
+    }
+
+    public String getUserProfile(String email){
+        return userMapper.getUserProfile(email);
+    }
+
+    public void updateUserProfile(User user){
+        userMapper.updateUserProfile(user);
     }
 }
