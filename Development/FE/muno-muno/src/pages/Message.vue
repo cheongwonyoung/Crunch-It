@@ -8,7 +8,7 @@
       <div v-for="message in messages" :key="message.id">
         <!-- 사용자 메시지 -->
         <MessageUser
-          v-if="message.sender === 'User'"
+          v-if="message.sender === this.nickname"
           :message="message.content"
           :time="message.time"
         />
@@ -33,9 +33,21 @@ import HeaderB from '@/components/HeaderB.vue';
 import MessageUser from '@/components/MessageUser.vue';
 import MessageBot from '@/components/MessageOther.vue';
 import MessageInput from '@/components/MessageInput.vue';
-import SockJS from 'sockjs-client';
-import Stomp from 'webstomp-client';
+// import SockJS from 'sockjs-client';
+// import Stomp from 'webstomp-client';
+function decodeJwt(token) {
+  if (!token) return null;
 
+  const base64Url = token.split('.')[1];
+  const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
+  const jsonPayload = decodeURIComponent(
+    atob(base64)
+      .split('')
+      .map((c) => '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2))
+      .join('')
+  );
+  return JSON.parse(jsonPayload);
+}
 export default {
   name: 'MessageP',
   components: {
@@ -49,21 +61,24 @@ export default {
       stompClient: null,
       // 임의로 추가한 메시지 데이터
       messages: [
-        {
-          id: 1,
-          sender: 'User',
-          content: '안녕하세요!',
-          time: '오후 10:00',
-        },
-        {
-          id: 2,
-          sender: 'Bot',
-          content: '안녕하세요! 반갑습니다.',
-          time: '오후 10:01',
-        },
+        // {
+        //   id: 1,
+        //   sender: '장태용',
+        //   content: '안녕하세요!',
+        //   time: '오후 10:00',
+        // },
+        // {
+        //   id: 2,
+        //   sender: 'Bot',
+        //   content: '안녕하세요! 반갑습니다.',
+        //   time: '오후 10:01',
+        // }, 
+   
       ],
       currentRoomId: 2,
       currentRoomName: '거지방', // 백엔드에서 값을 받으면 여기에 표시되도록 함
+      user: null,
+      nickname:""
     };
   },
   methods: {
@@ -73,7 +88,7 @@ export default {
     handleSendMessage(messageContent) {
       if (messageContent.trim() !== '') {
         const message = {
-          sender: 'User',
+          sender: this.nickname,
           content: messageContent,
           time: new Date().toLocaleTimeString('ko-KR', {
             hour: '2-digit',
@@ -91,8 +106,8 @@ export default {
       }
     },
     connect() {
-      const socket = new SockJS('http://localhost:8080/ws');
-      this.stompClient = Stomp.over(socket);
+      const socket = new window.SockJS('http://localhost:8080/ws');
+      this.stompClient = window.Stomp.over(socket);
       this.stompClient.connect({}, this.onConnected, this.onError);
     },
     onConnected() {
@@ -108,6 +123,7 @@ export default {
     },
     onMessageReceived(payload) {
       const message = JSON.parse(payload.body);
+      if(message.sender===this.nickname) return;
       this.messages.push({
         ...message,
         time: new Date().toLocaleTimeString('ko-KR', {
@@ -125,6 +141,12 @@ export default {
     },
   },
   mounted() {
+    const token = localStorage.getItem('JwtToken');
+
+    this.user =  decodeJwt(token);
+    
+    console.log("nickname= " +this.user.nickname);
+    this.nickname = this.user.nickname;
     this.connect();
     window.addEventListener('resize', this.handleResize);
   },
