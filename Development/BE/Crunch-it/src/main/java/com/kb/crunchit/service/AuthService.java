@@ -40,6 +40,16 @@ public class AuthService {
         return true;
     }
 
+    public boolean changePassword(User user){
+        try{
+            userMapper.updatePassword(user);
+            return true;
+        }catch(Exception e){
+            log.error(e.toString());
+            return false;
+        }
+    }
+
     public void sendCodeToEmail(String toEmail){
         String title = "CrunchIT 인증번호";
         String authCode = this.createCode();
