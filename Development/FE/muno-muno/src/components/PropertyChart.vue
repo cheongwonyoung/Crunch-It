@@ -1,109 +1,115 @@
 <template>
-  <!-- 차트 박스를 감싸는 컨테이너. 크기와 테두리를 정의 -->
-  <div class="chart-box">
-    <!-- SVG 정의, width와 height는 외부에서 받아옴, viewBox로 좌표계를 설정 -->
-    <svg :width="width" :height="height" viewBox="0 0 140 140">
-      <defs>
-        <!-- 방사형 그래디언트 정의, 하늘색에서 점점 짙어지는 색상 변화를 설정 -->
-        <radialGradient
-          id="skyBlueGradient"
-          cx="50%"
-          cy="50%"
-          r="50%"
-          fx="50%"
-          fy="50%"
-        >
-          <!-- 중심에서부터 바깥쪽으로 색상이 변화하는 방식 정의 -->
-          <stop offset="0%" stop-color="#C1DAFF" stop-opacity="0.9" />
-          <stop offset="70%" stop-color="var(--p10)" stop-opacity="0.7" />
-          <stop offset="100%" stop-color="var(--p10)" stop-opacity="0.5" />
-        </radialGradient>
+  <div class="chart-container">
+    <!-- 차트 박스를 감싸는 컨테이너. 크기와 테두리를 정의 -->
+    <div class="chart-box">
+      <!-- SVG 정의, width와 height는 외부에서 받아옴, viewBox를 세로로 확장 -->
+      <svg :width="width" :height="height" viewBox="0 0 140 150">
+        <defs>
+          <!-- 방사형 그래디언트 정의, 하늘색에서 점점 짙어지는 색상 변화를 설정 -->
+          <radialGradient
+            id="skyBlueGradient"
+            cx="50%"
+            cy="50%"
+            r="50%"
+            fx="50%"
+            fy="50%"
+          >
+            <!-- 중심에서부터 바깥쪽으로 색상이 변화하는 방식 정의 -->
+            <stop offset="0%" stop-color="#C1DAFF" stop-opacity="0.3" />
+            <stop offset="30%" stop-color="var(--p60)" stop-opacity="0.7" />
+            <stop offset="70%" stop-color="var(--p30)" stop-opacity="0.7" />
+            <stop offset="80%" stop-color="var(--p20)" stop-opacity="0.5" />
+            <stop offset="100%" stop-color="var(--p10)" stop-opacity="0.5" />
+          </radialGradient>
 
-        <!-- 마스크 정의 (전달 기준 데이터에 사용됨) -->
-        <mask id="previousLevelMask">
-          <!-- 이전 달 데이터용 섹션 그리기 -->
-          <g v-for="(section, index) in previousSections" :key="index">
-            <path
-              v-for="(level, levelIndex) in 6"
-              :key="`${index}-${levelIndex}`"
-              :d="calculatePath(index, levelIndex, 1.02)"
-              :fill="levelIndex < section.level ? 'white' : 'black'"
-            />
-          </g>
-        </mask>
+          <!-- 마스크 정의 (전달 기준 데이터에 사용됨) -->
+          <mask id="previousLevelMask">
+            <!-- 이전 달 데이터용 섹션 그리기 -->
+            <g v-for="(section, index) in previousSections" :key="index">
+              <path
+                v-for="(level, levelIndex) in 6"
+                :key="`${index}-${levelIndex}`"
+                :d="calculatePath(index, levelIndex, 1.02)"
+                :fill="levelIndex < section.level ? 'white' : 'black'"
+              />
+            </g>
+          </mask>
 
-        <!-- 현재 달 기준 데이터용 마스크 -->
-        <mask id="currentLevelMask">
-          <!-- 현재 달 데이터용 섹션 그리기 -->
-          <g v-for="(section, index) in sections" :key="index">
-            <path
-              v-for="(level, levelIndex) in 6"
-              :key="`${index}-${levelIndex}`"
-              :d="calculatePath(index, levelIndex, 1.02)"
-              :fill="levelIndex < section.level ? 'white' : 'black'"
-            />
-          </g>
-        </mask>
-      </defs>
+          <!-- 현재 달 기준 데이터용 마스크 -->
+          <mask id="currentLevelMask">
+            <!-- 현재 달 데이터용 섹션 그리기 -->
+            <g v-for="(section, index) in sections" :key="index">
+              <path
+                v-for="(level, levelIndex) in 6"
+                :key="`${index}-${levelIndex}`"
+                :d="calculatePath(index, levelIndex, 1.02)"
+                :fill="levelIndex < section.level ? 'white' : 'black'"
+              />
+            </g>
+          </mask>
+        </defs>
 
-      <!-- 점선 그리드 그리기: 차트의 각 레벨을 구분하는 원형 라인 -->
-      <g v-for="levelIndex in 6" :key="`grid-${levelIndex}`">
+        <!-- 점선 그리드 그리기: 차트의 각 레벨을 구분하는 원형 라인 -->
+        <g v-for="levelIndex in 6" :key="`grid-${levelIndex}`">
+          <circle
+            cx="70"
+            cy="70"
+            :r="levelIndex * 10"
+            fill="none"
+            :stroke="levelIndex === maxLevel ? 'var(--gr50)' : 'var(--gr60)'"
+            stroke-width="0.5"
+            stroke-dasharray="1,1"
+          />
+        </g>
+
+        <!-- 방사형 차트의 기준선을 표시: 차트의 각 섹션 경계선 -->
+        <g v-for="(section, index) in sections" :key="`lines-${index}`">
+          <path
+            :d="calculateLinePath(index)"
+            fill="none"
+            stroke="var(--gr60)"
+            stroke-width="0.5"
+            stroke-dasharray="1,1"
+          />
+        </g>
+
+        <!-- 전달 기준 데이터 (회색 부분) -->
         <circle
           cx="70"
           cy="70"
-          :r="levelIndex * 10"
-          fill="none"
-          :stroke="levelIndex === maxLevel ? 'var(--gr50)' : 'var(--gr60)'"
-          stroke-width="0.5"
-          stroke-dasharray="1,1"
+          r="60"
+          fill="var(--gr70)"
+          fill-opacity="0.3"
+          mask="url(#previousLevelMask)"
         />
-      </g>
 
-      <!-- 방사형 차트의 기준선을 표시: 차트의 각 섹션 경계선 -->
-      <g v-for="(section, index) in sections" :key="`lines-${index}`">
-        <path
-          :d="calculateLinePath(index)"
-          fill="none"
-          stroke="var(--gr60)"
-          stroke-width="0.5"
-          stroke-dasharray="1,1"
+        <!-- 이번 달 기준 데이터 (하늘색 부분) -->
+        <circle
+          cx="70"
+          cy="70"
+          r="60"
+          fill="url(#skyBlueGradient)"
+          mask="url(#currentLevelMask)"
         />
-      </g>
 
-      <!-- 전달 기준 데이터 (회색 부분) -->
-      <circle
-        cx="70"
-        cy="70"
-        r="60"
-        fill="var(--gr70)"
-        fill-opacity="0.3"
-        mask="url(#previousLevelMask)"
-      />
-
-      <!-- 이번 달 기준 데이터 (하늘색 부분) -->
-      <circle
-        cx="70"
-        cy="70"
-        r="60"
-        fill="url(#skyBlueGradient)"
-        mask="url(#currentLevelMask)"
-      />
-
-      <!-- 차트 라벨 (예적금, 주식 등 항목) -->
-      <g v-for="(label, index) in labels" :key="`label-${index}`">
-        <text
-          :x="calculateLabelPosition(index).x"
-          :y="calculateLabelPosition(index).y"
-          text-anchor="middle"
-          font-size="6"
-          :fill="sections[index].level === maxLevel ? '#000000' : 'var(--gr50)'"
-          font-weight="bold"
-        >
-          <!-- 라벨 표시 -->
-          {{ label }}
-        </text>
-      </g>
-    </svg>
+        <!-- 차트 라벨 (예적금, 주식 등 항목) -->
+        <g v-for="(label, index) in labels" :key="`label-${index}`">
+          <text
+            :x="calculateLabelPosition(index).x"
+            :y="calculateLabelPosition(index).y"
+            text-anchor="middle"
+            font-size="8"
+            :fill="
+              sections[index].level === maxLevel ? '#000000' : 'var(--gr50)'
+            "
+            font-weight="bold"
+          >
+            <!-- 라벨 표시 -->
+            {{ label }}
+          </text>
+        </g>
+      </svg>
+    </div>
   </div>
 </template>
 
@@ -165,16 +171,16 @@ export default {
       const largeArcFlag = endAngle - startAngle <= 180 ? 0 : 1;
 
       return `
-          M ${startX} ${startY}
-          A ${innerRadius} ${innerRadius} 0 ${largeArcFlag} 1 ${
+            M ${startX} ${startY}
+            A ${innerRadius} ${innerRadius} 0 ${largeArcFlag} 1 ${
         70 + innerRadius * Math.cos(endRadians)
       } ${70 + innerRadius * Math.sin(endRadians)}
-          L ${endX} ${endY}
-          A ${outerRadius} ${outerRadius} 0 ${largeArcFlag} 0 ${
+            L ${endX} ${endY}
+            A ${outerRadius} ${outerRadius} 0 ${largeArcFlag} 0 ${
         70 + outerRadius * Math.cos(startRadians)
       } ${70 + outerRadius * Math.sin(startRadians)}
-          Z
-        `;
+            Z
+          `;
     };
 
     // 방사형 차트의 선 계산
@@ -191,12 +197,6 @@ export default {
     const calculateLabelPosition = (index) => {
       let angle = (index * 72 - 54) * (Math.PI / 180);
       let radius = 76;
-
-      //   // 펀드 라벨 (index 2) 특별 처리
-      //   if (index === 3) {
-      //     radius = 76;
-      //     angle = (index * 72 - 52) * (Math.PI / 180);
-      //   }
 
       return {
         x: 70 + radius * Math.cos(angle),
@@ -218,6 +218,12 @@ export default {
 </script>
 
 <style scoped>
+.chart-container {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+}
+
 .chart-box {
   width: 335px;
   height: 320px;
