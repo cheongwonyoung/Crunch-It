@@ -13,4 +13,5 @@ public interface UserMapper {
     void updateUser(User user);
     void updateUserProfile(User user);
     String getUserProfile(String email);
+    void updatePassword(User user);
 }

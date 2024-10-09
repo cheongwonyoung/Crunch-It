@@ -50,5 +50,10 @@
         set profile_url = #{profileUrl}
         where email = #{email}
     </update>
+    <update id="updatePassword" parameterType="User">
+        update user
+        set password = #{password}
+        where email = #{email}
+    </update>
 
 </mapper>

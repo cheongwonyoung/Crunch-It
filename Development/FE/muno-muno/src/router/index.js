@@ -10,6 +10,7 @@ import MyPageEdit from "@/pages/MyPageEdit.vue";
 import Search from "@/pages/Search.vue";
 import Message from "@/pages/Message.vue";
 import Modal from "@/components/Modal.vue";
+import FindPasswordP from "@/pages/FindPassword.vue";
 
 const routes = [
     { path: "/", name: "Home", component: HomeP },
@@ -17,6 +18,7 @@ const routes = [
     { path: "/property", name: "Property", component: PropertyP },
     { path: "/community", name: "Community", component: CommunityP },
     { path: "/login", name: "Login", component: LoginP },
+    { path: "/findPassword", name: "FindPassword", component: FindPasswordP },
     { path: "/signup", name: "SignUp", component: SignupP },
     { path: "/mypage", name: "MyPage", component: MyPage },
     { path: "/mypageedit", name: "MyPageEdit", component: MyPageEdit },
