@@ -109,13 +109,17 @@ dependencies {
     implementation 'com.auth0:java-jwt:4.2.1'
     implementation 'javax.servlet:javax.servlet-api:4.0.1'
 
-    implementation 'com.fasterxml.jackson.dataformat:jackson-dataformat-xml'
     // AWS SDK S3
     implementation 'software.amazon.awssdk:s3:2.20.39'
     implementation 'software.amazon.awssdk:sts:2.20.39'
 
     // Apache Commons FileUpload (MultipartResolver 사용을 위한 의존성)
     implementation 'commons-fileupload:commons-fileupload:1.4'
+
+
+    // WebSocket 및 STOMP 메시징을 위한 의존성
+    implementation 'org.springframework:spring-messaging:5.3.37'
+    implementation 'org.springframework:spring-websocket:5.3.37'
 
     // 이메일 인증
     // https://mvnrepository.com/artifact/org.springframework.boot/spring-boot-starter-mail
@@ -137,6 +141,10 @@ dependencies {
     implementation group: 'io.lettuce', name: 'lettuce-core', version: '6.1.9.RELEASE'
 
 
+
+    // WebSocket 및 STOMP 메시징을 위한 의존성
+    implementation 'org.springframework:spring-messaging:5.3.37'
+    implementation 'org.springframework:spring-websocket:5.3.37'
 }
 
 test {

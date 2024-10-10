@@ -63,7 +63,10 @@
       />
       <span>커뮤니티</span>
     </router-link>
-
+    <router-link to="/chat" class="tab-item">
+      <img src="@/assets/community.svg" alt="채팅" />
+      <span>채팅</span>
+    </router-link>
     <img class="bar" src="@/assets/bar.svg" alt="Home Indicator Bar" />
   </nav>
 </template>

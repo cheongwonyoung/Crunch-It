@@ -28,4 +28,9 @@ public class RedisService {
             redisTemplate.expire(key, 60, TimeUnit.SECONDS);
         }
     }
+
+    public void saveKoreaToken(String key, String value) {
+        redisTemplate.opsForValue().set(key, value, 1, TimeUnit.DAYS);
+    }
+
 }

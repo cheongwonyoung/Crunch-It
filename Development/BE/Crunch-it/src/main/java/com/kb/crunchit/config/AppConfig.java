@@ -11,6 +11,7 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.web.multipart.commons.CommonsMultipartResolver;
 import org.springframework.web.multipart.support.StandardServletMultipartResolver;
 import org.springframework.web.reactive.function.client.WebClient;
@@ -25,6 +26,7 @@ import software.amazon.awssdk.auth.credentials.AwsBasicCredentials;
 import software.amazon.awssdk.auth.credentials.StaticCredentialsProvider;
 import software.amazon.awssdk.regions.Region;
 
+@EnableScheduling
 @Configuration
 @ComponentScan(basePackages = {"com.kb.crunchit.util", "com.kb.crunchit.service"})
 @MapperScan(basePackages = {"com.kb.crunchit.mapper"})
@@ -75,7 +77,7 @@ public class AppConfig {
     public WebClient webClient() {
         return WebClient.builder().build();
     }
-      
+
     // S3Client 설정 추가
     @Bean
     public S3Client s3Client() {
