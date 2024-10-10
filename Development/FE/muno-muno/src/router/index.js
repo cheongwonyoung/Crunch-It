@@ -14,6 +14,7 @@ import IncomeSetting from "@/pages/IncomeSetting.vue";
 import LimitSetting from "@/pages/LimitSetting.vue";
 import Modal from "@/components/Modal.vue";
 import FindPasswordP from "@/pages/FindPassword.vue";
+import ChatP from "@/pages/ChatPage.vue";
 // import apiClient from "@/axios";
 
 const routes = [
@@ -32,6 +33,7 @@ const routes = [
     { path: "/incomesetting", name: "IncomeSetting", component: IncomeSetting },
     { path: "/limitsetting", name: "LimitSetting", component: LimitSetting },
     { path: "/modal", name: "Modal", component: Modal },
+    { path: "/chat", name: "Chat", component: ChatP },
 ];
 
 const router = createRouter({
