@@ -10,4 +10,11 @@ public interface UserMapper {
     void insertUser(User dto);
 
     void updateUser(User user);
+    void updateUserProfile(User user);
+    String getUserProfile(String email);
+    void updatePassword(User user);
+
+    Integer onBoardingCheck(Integer userId);
+
+    void updateUserOnBoarding(User user);
 }

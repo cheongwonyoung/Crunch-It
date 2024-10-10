@@ -13,6 +13,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.stereotype.Service;
+import software.amazon.awssdk.services.s3.endpoints.internal.Value;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -64,7 +65,9 @@ public class JwtService {
 
     public Authentication getAuthentication(String token){
         String email = String.valueOf(jwtTokenUtil.extractEmail(token));
-        CustomUserDetails principal = new CustomUserDetails(email, null);
+        Integer userId = Integer.valueOf(jwtTokenUtil.extractUserId(token));
+        String nickname = String.valueOf(jwtTokenUtil.extractNickname(token));
+        CustomUserDetails principal = new CustomUserDetails(email, null, nickname, userId);
         return new UsernamePasswordAuthenticationToken(principal, token, null);
     }
 }

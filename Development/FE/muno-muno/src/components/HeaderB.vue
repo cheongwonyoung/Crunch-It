@@ -27,7 +27,7 @@ export default {
   display: flex;
   justify-content: flex-start;
   align-items: center;
-  padding: 0 22px;
+  padding: 0 18px;
   height: 65px;
 
   position: fixed;
@@ -37,16 +37,21 @@ export default {
   z-index: 1000;
   box-sizing: border-box;
   font-size: 22px;
+
+  background-color: var(--gr100);
 }
 
 .header-text {
+  color: var(--gr10);
   font-size: 22px;
   font-weight: 600;
+  line-height: 100%;
 }
 
 .back-icon {
   width: 24px;
   height: 24px;
   cursor: pointer;
+  margin-right: 6px;
 }
 </style>

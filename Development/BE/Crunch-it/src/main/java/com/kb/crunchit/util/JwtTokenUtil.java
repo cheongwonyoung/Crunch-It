@@ -2,9 +2,11 @@ package com.kb.crunchit.util;
 
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
+import com.auth0.jwt.interfaces.Claim;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.ibatis.io.Resources;
 import org.springframework.stereotype.Component;
+import software.amazon.awssdk.services.s3.endpoints.internal.Value;
 
 import java.io.Reader;
 import java.util.Date;
@@ -22,6 +24,8 @@ public class JwtTokenUtil {
     private static final String ACCESS_TOKEN_SUBJECT = "AccessToken";
     private static final String REFRESH_TOKEN_SUBJECT = "RefreshToken";
     private static final String EMAIL_CLAIM = "email";
+    private static final String NICKNAME_CLAIM = "nickname";
+    private static final String USERID_CLAIM = "user_id";
     private static final String BEARER = "Bearer ";
 
 
@@ -38,12 +42,14 @@ public class JwtTokenUtil {
         }
     }
 
-    public String createAccessToken(String email){
+    public String createAccessToken(String email, String nickname, Integer userId){
         Date now = new Date();
         return JWT.create()
                 .withSubject(ACCESS_TOKEN_SUBJECT)
                 .withExpiresAt(new Date(now.getTime() + accessTokenExpirationPeriod))
                 .withClaim(EMAIL_CLAIM, email)
+                .withClaim(NICKNAME_CLAIM, nickname)
+                .withClaim(USERID_CLAIM, userId)
                 .sign(Algorithm.HMAC256(secretKey));
     }
 
@@ -62,6 +68,31 @@ public class JwtTokenUtil {
                     .verify(accessToken)
                     .getClaim(EMAIL_CLAIM)
                     .asString();
+        } catch(Exception e){
+            return null;
+        }
+    }
+
+    public String extractNickname(String accessToken){
+        try{
+            return JWT.require(Algorithm.HMAC256(secretKey))
+                    .build()
+                    .verify(accessToken)
+                    .getClaim(NICKNAME_CLAIM)
+                    .asString();
+        } catch(Exception e){
+            return null;
+        }
+    }
+
+    public String extractUserId(String accessToken){
+        try{
+
+            return JWT.require(Algorithm.HMAC256(secretKey))
+                    .build()
+                    .verify(accessToken)
+                    .getClaim(USERID_CLAIM)
+                    .toString();
         } catch(Exception e){
             return null;
         }

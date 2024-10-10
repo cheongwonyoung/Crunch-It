@@ -1,136 +1,155 @@
 <template>
   <div class="product-recommendation">
-    <div class="status-bar"></div>
-    <div class="header">
-      <h1>상품추천</h1>
-      <div class="search-icon">
-        <img src="@/assets/search.svg" alt="Search" />
-      </div>
+    <HeaderQ title="상품추천" @search="handleSearch" />
+
+    <div class="popular-section">
+      <h2>가장 인기있는 상품</h2>
     </div>
-    <div class="banner">
-      <div class="banner-content">
-        <h2>웃는 문어들의 선택</h2>
-        <p>쏠편한 입출금통장</p>
-      </div>
-    </div>
+
+    <BannerSlider @banner-click="openModal" />
+
     <div class="categories">
-      <button
-        :class="{ active: selectedCategory === '예금' }"
-        @click="selectCategory('예금')"
-      >
-        예금
-      </button>
-      <button
-        :class="{ active: selectedCategory === '적금' }"
-        @click="selectCategory('적금')"
-      >
-        적금
-      </button>
-      <button
-        :class="{ active: selectedCategory === '펀드' }"
-        @click="selectCategory('펀드')"
-      >
-        펀드
-      </button>
-      <button
-        :class="{ active: selectedCategory === '주식' }"
-        @click="selectCategory('주식')"
-      >
-        주식
-      </button>
-      <button
-        :class="{ active: selectedCategory === '채권' }"
-        @click="selectCategory('채권')"
-      >
-        채권
-      </button>
+      <div class="category-buttons">
+        <Category
+          v-for="category in categories"
+          :key="category"
+          :category="category"
+          :isActive="selectedCategory === category"
+          @category-selected="selectCategory"
+        />
+      </div>
+      <div class="base-underline"></div>
     </div>
+
     <div class="product-list">
-      <div v-for="product in products" :key="product.id" class="product-item">
-        <div class="product-badge">{{ product.bank }}</div>
-        <h2 class="product-title">{{ product.title }}</h2>
-        <p class="product-description">{{ product.description }}</p>
+      <div v-if="products.length === 0" class="no-products">
+        해당 상품이 없습니다
+      </div>
+      <div v-else>
+        <ProductItem
+          v-for="product in products"
+          :key="product.id"
+          :product="product"
+          @click="openModal(product)"
+        />
       </div>
     </div>
+
+    <!-- ProductModal -->
+    <ProductModal
+      v-if="selectedProduct"
+      :show="showModal"
+      :product="selectedProduct"
+      @close="closeModal"
+    />
   </div>
 </template>
 
 <script>
+import HeaderQ from '@/components/HeaderQ.vue';
+import ProductItem from '@/components/ProductItem.vue';
+import BannerSlider from '@/components/BannerSlider.vue';
+import Category from '@/components/Category.vue';
+import ProductModal from '@/components/Modal.vue';
+
 export default {
   name: 'ProductP',
+  components: {
+    HeaderQ,
+    ProductItem,
+    BannerSlider,
+    Category,
+    ProductModal,
+  },
   data() {
     return {
       selectedCategory: '예금',
+      showModal: false,
+      selectedProduct: null,
+      categories: ['예금', '적금', '펀드', '주식', '채권'],
       products: [],
+      // 초기 UI 확인 차 임의 데이터. 추후 삭제 바람.
       allProducts: {
         예금: [
           {
             id: 1,
-            bank: '신한',
-            title: '쏠편한 입출금통장',
-            description: '#모바일이체도 #신한CD,ATM출금도 #수수료완전면제',
+            bank: 'KB국민',
+            title: '국민 입출금 통장',
+            joinMethods: '영업점, 인터넷, 스마트폰',
+            interestType: '단리',
+            sixMonthRate: '1%',
+            twelveMonthRate: '1.3%',
+            category: '예금',
           },
           {
             id: 2,
             bank: 'KB국민',
-            title: '국민 입출금 통장',
-            description: '#국민 통장 #이자율',
+            title: 'KB스타퀴즈왕적금',
+            joinMethods: '인터넷, 스마트폰',
+            interestType: '복리',
+            sixMonthRate: '1.5%',
+            twelveMonthRate: '1.8%',
+            category: '예금',
           },
-        ],
-        적금: [
           {
             id: 3,
-            bank: '신한',
-            title: '신한 적금 상품',
-            description: '#고금리 #안전한 투자',
+            bank: 'KB국민',
+            title: 'KB Star 정기예금',
+            joinMethods: '인터넷, 스마트폰',
+            interestType: '복리',
+            sixMonthRate: '2.5%',
+            twelveMonthRate: '1.8%',
+            category: '예금',
           },
           {
             id: 4,
-            bank: '우리',
-            title: '우리 적금 상품',
-            description: '#안정성 #고수익',
+            bank: 'KB국민',
+            title: 'KB국민UP정기예금',
+            joinMethods: '인터넷, 스마트폰',
+            interestType: '복리',
+            sixMonthRate: '2.90%%',
+            twelveMonthRate: '1.8%',
+            category: '예금',
+          },
+          {
+            id: 5,
+            bank: 'KB국민',
+            title: '국민수퍼정기예금(개인)',
+            joinMethods: '인터넷, 스마트폰',
+            interestType: '복리',
+            sixMonthRate: '2.5%',
+            twelveMonthRate: '1.8%',
+            category: '예금',
           },
         ],
         펀드: [
           {
-            id: 5,
-            bank: 'NH투자증권',
-            title: 'NH 펀드',
-            description: '#장기투자 #고수익',
-          },
-          {
-            id: 6,
-            bank: '미래에셋',
-            title: '미래에셋 펀드',
-            description: '#분산투자 #안정성',
-          },
-        ],
-        주식: [
-          {
-            id: 7,
-            bank: '삼성증권',
-            title: '삼성전자',
-            description: '#코스피 #대형주',
-          },
-          {
-            id: 8,
-            bank: '키움증권',
-            title: '키움증권 주식',
-            description: '#성장주 #안정성',
+            id: 3,
+            bank: '신한',
+            title: '신한 글로벌펀드',
+            fundProduct: '글로벌 주식형 펀드',
+            category: '펀드',
           },
         ],
         채권: [
           {
-            id: 9,
-            bank: '신한카드',
-            title: '신한카드 채권',
-            description: '#안정성 #고정수익',
+            id: 4,
+            bank: '우리',
+            title: '우리채권',
+            bondRating: 'AAA',
+            couponRate: '2.0%',
+            maturityDate: '2026-12-31',
+            interestPaymentDate: '매년 12월 31일',
+            category: '채권',
           },
+        ],
+        주식: [
           {
-            id: 10,
-            bank: 'KB국민카드',
-            title: 'KB 국민카드 채권',
-            description: '#안정적 투자',
+            id: 5,
+            bank: '삼성',
+            title: '삼성전자',
+            marketCapWeight: '15%',
+            category: '주식',
           },
         ],
       },
@@ -142,129 +161,63 @@ export default {
       this.updateProducts();
     },
     updateProducts() {
-      // 선택된 카테고리에 맞는 상품 리스트를 업데이트
       this.products = this.allProducts[this.selectedCategory] || [];
+    },
+    handleSearch() {
+      console.log('Search clicked');
+    },
+    openModal(product) {
+      this.selectedProduct = product;
+      this.showModal = true;
+    },
+    closeModal() {
+      this.showModal = false;
+      this.selectedProduct = null;
     },
   },
   mounted() {
-    // 페이지가 로드되었을 때 기본 상품을 업데이트
     this.updateProducts();
   },
 };
 </script>
 
 <style scoped>
-.status-bar {
-  width: 375px;
-  height: 44px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 14px;
+.popular-section {
+  margin-top: 78px;
 }
 
-.header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  width: 375px;
-  height: 64px;
-  flex-shrink: 0;
-}
-
-.header h1 {
-  font-size: 24px;
-  font-weight: bold;
-}
-
-.search-icon img {
-  width: 24px;
-  height: 24px;
-}
-
-.banner {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  width: 335px;
-  height: 114px;
-  border-radius: 14px;
-  background: #292d33;
-  margin: 16px auto;
-}
-
-.banner-content h2 {
-  color: #ffffff;
-  font-size: 14px;
-  margin-left: 15px;
-  margin-bottom: 8px;
-}
-
-.banner-content p {
-  color: #ffffff;
-  font-size: 18px;
-  font-weight: bold;
-
-  margin-left: 15px;
+.popular-section h2 {
+  color: var(--gr30);
+  font-size: 20px;
+  font-weight: 600;
+  line-height: 100%;
+  padding-left: 20px;
 }
 
 .categories {
-  color: var(--gray-20, #292d33);
   text-align: center;
-  font-family: Pretendard;
   font-size: 16px;
-  font-style: normal;
   font-weight: 600;
-  line-height: 150%; /* 24px */
+  line-height: 150%;
+  margin-bottom: 14px;
+  position: relative;
 }
 
-.categories button {
-  padding: 8px 16px;
-  border: none;
-  background: none;
-  font-size: 16px;
-  cursor: pointer;
-  color: #5f6368;
+.category-buttons {
+  padding-left: 20px;
+  display: flex;
 }
 
-.categories .active {
-  color: #1f1f1f;
-  border-bottom: 2px solid #1f1f1f;
+.base-underline {
+  height: 0.5px;
+  background: var(--gr70);
+  position: absolute;
+  width: 100%;
 }
 
 .product-list {
-  margin-top: 16px;
-}
-
-.product-item {
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  gap: 6px;
-  padding: 18px;
-  border-radius: 10px;
-  border: 0.5px solid #d6dae0;
-  background: #fff;
-  margin-bottom: 12px;
-  box-shadow: 0px 0px 6px rgba(0, 0, 0, 0.04);
-}
-
-.product-badge {
-  display: inline-flex;
-  padding: 4px 8px;
-  border-radius: 9px;
-  background: #ebf3ff;
-  color: #1f1f1f;
-}
-
-.product-title {
-  font-size: 18px;
-  font-weight: bold;
-  margin: 8px 0;
-}
-
-.product-description {
-  font-size: 14px;
-  color: #5f6368;
+  font-size: 16px;
+  color: var(--gr60);
+  text-align: center;
 }
 </style>

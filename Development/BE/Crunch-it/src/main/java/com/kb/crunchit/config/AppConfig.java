@@ -11,36 +11,26 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.PropertySource;
-import org.springframework.core.env.Environment;
+import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.web.multipart.commons.CommonsMultipartResolver;
+import org.springframework.web.multipart.support.StandardServletMultipartResolver;
 import org.springframework.web.reactive.function.client.WebClient;
-import software.amazon.awssdk.auth.credentials.AwsBasicCredentials;
-import software.amazon.awssdk.auth.credentials.StaticCredentialsProvider;
-import software.amazon.awssdk.regions.Region;
-import software.amazon.awssdk.services.s3.S3Client;
 
 import javax.sql.DataSource;
 import java.io.IOException;
 import java.io.Reader;
 import java.util.Properties;
 
+import software.amazon.awssdk.services.s3.S3Client;
+import software.amazon.awssdk.auth.credentials.AwsBasicCredentials;
+import software.amazon.awssdk.auth.credentials.StaticCredentialsProvider;
+import software.amazon.awssdk.regions.Region;
+
+@EnableScheduling
 @Configuration
 @ComponentScan(basePackages = {"com.kb.crunchit.util", "com.kb.crunchit.service"})
-@MapperScan(basePackages = {"com.kb.crunchit.mapper", "com.kb.crunchit.mapper.analysis"})
-@PropertySource("classpath:properties/application.properties") // 파일 위치 명시
+@MapperScan(basePackages = {"com.kb.crunchit.mapper"})
 public class AppConfig {
-
-    @Autowired
-    private Environment env;
-
-    // Get property value from application.properties
-    public String getSomeProperty() {
-        String someProperty = env.getProperty("spring.http.encoding.charset");
-        System.out.println("spring.http.encoding.charset: " + someProperty);  // Log the value
-        return someProperty;
-    }
-
     @Bean  //(destroyMethod="close")
     public DataSource dataSource() {
         Properties properties = new Properties();

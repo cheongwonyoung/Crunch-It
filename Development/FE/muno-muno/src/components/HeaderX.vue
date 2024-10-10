@@ -29,7 +29,7 @@ export default {
   align-items: center;
   padding: 0 22px;
   height: 65px;
-
+  background-color: var(--gr100);
   position: fixed;
   top: 44px;
   left: 0;

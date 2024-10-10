@@ -11,17 +11,18 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 public class User {
-    public Integer user_id;
+    public Integer userId;
     public String nickname;
     public String password;
-    public String pin_number;
+    public String pinNumber;
     public String birth;
     public Integer gender;
-    public String phone_number;
+    public String phoneNumber;
     public String email;
-    public Integer md_user_id;
-    public String profile_url;
+    public Integer mdUserId;
+    public String profileUrl;
     public Integer salary;
+    public Integer outcomeLimit;
 
     public List<Account> accounts;
     public List<Stock> stocks;

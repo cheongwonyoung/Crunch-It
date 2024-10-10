@@ -22,7 +22,6 @@ public class RecommendationController {
     // 주식 수익률이 가장 높은 사용자의 상위 3개 주식 추천
     @GetMapping("/top-stocks")
     public List<UserStockResponseDTO> recommendTopStocks() {
-//        System.out.println("123!!!");
         Optional<Integer> userId = recommendationTopService.getTopProfitUserId("stock");
         if (userId.isPresent()) {
             return recommendationTopService.recommendTopStocksForUser(userId.get());

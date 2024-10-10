@@ -1,12 +1,9 @@
-<!-- Community.vue -->
 <template>
-  <div>
-    <!-- Community 컴포넌트 내용 -->
-  </div>
+  <div></div>
 </template>
 
 <script>
 export default {
-  name: 'CommunityP', // 다중 단어로 변경
+  name: 'CommunityP',
 };
 </script>

@@ -27,7 +27,9 @@ public class JwtUserDetailsService implements UserDetailsService {
 
         return new CustomUserDetails(
                 user.getEmail(),
-                user.getPassword()
+                user.getPassword(),
+                user.getNickname(),
+                user.getUserId()
         );
 
     }
