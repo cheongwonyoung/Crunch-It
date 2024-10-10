@@ -16,7 +16,7 @@
 
       <div class="post-meta">
         <span class="category">{{ post.category }}</span> |
-        <span class="user">{{ nickname }}</span> |
+        <span class="user">{{ post.writerId }}</span> |
         <span class="date">{{ formattedDate }}</span>
       </div>
     </header>

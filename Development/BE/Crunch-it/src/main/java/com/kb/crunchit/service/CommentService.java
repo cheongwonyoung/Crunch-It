@@ -29,7 +29,7 @@ public class CommentService {
         int boardId=commentRequestDTO.getBoardId();
         int boardWriterInt=commentMapper.getBoardWriter(boardId);
         String boardWriter=String.valueOf(boardWriterInt);
-        notificationController.notifyUser(boardWriter,"새로운 댓글이 달렸습니다.");
+//        notificationController.notifyUser(boardWriter,"새로운 댓글이 달렸습니다.");
     }
 
     public List<Comment> getAllComments(int boardId){

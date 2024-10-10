@@ -1,15 +1,5 @@
-import { createRouter, createWebHistory } from "vue-router";
-import HomeP from "@/pages/Home.vue";
-import ProductP from "@/pages/Product.vue";
-import PropertyP from "@/pages/Property.vue";
-import CommunityP from "@/pages/Community.vue";
-import LoginP from "@/pages/LoginPage.vue";
-import SignupP from "@/pages/SignUpPage.vue";
-import MyPage from "@/pages/MyPage.vue";
-import MyPageEdit from "@/pages/MyPageEdit.vue";
-import Search from "@/pages/Search.vue";
+
 import Message from "@/pages/Message.vue";
-import Modal from "@/components/Modal.vue";
 import FindPasswordP from "@/pages/FindPassword.vue";
 import { createRouter, createWebHistory } from 'vue-router';
 import HomeP from '@/pages/Home.vue';
@@ -21,7 +11,6 @@ import MyPage from '@/pages/MyPage.vue';
 import MyPageEdit from '@/pages/MyPageEdit.vue';
 import Search from '@/pages/Search.vue';
 import Modal from '@/components/Modal.vue';
-// import apiClient from '@/axios';
 import apiClient from '@/axios';
 import CommunityP from '@/pages/CommunityPage.vue';
 import PostDetailP from "@/pages/PostDetailPage.vue";

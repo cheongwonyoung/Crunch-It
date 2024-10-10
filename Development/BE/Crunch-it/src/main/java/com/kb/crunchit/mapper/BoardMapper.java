@@ -20,6 +20,7 @@ public interface BoardMapper {
     void insertBoard(BoardRequestDTO boardRequestDTO);
     void modifyBoard(BoardRequestDTO boardRequestDTO);
     void deleteBoard(int boardId);
+//    void deleteLikesByBoardId(int boardId);
 
 //    int selectBoardForLikes(int boardId);
 

@@ -37,6 +37,8 @@ public class BoardService {
     }
 
     public void deletePost(int boardId) {
+
+//        boardMapper.deleteLikesByBoardId(boardId);  //자식 테이블 레코드 먼저 지우고 부모테이블 지우기
         boardMapper.deleteBoard(boardId);
     }
 

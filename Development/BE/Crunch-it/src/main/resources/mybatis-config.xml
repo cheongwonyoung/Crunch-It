@@ -23,6 +23,8 @@
         <typeAlias alias="LikeResponse" type="com.kb.crunchit.dto.response.LikeResponseDTO"/>
         <typeAlias alias="StockPriceInfo" type="com.kb.crunchit.entity.StockPriceInfo"/>
         <typeAlias alias="User" type="com.kb.crunchit.entity.User"/>
+        <typeAlias alias="Notification" type="com.kb.crunchit.entity.Notification"/>
+        <typeAlias alias="NotificationRequest" type="com.kb.crunchit.dto.request.NotificationRequestDTO"/>
     </typeAliases>
 
     <!-- 데이터베이스 환경 설정 -->

@@ -50,11 +50,18 @@
     </update>
 
     <!--    게시글 삭제-->
+
+<!--    <delete id="deleteLikesByBoardId" parameterType="int">-->
+<!--        DELETE FROM board_likes WHERE board_id = #{boardId}-->
+<!--    </delete>-->
+
     <delete id="deleteBoard" parameterType="int">
         DELETE FROM board WHERE board_id=#{boardId}
     </delete>
 
-<!--    <select id="selectBoardForLikes" parameterType="int" resultType="int">-->
+
+
+    <!--    <select id="selectBoardForLikes" parameterType="int" resultType="int">-->
 <!--        SELECT COUNT(*)-->
 <!--        FROM board_likes-->
 <!--        WHERE board_id=#{boardId}-->
