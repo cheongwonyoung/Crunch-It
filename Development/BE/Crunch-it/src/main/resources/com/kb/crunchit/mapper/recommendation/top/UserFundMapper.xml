@@ -3,7 +3,7 @@
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
-<mapper namespace="com.kb.crunchit.mapper.UserFundMapper">
+<mapper namespace="com.kb.crunchit.mapper.recommendation.top.UserFundMapper">
     <!-- 모든 사용자 펀드 정보 조회 -->
     <resultMap id="userFundResultMap" type="UserFundResponseDTO">
         <result property="fundCode" column="fund_code" jdbcType="VARCHAR"/>

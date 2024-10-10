@@ -1,4 +1,4 @@
-package com.kb.crunchit.mapper;
+package com.kb.crunchit.mapper.recommendation.top;
 
 import org.apache.ibatis.annotations.Mapper;
 

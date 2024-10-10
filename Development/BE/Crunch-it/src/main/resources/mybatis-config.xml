@@ -1,23 +1,32 @@
-<?xml version="1.0" encoding="UTF-8"?>
+<?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE configuration PUBLIC "-//mybatis.org//DTD Config 3.0//EN" "http://mybatis.org/dtd/mybatis-3-config.dtd">
+
 <configuration>
     <settings>
         <setting name="mapUnderscoreToCamelCase" value="true"/>
     </settings>
     <typeAliases>
-        <typeAlias alias="UserStockResponseDTO" type="com.kb.crunchit.dto.response.UserStockResponseDTO"/>
-        <typeAlias alias="UserBondResponseDTO" type="com.kb.crunchit.dto.response.UserBondResponseDTO"/>
-        <typeAlias alias="UserFundResponseDTO" type="com.kb.crunchit.dto.response.UserFundResponseDTO"/>
+        <typeAlias alias="UserStockResponseDTO" type="com.kb.crunchit.dto.response.recommendation.top.UserStockResponseDTO"/>
+        <typeAlias alias="UserBondResponseDTO" type="com.kb.crunchit.dto.response.recommendation.top.UserBondResponseDTO"/>
+        <typeAlias alias="UserFundResponseDTO" type="com.kb.crunchit.dto.response.recommendation.top.UserFundResponseDTO"/>
         <typeAlias alias="StockPriceInfo" type="com.kb.crunchit.entity.StockPriceInfo"/>
         <typeAlias alias="User" type="com.kb.crunchit.entity.User"/>
+        <typeAlias alias="DepositOptionInfo" type="com.kb.crunchit.entity.DepositOptionInfo"/>
+        <typeAlias alias="SavingOptionInfo" type="com.kb.crunchit.entity.SavingOptionInfo"/>
     </typeAliases>
 
     <mappers>
-        <mapper resource="com/kb/crunchit/mapper/UserAssetStatisticsMapper.xml"/>
-        <mapper resource="com/kb/crunchit/mapper/UserBondMapper.xml"/>
-        <mapper resource="com/kb/crunchit/mapper/UserFundMapper.xml"/>
-        <mapper resource="com/kb/crunchit/mapper/UserStockMapper.xml"/>
-        <mapper resource="com/kb/crunchit/mapper/UserMapper.xml"/>
-    </mappers>
+        <mapper resource="com/kb/crunchit/mapper/recommendation/api/RecommendationApiBondMapper.xml"/>
+        <mapper resource="com/kb/crunchit/mapper/recommendation/api/RecommendationApiDepositMapper.xml"/>
+        <mapper resource="com/kb/crunchit/mapper/recommendation/api/RecommendationApiDepositOptionMapper.xml"/>
+        <mapper resource="com/kb/crunchit/mapper/recommendation/api/RecommendationApiSavingMapper.xml"/>
+        <mapper resource="com/kb/crunchit/mapper/recommendation/api/RecommendationApiSavingOptionMapper.xml"/>
+        <mapper resource="com/kb/crunchit/mapper/recommendation/api/RecommendationApiFundMapper.xml"/>
 
+        <mapper resource="com/kb/crunchit/mapper/recommendation/top/UserAssetStatisticsMapper.xml"/>
+        <mapper resource="com/kb/crunchit/mapper/recommendation/top/UserBondMapper.xml"/>
+        <mapper resource="com/kb/crunchit/mapper/recommendation/top/UserFundMapper.xml"/>
+        <mapper resource="com/kb/crunchit/mapper/recommendation/top/UserStockMapper.xml"/>
+        <mapper resource="com/kb/crunchit/mapper/recommendation/top/UserMapper.xml"/>
+    </mappers>
 </configuration>

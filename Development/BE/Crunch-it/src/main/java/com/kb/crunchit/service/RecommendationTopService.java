@@ -1,12 +1,12 @@
 package com.kb.crunchit.service;
 
-import com.kb.crunchit.dto.response.UserBondResponseDTO;
-import com.kb.crunchit.dto.response.UserFundResponseDTO;
-import com.kb.crunchit.dto.response.UserStockResponseDTO;
-import com.kb.crunchit.mapper.UserAssetStatisticsMapper;
-import com.kb.crunchit.mapper.UserBondMapper;
-import com.kb.crunchit.mapper.UserFundMapper;
-import com.kb.crunchit.mapper.UserStockMapper;
+import com.kb.crunchit.dto.response.recommendation.top.UserBondResponseDTO;
+import com.kb.crunchit.dto.response.recommendation.top.UserFundResponseDTO;
+import com.kb.crunchit.dto.response.recommendation.top.UserStockResponseDTO;
+import com.kb.crunchit.mapper.recommendation.top.UserAssetStatisticsMapper;
+import com.kb.crunchit.mapper.recommendation.top.UserBondMapper;
+import com.kb.crunchit.mapper.recommendation.top.UserFundMapper;
+import com.kb.crunchit.mapper.recommendation.top.UserStockMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -14,7 +14,7 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
-public class RecommendationService {
+public class RecommendationTopService {
 
     @Autowired
     private UserStockMapper userStockMapper;

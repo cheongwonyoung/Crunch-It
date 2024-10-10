@@ -3,7 +3,7 @@ package com.kb.crunchit.service;
 import com.kb.crunchit.dto.request.UserRequestDto;
 import com.kb.crunchit.dto.response.UserDto;
 import com.kb.crunchit.entity.User;
-import com.kb.crunchit.mapper.UserMapper;
+import com.kb.crunchit.mapper.recommendation.top.UserMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
