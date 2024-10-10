@@ -177,14 +177,4 @@ h1 {
   height: 24px;
   margin-right: 8px;
 }
-
-.start-button {
-  position: fixed;
-  bottom: 34px;
-  left: 50%;
-  transform: translateX(-50%);
-  width: calc(100% - 40px);
-  max-width: 335px;
-  cursor: pointer;
-}
 </style>
