@@ -28,5 +28,11 @@ export default {
   flex-shrink: 0;
   border: none;
   cursor: pointer;
+
+  position: fixed;
+  bottom: 34px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: calc(100% - 40px);
 }
 </style>

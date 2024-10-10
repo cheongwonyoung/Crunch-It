@@ -18,7 +18,7 @@
           :message="message.content"
           :time="message.time"
           :name="message.sender"
-          avatar="https://via.placeholder.com/32"
+          :avatar="require('@/assets/profile.svg')"
         />
       </div>
     </div>
