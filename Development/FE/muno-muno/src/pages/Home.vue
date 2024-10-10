@@ -15,7 +15,7 @@
         </div>
         <!-- 문어 레벨 섹션 -->
         <OctopusLevel
-            :currentLevel="currentLevel"
+            :currentLevel="octopusesLevel[0]"
             :currentOctopus="currentOctopus"
             :levelText="levelText"
             @navigate="navigateToProductRecommendation" />
@@ -49,10 +49,9 @@
             return {
                 expenseAmount: 100000,
                 test: 0,
-                currentLevel: 1,
                 levelText: "",
                 currentOctopus: {},
-                octopusesLevel: [0, 0, 0, 0], //예적금, 주식, 펀드, 채권 순
+                octopusesLevel: [1, 1, 1, 1], //예적금, 주식, 펀드, 채권 순
                 octopuses: [
                     {
                         id: 1,
@@ -99,19 +98,16 @@
         },
         methods: {
             selectOctopus(octopus) {
+                const octopusIndex = octopus.id - 1; // 배열 인덱스는 0부터 시작
+                const octopusLevel = this.octopusesLevel[octopusIndex] || 1;
                 this.currentOctopus = {
                     name: octopus.name,
-                    image: octopus.levelImages[this.currentLevel - 1],
+                    image: octopus.levelImages[octopusLevel - 1],
                 };
-                this.levelText = `Lv.${this.currentLevel} ${octopus.name}`;
+                this.levelText = `Lv.${octopusLevel} ${octopus.name}`;
             },
             navigateToProductRecommendation() {
                 this.$router.push("/product");
-            },
-            updateOctopusLevel(newLevel) {
-                this.currentLevel = newLevel;
-                this.currentOctopus.image = this.currentOctopus.levelImages[this.currentLevel - 1];
-                this.levelText = `Lv.${this.currentLevel} ${this.currentOctopus.name}`;
             },
             fetchLevelFromBackend() {
                 apiClient
@@ -124,6 +120,7 @@
                             this.octopusesLevel[2] = userOctopus.fundOctopusLevel;
                             this.octopusesLevel[3] = userOctopus.bondOctopusLevel;
                         }
+                        this.setInitialOctopus();
                     })
                     .catch((err) => {
                         console.log(err);
@@ -146,8 +143,8 @@
             },
         },
         mounted() {
-            this.fetchLevelFromBackend();
             this.setInitialOctopus();
+            this.fetchLevelFromBackend();
             this.fetchMonthlyOutcome();
         },
     };
