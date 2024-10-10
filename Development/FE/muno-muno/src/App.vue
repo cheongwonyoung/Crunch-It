@@ -28,12 +28,16 @@ export default {
         '/message',
         '/mydata',
         '/incomesetting',
+        '/limitsetting',
       ],
     };
   },
   computed: {
     showTabBar() {
-      return !this.hideRoutes.includes(this.$route.path);
+      // this.$route.path가 hideRoutes 배열에 포함된 경로로 시작하면 TabBar를 숨깁니다.
+      return !this.hideRoutes.some((route) =>
+        this.$route.path.startsWith(route)
+      );
     },
   },
 };
@@ -63,7 +67,7 @@ html {
   --gr30: #383e47;
   --gr40: #616b79;
   --gr50: #8892a0;
-  --gr60: #d6dae0;
+  --gr60: #c4cad4;
   --gr70: #edeff2;
   --gr80: #f5f6f7;
   --gr90: #fbfbfc;

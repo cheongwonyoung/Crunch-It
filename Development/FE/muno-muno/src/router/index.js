@@ -11,6 +11,7 @@ import Search from '@/pages/Search.vue';
 import Message from '@/pages/Message.vue';
 import MyData from '@/pages/MyData.vue';
 import IncomeSetting from '@/pages/IncomeSetting.vue';
+import LimitSetting from '@/pages/LimitSetting.vue';
 import Modal from '@/components/Modal.vue';
 
 const routes = [
@@ -26,6 +27,7 @@ const routes = [
   { path: '/message', name: 'Message', component: Message },
   { path: '/mydata', name: 'MyData', component: MyData },
   { path: '/incomesetting', name: 'IncomeSetting', component: IncomeSetting },
+  { path: '/limitsetting', name: 'LimitSetting', component: LimitSetting },
   { path: '/modal', name: 'Modal', component: Modal },
 ];
 
