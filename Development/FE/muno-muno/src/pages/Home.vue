@@ -192,6 +192,12 @@
         box-sizing: border-box;
     }
 
+    .logo {
+        width: auto;
+        height: 17px;
+        margin: 0;
+    }
+
     .mypage-icon {
         width: 24px;
         height: 24px;
