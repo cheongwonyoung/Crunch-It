@@ -90,14 +90,4 @@ h1 {
   font-weight: 500;
   margin-top: 20px;
 }
-
-.connect-button {
-  position: fixed;
-  bottom: 34px;
-  left: 50%;
-  transform: translateX(-50%);
-  width: calc(100% - 40px);
-  max-width: 335px;
-  cursor: pointer;
-}
 </style>

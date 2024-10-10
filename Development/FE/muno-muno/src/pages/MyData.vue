@@ -97,13 +97,4 @@ p {
   font-weight: 400;
   line-height: 21px;
 }
-
-.connect-button {
-  position: fixed;
-  bottom: 34px;
-  left: 50%;
-  transform: translateX(-50%);
-  width: calc(100% - 40px);
-  cursor: pointer;
-}
 </style>
