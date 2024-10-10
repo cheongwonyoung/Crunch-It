@@ -26,6 +26,8 @@
 
 <script>
     import apiClient from "@/axios";
+    import { useUserStore } from "@/stores/userStore";
+    import { mapActions } from "pinia";
     export default {
         data() {
             return {
@@ -34,34 +36,41 @@
             };
         },
         methods: {
-            login() {
+            ...mapActions(useUserStore, ["setUserInfo"]),
+            async login() {
                 if (this.email === "" || this.password === "") {
                     return;
                 }
-                apiClient
-                    .post("/auth/login", {
+                try {
+                    const res = await apiClient.post("/auth/login", {
                         email: this.email,
                         password: this.password,
-                    })
-                    .then((res) => {
-                        if (res.status != 200) {
-                            console.log("Server Error");
-                            return;
-                        }
-                        const authHeader = res.headers["authorization"];
-                        console.log(authHeader);
-                        if (authHeader && authHeader.startsWith("Bearer ")) {
-                            const token = authHeader.substring(7); // 'Bearer ' 이후의 문자열을 추출
-                            console.log("JWT Token:", token);
-                            localStorage.setItem("JwtToken", token);
-                            this.$router.push("/");
-                        } else {
-                            console.error("Authorization 헤더가 존재하지 않거나 잘못된 형식입니다.");
-                        }
-                    })
-                    .catch((error) => {
-                        console.log(error);
                     });
+                    if (res.status != 200) {
+                        console.log("Server Error");
+                        return;
+                    }
+                    const authHeader = res.headers["authorization"];
+                    console.log(authHeader);
+                    if (authHeader && authHeader.startsWith("Bearer ")) {
+                        const token = authHeader.substring(7); // 'Bearer ' 이후의 문자열을 추출
+                        console.log("JWT Token:", token);
+                        localStorage.setItem("JwtToken", token);
+                    } else {
+                        console.error("Authorization 헤더가 존재하지 않거나 잘못된 형식입니다.");
+                    }
+                } catch (error) {
+                    console.log(error);
+                }
+                try {
+                    const res = await apiClient.get("/mypage/userInfo");
+                    const nickname = res.data.data.nickname;
+                    const profileUrl = res.data.data.profile_url;
+                    this.setUserInfo({ nickname: nickname, profileUrl: profileUrl });
+                } catch (error) {
+                    console.log(error);
+                }
+                this.$router.push("/");
             },
         },
     };
