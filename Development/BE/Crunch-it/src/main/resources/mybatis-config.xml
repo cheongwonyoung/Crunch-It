@@ -25,6 +25,11 @@
         <typeAlias alias="User" type="com.kb.crunchit.entity.User"/>
         <typeAlias alias="Notification" type="com.kb.crunchit.entity.Notification"/>
         <typeAlias alias="NotificationRequest" type="com.kb.crunchit.dto.request.NotificationRequestDTO"/>
+
+        <typeAlias alias="AssetStatistics" type="com.kb.crunchit.entity.AssetStatistics" />
+        <typeAlias alias="InvestHistory" type="com.kb.crunchit.entity.InvestHistory" />
+        <typeAlias alias="Stock" type="com.kb.crunchit.entity.Stock" />
+        <typeAlias alias="Bond" type="com.kb.crunchit.entity.Bond" />
     </typeAliases>
 
     <!-- 데이터베이스 환경 설정 -->

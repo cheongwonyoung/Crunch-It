@@ -7,37 +7,44 @@
 
     <!-- 마이데이터의 md_user_id로 메인 DB의 user_id를 조회 -->
     <select id="getUserIdByMdUserId" resultType="int" parameterType="int">
-        SELECT user_id FROM user WHERE md_user_id = #{mdUserId}
+        SELECT user_id
+        FROM user
+        WHERE md_user_id = #{mdUserId}
     </select>
 
     <!-- 계좌가 특정 user_id에 대해 메인 DB에 존재하는지 확인 -->
     <select id="exists" resultType="boolean" parameterType="map">
         SELECT COUNT(1)
         FROM user_account
-        WHERE account_id = #{accountId} AND user_id = #{userId}
+        WHERE account_id = #{accountId}
+          AND user_id = #{userId}
     </select>
 
     <!-- 계좌 정보 업데이트 -->
     <update id="updateAccount" parameterType="map">
         UPDATE user_account
-        SET account_type = #{account.accountType},
+        SET account_type   = #{account.accountType},
             account_number = #{account.accountNumber},
-            bank_name = #{account.bankName},
-            account_name = #{account.accountName},
-            balance = #{account.balance}
-        WHERE account_id = #{account.accountId} AND user_id = #{userId}
+            bank_name      = #{account.bankName},
+            account_name   = #{account.accountName},
+            balance        = #{account.balance}
+        WHERE account_id = #{account.accountId}
+          AND user_id = #{userId}
     </update>
 
     <!-- 새로운 계좌 정보 추가 -->
     <insert id="insertAccount" parameterType="map">
         INSERT INTO user_account (account_id, user_id, account_type, account_number, bank_name, account_name, balance)
-        VALUES (#{account.accountId}, #{userId}, #{account.accountType}, #{account.accountNumber}, #{account.bankName}, #{account.accountName}, #{account.balance})
+        VALUES (#{account.accountId}, #{userId}, #{account.accountType}, #{account.accountNumber}, #{account.bankName},
+                #{account.accountName}, #{account.balance})
     </insert>
 
     <!-- 계좌 정보 삭제 -->
     <delete id="deleteAccount" parameterType="map">
-        DELETE FROM user_account
-        WHERE account_id = #{accountId} AND user_id = #{userId}
+        DELETE
+        FROM user_account
+        WHERE account_id = #{accountId}
+          AND user_id = #{userId}
     </delete>
 
     <!-- 특정 사용자의 모든 계좌 ID 가져오기 -->
@@ -45,6 +52,24 @@
         SELECT account_id
         FROM user_account
         WHERE user_id = #{userId}
+    </select>
+
+    <!-- 예적금 통장 총 금액(정기예금, 적금) -->
+    <!-- account (계좌) 테이블에서 account_type 이 ‘정기예금’ 또는 ‘적금’ 인 balance (잔액) 의 합 -->
+    <select id="calculateSavingsAmount" resultType="long">
+        SELECT COALESCE(SUM(balance), 0)
+        FROM user_account
+        WHERE user_id = #{userId}
+          AND account_type IN ('정기예금', '적금')
+    </select>
+
+    <!-- 현금자산(보통예금, 증권) -->
+    <!-- account (계좌) 테이블에서 account_type (계좌 종류) 가 ‘보통예금’ 또는 ‘증권’ 인 balance (잔액) 의 합 -->
+    <select id="calculateTotalBalance" resultType="long">
+        SELECT COALESCE(SUM(balance), 0)
+        FROM user_account
+        WHERE user_id = #{userId}
+          AND account_type IN ('보통예금', '증권')
     </select>
 
 </mapper>

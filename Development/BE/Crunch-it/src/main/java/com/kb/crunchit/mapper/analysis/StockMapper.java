@@ -1,6 +1,7 @@
 package com.kb.crunchit.mapper.analysis;
 
 import com.kb.crunchit.dto.response.analysis.StockResponseDto;
+import com.kb.crunchit.entity.Stock;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
@@ -20,4 +21,16 @@ public interface StockMapper {
     void deleteStock(@Param("stockCode") String stockCode, @Param("userId") int userId); // 사용자가 매도한 주식을 삭제
 
     List<String> getAllStockCodes(int userId); // 특정 user_id의 모든 주식 코드를 가져옴
+
+    // 주식에 투자한 총 비용
+    long calculateInvestAmount(int userId);
+
+    // 사용자가 보유한 주식 코드를 반환
+    List<String> getUserStocks(int userId);
+
+    // 사용자가 보유한 주식 코드에 맞는 주식 평균 단가
+    int getAveragePurchasePrice(@Param("userId") int user_id, @Param("stockCode") String stockCode);
+
+    // 사용자가 보유한 주식 코드에 맞는 수량
+    int getStockQuantity (@Param("userId") int user_id, @Param("stockCode") String stockCode);
 }
