@@ -22,6 +22,7 @@ public class User {
     public Integer mdUserId;
     public String profileUrl;
     public Integer salary;
+    public Integer outcomeLimit;
 
     public List<Account> accounts;
     public List<Stock> stocks;
