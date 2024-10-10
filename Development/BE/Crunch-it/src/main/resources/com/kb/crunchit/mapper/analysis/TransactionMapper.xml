@@ -45,5 +45,12 @@
         FROM user_income_outcome_transaction
         WHERE user_id = #{userId}
     </select>
+    <select id="getMonthlyOutcome" resultType="java.lang.Integer" parameterType="map">
+        SELECT sum(amount)
+        FROM user_income_outcome_transaction
+        WHERE user_id = #{userId} AND
+              transaction_type = 1 AND
+              register_date between #{startDate} AND #{endDate}
+    </select>
 
 </mapper>
