@@ -7,4 +7,5 @@ import lombok.Setter;
 @Setter
 public class EmailRequestDto {
     public String email;
+    public boolean isForSignUp;
 }

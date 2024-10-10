@@ -1,39 +1,41 @@
-import { createRouter, createWebHistory } from 'vue-router';
-import HomeP from '@/pages/Home.vue';
-import ProductP from '@/pages/Product.vue';
-import PropertyP from '@/pages/Property.vue';
-import CommunityP from '@/pages/Community.vue';
-import LoginP from '@/pages/LoginPage.vue';
-import SignupP from '@/pages/SignUpPage.vue';
-import MyPage from '@/pages/MyPage.vue';
-import MyPageEdit from '@/pages/MyPageEdit.vue';
-import Search from '@/pages/Search.vue';
-import Message from '@/pages/Message.vue';
-import MyData from '@/pages/MyData.vue';
-import IncomeSetting from '@/pages/IncomeSetting.vue';
-import LimitSetting from '@/pages/LimitSetting.vue';
-import Modal from '@/components/Modal.vue';
+import { createRouter, createWebHistory } from "vue-router";
+import HomeP from "@/pages/Home.vue";
+import ProductP from "@/pages/Product.vue";
+import PropertyP from "@/pages/Property.vue";
+import CommunityP from "@/pages/Community.vue";
+import LoginP from "@/pages/LoginPage.vue";
+import SignupP from "@/pages/SignUpPage.vue";
+import MyPage from "@/pages/MyPage.vue";
+import MyPageEdit from "@/pages/MyPageEdit.vue";
+import Search from "@/pages/Search.vue";
+import Message from "@/pages/Message.vue";
+import MyData from "@/pages/MyData.vue";
+import IncomeSetting from "@/pages/IncomeSetting.vue";
+import LimitSetting from "@/pages/LimitSetting.vue";
+import Modal from "@/components/Modal.vue";
+import FindPasswordP from "@/pages/FindPassword.vue";
 
 const routes = [
-  { path: '/', name: 'Home', component: HomeP },
-  { path: '/product', name: 'Product', component: ProductP },
-  { path: '/property', name: 'Property', component: PropertyP },
-  { path: '/community', name: 'Community', component: CommunityP },
-  { path: '/login', name: 'Login', component: LoginP },
-  { path: '/signup', name: 'SignUp', component: SignupP },
-  { path: '/mypage', name: 'MyPage', component: MyPage },
-  { path: '/mypageedit', name: 'MyPageEdit', component: MyPageEdit },
-  { path: '/search', name: 'Search', component: Search },
-  { path: '/message', name: 'Message', component: Message },
-  { path: '/mydata', name: 'MyData', component: MyData },
-  { path: '/incomesetting', name: 'IncomeSetting', component: IncomeSetting },
-  { path: '/limitsetting', name: 'LimitSetting', component: LimitSetting },
-  { path: '/modal', name: 'Modal', component: Modal },
+    { path: "/", name: "Home", component: HomeP },
+    { path: "/product", name: "Product", component: ProductP },
+    { path: "/property", name: "Property", component: PropertyP },
+    { path: "/community", name: "Community", component: CommunityP },
+    { path: "/login", name: "Login", component: LoginP },
+    { path: "/findPassword", name: "FindPassword", component: FindPasswordP },
+    { path: "/signup", name: "SignUp", component: SignupP },
+    { path: "/mypage", name: "MyPage", component: MyPage },
+    { path: "/mypageedit", name: "MyPageEdit", component: MyPageEdit },
+    { path: "/search", name: "Search", component: Search },
+    { path: "/message", name: "Message", component: Message },
+    { path: "/mydata", name: "MyData", component: MyData },
+    { path: "/incomesetting", name: "IncomeSetting", component: IncomeSetting },
+    { path: "/limitsetting", name: "LimitSetting", component: LimitSetting },
+    { path: "/modal", name: "Modal", component: Modal },
 ];
 
 const router = createRouter({
-  history: createWebHistory(),
-  routes,
+    history: createWebHistory(),
+    routes,
 });
 
 // const navigationRoutes = ['Login', 'SignUp'];
