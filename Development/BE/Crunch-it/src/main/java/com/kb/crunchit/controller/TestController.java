@@ -3,6 +3,7 @@ package com.kb.crunchit.controller;
 import com.kb.crunchit.security.CustomUserDetails;
 import com.kb.crunchit.service.RecommendationTopService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.config.annotation.SecurityBuilder;
 import org.springframework.security.core.Authentication;
@@ -32,8 +33,11 @@ public class TestController {
         return ResponseEntity.ok().body(response);
     }
 
-    @GetMapping("/koreaToken")
-    public ResponseEntity<?> token(){
-        return ResponseEntity.ok().body(recommendationTopService.getKoreaToken());
-    }
+//    @GetMapping("/koreaToken")
+//    public ResponseEntity<?> token(){
+////        return new ResponseEntity<>(recommendationTopService.getKoreaToken(), HttpStatus.valueOf(200));
+////        return ResponseEntity.ok().body(recommendationTopService.getProfitAssetIndexRanking(recommendationTopService.getKoreaToken()));
+////        return ResponseEntity.ok().body(recommendationTopService.getAmountRanking(recommendationTopService.getKoreaToken()));
+//        return ResponseEntity.ok().body(recommendationTopService.getDividendRanking(recommendationTopService.getKoreaToken()));
+//    }
 }

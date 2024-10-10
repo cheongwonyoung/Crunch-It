@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.kb.crunchit.mapper.KISDividendMapper">
+
+    <!-- 주식이 존재하는지 확인 -->
+    <select id="exists" parameterType="map" resultType="boolean">
+        SELECT COUNT(1)
+        FROM kis_stock_dividend_rank
+        WHERE isin_name = #{isinName}
+    </select>
+
+    <!-- 주식 정보 업데이트 -->
+    <update id="updateStock" parameterType="StockPriceInfo">
+        UPDATE kis_stock_dividend_rank
+        SET data_rank = #{dataRank}, per_sto_divi_amt = #{perStoDiviAmt}
+        WHERE isin_name = #{isinName}
+    </update>
+
+    <!-- 새 주식 정보 삽입 -->
+    <insert id="insertStock" parameterType="StockPriceInfo">
+        INSERT INTO kis_stock_dividend_rank (data_rank , isin_name , per_sto_divi_amt)
+        VALUES (#{dataRank}, #{isinName}, #{perStoDiviAmt})
+    </insert>
+</mapper>

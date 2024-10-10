@@ -1,34 +1,23 @@
 package com.kb.crunchit.service;
 
-import com.kb.crunchit.dto.request.StockInfoRequestDto;
-import com.kb.crunchit.dto.response.UserBondResponseDTO;
-import com.kb.crunchit.dto.response.UserFundResponseDTO;
-import com.kb.crunchit.dto.response.UserStockResponseDTO;
-import com.kb.crunchit.dto.response.analysis.StockApiResponse;
-import com.kb.crunchit.dto.response.analysis.StockInfoResponseDto;
-import com.kb.crunchit.mapper.UserAssetStatisticsMapper;
-import com.kb.crunchit.mapper.UserBondMapper;
-import com.kb.crunchit.mapper.UserFundMapper;
-import com.kb.crunchit.mapper.UserStockMapper;
+import com.kb.crunchit.dto.response.*;
+import com.kb.crunchit.mapper.*;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.PropertySource;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
-import org.springframework.web.util.UriComponentsBuilder;
-import reactor.core.publisher.Mono;
 
-import java.net.URI;
-import java.net.URISyntaxException;
 import java.time.LocalDate;
 import java.util.*;
-import java.util.concurrent.TimeUnit;
 
 @Service
 @RequiredArgsConstructor
+@PropertySource("classpath:properties/api.properties")
 public class RecommendationTopService {
-    private final RedisService redisService;
 
     private final UserStockMapper userStockMapper;
 
@@ -37,6 +26,12 @@ public class RecommendationTopService {
     private final UserBondMapper userBondMapper;
 
     private final UserAssetStatisticsMapper userAssetStatisticsMapper; // user_asset_statistics 매퍼 추가
+
+    private final KISStockProfitInfoMapper kisStockProfitInfoMapper;
+
+    private final KISAmountRankingMapper kisAmountRankingMapper;
+
+    private final KISDividendMapper kisDividendMapper;
 
     @Value("${korea.stock.appkey}")
     private String appkey;
@@ -119,18 +114,147 @@ public class RecommendationTopService {
         body.put("appsecret", appsecret);
 
         // POST 요청 보내기
-        String responseToken = webClient.post()
-                .uri(baseUri + "/oauth2/tokenP") // 실제 요청할 경로로 설정
+        KISAccessTokenResponseDTO responseToken = webClient.post()
+                .uri("https://"+baseUri+":9443" + "/oauth2/tokenP") // 실제 요청할 경로로 설정
                 .contentType(MediaType.APPLICATION_JSON)
                 .bodyValue(body)
                 .retrieve()
-                .bodyToMono(String.class)
+                .bodyToMono(KISAccessTokenResponseDTO.class)
                 .block();
 
-        System.out.println("응답: " + responseToken);
-
-        redisService.saveKoreaToken("koreaToken", responseToken);
-
-        return responseToken;
+        return responseToken.getAccessToken();
     }
+    // 당기순이익
+    public void getProfitAssetIndexRanking(String KISAccessToken) {
+        KISStockProfitResponseDto result = webClient.get()
+            .uri(uriBuilder -> uriBuilder
+                    .scheme("https")
+                    .host(baseUri)
+                    .port(9443)
+                    .path("/uapi/domestic-stock/v1/ranking/profit-asset-index")
+                    .queryParam("fid_cond_mrkt_div_code", "J")
+                    .queryParam("fid_cond_scr_div_code", "20173")
+                    .queryParam("fid_input_iscd", "0000")
+                    .queryParam("fid_div_cls_code", "0")
+                    .queryParam("fid_input_price_1", "") // 입력 가격1
+                    .queryParam("fid_input_price_2", "") // 입력 가격2
+                    .queryParam("fid_vol_cnt", "") // 거래량 수
+                    .queryParam("fid_input_option_1", "2024")
+                    .queryParam("fid_input_option_2", "0")
+                    .queryParam("fid_rank_sort_cls_code", "3")
+                    .queryParam("fid_blng_cls_code", "0")
+                    .queryParam("fid_trgt_exls_cls_code", "0")
+                    .queryParam("fid_trgt_cls_code", "0")
+                    .build())
+            .header(HttpHeaders.CONTENT_TYPE, "application/json; charset=utf-8")
+            .header(HttpHeaders.AUTHORIZATION, "Bearer "+KISAccessToken)//access_token
+            .header("appkey", appkey)
+            .header("appsecret", appsecret)
+            .header("tr_id", "FHPST01730000")
+            .header("custtype", "P")
+            .accept(MediaType.APPLICATION_JSON)
+            .retrieve()
+            .bodyToMono(KISStockProfitResponseDto.class)
+            .block();
+
+        result.getOutput().forEach(stockData -> {
+            if (kisStockProfitInfoMapper.exists(stockData.getIsinCdNm())) {
+                kisStockProfitInfoMapper.updateStock(stockData);
+            } else {
+                kisStockProfitInfoMapper.insertStock(stockData);
+            }
+        });
+
+    }
+    // 시가총액상위
+    public void getAmountRanking(String KISAccessToken) {
+        StockMarketDataDTO result = webClient.get()
+            .uri(uriBuilder -> uriBuilder
+                    .scheme("https")
+                    .host(baseUri)
+                    .port(9443)
+                    .path("/uapi/domestic-stock/v1/ranking/market-cap")
+                    .queryParam("fid_cond_mrkt_div_code", "J")
+                    .queryParam("fid_cond_scr_div_code", "20174")
+                    .queryParam("fid_div_cls_code", "0")
+                    .queryParam("fid_input_iscd", "0000")
+                    .queryParam("fid_trgt_cls_code", "0")
+                    .queryParam("fid_trgt_exls_cls_code", "0")
+                    .queryParam("fid_input_price_1", "") // 입력 가격1
+                    .queryParam("fid_input_price_2", "") // 입력 가격2
+                    .queryParam("fid_vol_cnt", "") // 거래량 수
+                    .build())
+            .header(HttpHeaders.CONTENT_TYPE, "application/json; charset=utf-8")
+            .header(HttpHeaders.AUTHORIZATION, "Bearer "+KISAccessToken)//access_token
+            .header("appkey", appkey)
+            .header("appsecret", appsecret)
+            .header("tr_id", "FHPST01740000")
+            .header("custtype", "P")
+            .accept(MediaType.APPLICATION_JSON)
+            .retrieve()
+            .bodyToMono(StockMarketDataDTO.class)
+            .block();
+
+        result.getOutput().forEach(stockData -> {
+            if (kisAmountRankingMapper.exists(stockData.getStockName())) {
+                kisAmountRankingMapper.updateStock(stockData);
+            } else {
+                kisAmountRankingMapper.insertStock(stockData);
+            }
+        });
+
+    }
+
+    // 배당률 상위
+    public void getDividendRanking(String KISAccessToken) {
+        DividendDataDTO result = webClient.get()
+                .uri(uriBuilder -> uriBuilder
+                        .scheme("https")
+                        .host(baseUri)
+                        .port(9443)
+                        .path("/uapi/domestic-stock/v1/ranking/dividend-rate")
+                        .queryParam("CTS_AREA", "")
+                        .queryParam("GB1", "0")
+                        .queryParam("UPJONG", "0001")
+                        .queryParam("GB2", "0")
+                        .queryParam("GB3", "2")
+                        .queryParam("F_DT", "20230101")
+                        .queryParam("T_DT", "20240101")
+                        .queryParam("GB4", "1")
+                        .build())
+                .header(HttpHeaders.CONTENT_TYPE, "application/json; charset=utf-8")
+                .header(HttpHeaders.AUTHORIZATION, "Bearer "+KISAccessToken)//access_token
+                .header("appkey", appkey)
+                .header("appsecret", appsecret)
+                .header("tr_id", "HHKDB13470100")
+                .header("custtype", "P")
+                .accept(MediaType.APPLICATION_JSON)
+                .retrieve()
+                .bodyToMono(DividendDataDTO.class)
+                .block();
+
+        result.getOutput().forEach(stockData -> {
+            if (kisDividendMapper.exists(stockData.getIsinName())) {
+                kisDividendMapper.updateStock(stockData);
+            } else {
+                kisDividendMapper.insertStock(stockData);
+            }
+        });
+
+    }
+
+    // 매일 오전 12시에 API 호출하여 DB 업데이트
+    @Scheduled(cron = "0 23 16 * * *", zone = "Asia/Seoul")  // 매일 00:00 실행
+    public void fetchAndUpdateStockData() {
+        String token = getKoreaToken();
+
+        // 당기순이익 상위
+        getProfitAssetIndexRanking(token);
+        // 시가 총액 상위
+        getAmountRanking(token);
+        // 배당률 상위
+        getDividendRanking(token);
+
+    }
+
 }

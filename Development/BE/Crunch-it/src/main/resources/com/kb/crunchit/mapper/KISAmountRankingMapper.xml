@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.kb.crunchit.mapper.KISAmountRankingMapper">
+
+    <!-- 주식이 존재하는지 확인 -->
+    <select id="exists" parameterType="map" resultType="boolean">
+        SELECT COUNT(1)
+        FROM kis_stock_amount_rank
+        WHERE hts_kor_isnm = #{stockName}
+    </select>
+
+    <!-- 주식 정보 업데이트 -->
+    <update id="updateStock" parameterType="StockPriceInfo">
+        UPDATE kis_stock_amount_rank
+        SET data_rank = #{dataRank}, mrkt_whol_avls_rlim = #{marketCapRatio}
+        WHERE hts_kor_isnm = #{stockName}
+    </update>
+
+    <!-- 새 주식 정보 삽입 -->
+    <insert id="insertStock" parameterType="StockPriceInfo">
+        INSERT INTO kis_stock_amount_rank (data_rank , hts_kor_isnm , mrkt_whol_avls_rlim)
+        VALUES (#{dataRank}, #{stockName}, #{marketCapRatio})
+    </insert>
+</mapper>
