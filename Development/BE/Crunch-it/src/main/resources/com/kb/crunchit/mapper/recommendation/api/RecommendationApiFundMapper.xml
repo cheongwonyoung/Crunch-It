@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.kb.crunchit.mapper.recommendation.api.RecommendationApiFundMapper">
+
+    <resultMap id="FundResultMap" type="com.kb.crunchit.entity.FundInfo">
+        <result property="fndTp" column="fndTp" />
+        <result property="fndNm" column="fndNm" />
+    </resultMap>
+
+    <select id="selectAllFunds" resultMap="FundResultMap">
+        SELECT * FROM recommendation_api_fund
+    </select>
+
+    <insert id="insertFund" parameterType="com.kb.crunchit.entity.FundInfo">
+        INSERT INTO recommendation_api_fund (fndTp, fndNm)
+        VALUES (#{fndTp}, #{fndNm})
+    </insert>
+
+    <update id="updateFund" parameterType="com.kb.crunchit.entity.FundInfo">
+        UPDATE recommendation_api_fund
+        SET fndTp = #{fndTp}
+        WHERE fndNm = #{fndNm}
+    </update>
+
+    <select id="exists" parameterType="String" resultType="int">
+        SELECT COUNT(*) FROM recommendation_api_fund WHERE fndNm = #{fndNm}
+    </select>
+
+</mapper>

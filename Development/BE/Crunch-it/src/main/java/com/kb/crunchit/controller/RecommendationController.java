@@ -1,8 +1,8 @@
 package com.kb.crunchit.controller;
 
-import com.kb.crunchit.dto.response.UserBondResponseDTO;
-import com.kb.crunchit.dto.response.UserFundResponseDTO;
-import com.kb.crunchit.dto.response.UserStockResponseDTO;
+import com.kb.crunchit.dto.response.recommendation.top.UserBondResponseDTO;
+import com.kb.crunchit.dto.response.recommendation.top.UserFundResponseDTO;
+import com.kb.crunchit.dto.response.recommendation.top.UserStockResponseDTO;
 import com.kb.crunchit.service.RecommendationTopService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -22,7 +22,6 @@ public class RecommendationController {
     // 주식 수익률이 가장 높은 사용자의 상위 3개 주식 추천
     @GetMapping("/top-stocks")
     public List<UserStockResponseDTO> recommendTopStocks() {
-//        System.out.println("123!!!");
         Optional<Integer> userId = recommendationTopService.getTopProfitUserId("stock");
         if (userId.isPresent()) {
             return recommendationTopService.recommendTopStocksForUser(userId.get());
@@ -55,6 +54,4 @@ public class RecommendationController {
             return List.of();
         }
     }
-
-
 }

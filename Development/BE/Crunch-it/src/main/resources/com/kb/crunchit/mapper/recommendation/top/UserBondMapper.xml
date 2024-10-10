@@ -3,7 +3,7 @@
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
-<mapper namespace="com.kb.crunchit.mapper.UserBondMapper">
+<mapper namespace="com.kb.crunchit.mapper.recommendation.top.UserBondMapper">
     <!-- 모든 사용자 채권 정보 조회 -->
     <resultMap id="userBondResultMap" type="UserBondResponseDTO">
         <result property="bondCode" column="bond_code" jdbcType="VARCHAR"/>

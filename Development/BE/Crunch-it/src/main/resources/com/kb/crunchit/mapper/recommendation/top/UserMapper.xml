@@ -5,7 +5,7 @@
 
 
 
-<mapper namespace="com.kb.crunchit.mapper.UserMapper">
+<mapper namespace="com.kb.crunchit.mapper.recommendation.top.UserMapper">
     <select id="findByEmail" resultType="User" parameterType="string">
         SELECT
             user_id AS userId,

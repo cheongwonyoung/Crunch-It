@@ -1,5 +1,13 @@
 package com.kb.crunchit.service;
 
+import com.kb.crunchit.dto.response.recommendation.top.UserBondResponseDTO;
+import com.kb.crunchit.dto.response.recommendation.top.UserFundResponseDTO;
+import com.kb.crunchit.dto.response.recommendation.top.UserStockResponseDTO;
+import com.kb.crunchit.mapper.recommendation.top.UserAssetStatisticsMapper;
+import com.kb.crunchit.mapper.recommendation.top.UserBondMapper;
+import com.kb.crunchit.mapper.recommendation.top.UserFundMapper;
+import com.kb.crunchit.mapper.recommendation.top.UserStockMapper;
+import org.springframework.beans.factory.annotation.Autowired;
 import com.kb.crunchit.dto.response.*;
 import com.kb.crunchit.mapper.*;
 import lombok.RequiredArgsConstructor;
@@ -11,6 +19,8 @@ import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
 
+import java.util.List;
+import java.util.Optional;
 import java.time.LocalDate;
 import java.util.*;
 
@@ -19,6 +29,7 @@ import java.util.*;
 @PropertySource("classpath:properties/api.properties")
 public class RecommendationTopService {
 
+    @Autowired
     private final UserStockMapper userStockMapper;
 
     private final UserFundMapper userFundMapper;

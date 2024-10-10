@@ -1,4 +1,4 @@
-package com.kb.crunchit.dto.response;
+package com.kb.crunchit.dto.response.recommendation.top;
 
 public class UserFundResponseDTO {
     private String fundCode;

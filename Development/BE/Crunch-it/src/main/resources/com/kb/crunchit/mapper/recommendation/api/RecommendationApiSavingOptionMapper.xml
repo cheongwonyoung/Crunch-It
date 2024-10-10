@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.kb.crunchit.mapper.recommendation.api.RecommendationApiSavingOptionMapper">
+
+    <!-- Mapping columns to SavingOptionInfo entity properties -->
+    <resultMap id="SavingOptionResultMap" type="com.kb.crunchit.entity.SavingOptionInfo">
+        <result property="productCode" column="fin_prdt_cd"/>   <!-- 상품 코드 -->
+        <result property="rateTypeName" column="intr_rate_type_nm"/>   <!-- 금리 유형명 -->
+        <result property="reserveTypeName" column="rsrv_type_nm"/>     <!-- 저축 유형명 -->
+        <result property="saveTerm" column="save_trm"/>                <!-- 저축 기간 -->
+        <result property="baseRate" column="intr_rate"/>               <!-- 저축 금리 -->
+        <result property="maxRate" column="intr_rate2"/>               <!-- 최고 우대금리 -->
+    </resultMap>
+
+    <!-- Insert statement for saving option data -->
+    <insert id="insertSavingOption" parameterType="com.kb.crunchit.entity.SavingOptionInfo">
+        INSERT INTO recommendation_api_saving_option (fin_prdt_cd, intr_rate_type_nm, rsrv_type_nm, save_trm, intr_rate, intr_rate2)
+        VALUES (#{productCode}, #{rateTypeName}, #{reserveTypeName}, #{saveTerm}, #{baseRate}, #{maxRate})
+    </insert>
+
+    <!-- Update statement for saving option data -->
+    <update id="updateSavingOption" parameterType="com.kb.crunchit.entity.SavingOptionInfo">
+        UPDATE recommendation_api_saving_option
+        SET intr_rate_type_nm = #{rateTypeName},
+            rsrv_type_nm = #{reserveTypeName},
+            save_trm = #{saveTerm},
+            intr_rate = #{baseRate},
+            intr_rate2 = #{maxRate}
+        WHERE fin_prdt_cd = #{productCode}
+          AND save_trm = #{saveTerm}
+    </update>
+
+    <!-- Check if the saving option record exists -->
+    <select id="existsSavingOption" parameterType="map" resultType="int">
+        SELECT COUNT(*) FROM recommendation_api_saving_option
+        WHERE fin_prdt_cd = #{productCode}
+          AND rsrv_type_nm = #{reserveTypeName}
+          AND save_trm = #{saveTerm}
+    </select>
+
+</mapper>
