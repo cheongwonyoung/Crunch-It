@@ -23,6 +23,7 @@ export default {
   line-height: 100%;
   border-radius: 12px;
   background: var(--p10);
+  width: 335px;
   height: 56px;
   flex-shrink: 0;
   border: none;
