@@ -59,8 +59,10 @@
 <script>
 import HeaderB from '@/components/HeaderB.vue';
 import ButtonA from '@/components/ButtonA.vue';
-import ProfileModal from '@/components/ProfileModal.vue';
+import { useUserStore } from '@/stores/userStore';
+import { mapActions, mapState } from 'pinia';
 import apiClient from '@/axios';
+import ProfileModal from '@/components/ProfileModal.vue';
 
 export default {
   name: 'MyPage',
@@ -68,6 +70,9 @@ export default {
     HeaderB,
     ButtonA,
     ProfileModal,
+  },
+  computed: {
+    ...mapState(useUserStore, ['userInfo']),
   },
   data() {
     return {
@@ -82,12 +87,9 @@ export default {
     };
   },
   methods: {
+    ...mapActions(useUserStore, ['setUserInfo']),
     goBack() {
       this.$router.push('/');
-    },
-    // 프로필 모달 표시
-    showProfileModal() {
-      this.isProfileModalVisible = true;
     },
     // 프로필 수정 페이지로 이동
     goToEditPage() {
@@ -105,10 +107,17 @@ export default {
           this.user.nickname = data.nickname;
           this.user.phoneNumber = data.phone_number;
           this.profileUrl = data.profile_url;
+          this.setUserInfo({
+            nickname: data.nickname,
+            profileUrl: data.profileUrl,
+          });
         })
         .catch((error) => {
           console.error('Error fetching user profile:', error);
         });
+    },
+    showProfileModal() {
+      this.isProfileModalVisible = true;
     },
   },
   mounted() {
