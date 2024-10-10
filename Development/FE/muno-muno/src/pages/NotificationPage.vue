@@ -18,20 +18,31 @@
 
 <script>
 import { ref, onMounted } from 'vue';
-import axios from 'axios';
+// import axios from 'axios';
+import apiClient from "@/axios";
 
 export default {
   name: 'NotificationP',
   setup() {
     const notifications = ref([]);
 
-    // 기존 알림 데이터를 가져오는 함수
+    // 기존 알림 데이터를 가져오는 함수 (Authorization 헤더 추가)
     const fetchNotifications = async () => {
       try {
-        const response = await axios.get('http://localhost:8080/notifications');
+        const token = localStorage.getItem('JwtToken'); // 로컬스토리지에서 JWT 토큰 가져오기
+        if (!token) {
+          console.error('토큰이 없습니다. 로그인해주세요.');
+          return;
+        }
+
+        const response = await apiClient.get('/notifications', {
+          headers: {
+            Authorization: `${token}` // JWT 토큰을 Authorization 헤더에 포함
+          }
+        });
         notifications.value = response.data;
       } catch (error) {
-        console.error('Failed to fetch notifications', error);
+        console.error('알림 데이터를 불러오는 데 실패했습니다.', error);
       }
     };
 
@@ -40,29 +51,34 @@ export default {
       const token = localStorage.getItem('JwtToken'); // JWT 토큰을 로컬스토리지에서 가져옴
       if (!token) {
         console.error('토큰이 없습니다. 로그인해주세요.');
-      } else {
-        const payload = JSON.parse(atob(token.split('.')[1]));
-        console.log(payload);
-        const now = Math.floor(Date.now() / 1000);
-
-        if (payload.exp < now) {
-          console.error('토큰이 만료되었습니다. 다시 로그인해주세요.');
-        } else {
-          console.log('토큰 유효:', payload);
-        }
+        return;
       }
+
+      const payload = JSON.parse(atob(token.split('.')[1])); // JWT 디코딩
+      console.log('Decoded Token Payload:', payload);
+
+      // console.log('SSE 구독 요청 시작...',token);
+
       const eventSource = new EventSource(`http://localhost:8080/notifications/subscribe?token=${token}`);
 
       eventSource.onmessage = function(event) {
         console.log('New Notification:', event.data);
+        // 새로운 알림이 오면 notifications 배열에 추가
+        notifications.value.push(JSON.parse(event.data));
       };
 
       eventSource.onerror = function(error) {
-        console.error('SSE connection error', error);
+        if (eventSource.readyState === EventSource.CLOSED) {
+          console.log('SSE connection closed by server.');
+        } else {
+          console.error('SSE connection error', error);
+          console.log('EventSource readyState:', eventSource.readyState);
+          console.log('EventSource URL:', eventSource.url);
+        }
         eventSource.close();
       };
-    };
 
+    };
 
     const formatTime = (time) => {
       const date = new Date(time);
@@ -70,7 +86,7 @@ export default {
     };
 
     onMounted(() => {
-      fetchNotifications();
+      fetchNotifications(); // 처음에 알림 데이터 가져오기
       subscribeToSSE(); // SSE 구독 시작
     });
 
@@ -81,6 +97,7 @@ export default {
   },
 };
 </script>
+
 
 <style scoped>
 .container {

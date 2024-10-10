@@ -4,7 +4,7 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.kb.crunchit.mapper.NotificationMapper">
 
-    <select id="getNotificationById" parameterType="int" resultType="Notification">
+    <select id="getNotificationById" parameterType="Integer" resultType="Notification">
         SELECT *
         FROM notification
         WHERE user_id=#{userId}

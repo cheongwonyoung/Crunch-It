@@ -9,7 +9,7 @@ import java.util.List;
 public interface NotificationMapper {
 
     //특정 사용자 알림 목록 가져오는
-    List<Notification> getNotificationById(int userId);
+    List<Notification> getNotificationById(Integer userId);
 
     void insertNotification(NotificationRequestDTO notificationRequestDTO);
 }

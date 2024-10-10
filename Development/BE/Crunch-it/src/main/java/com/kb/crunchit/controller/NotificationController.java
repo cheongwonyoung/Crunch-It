@@ -24,19 +24,18 @@ public class NotificationController {
 
     @Autowired
     private NotificationService notificationService;
-//    @Autowired
-//    private JwtService jwtService;
 
     //로그인한 사용자 알림 조회
     @GetMapping
     public List<Notification> getNotificationById(Authentication authentication){
+        System.out.println("get Notification by userId");
         CustomUserDetails user=(CustomUserDetails) authentication.getPrincipal();
         Integer userId=user.getUserId();
         return notificationService.getnotificationById(userId);
     }
 
     //새로운 알림 추가
-    @PostMapping
+    @PostMapping("/insert")
     public ResponseEntity<String> insertNotification(@RequestBody NotificationRequestDTO notificationRequestDTO, Authentication authentication){
         CustomUserDetails user=(CustomUserDetails) authentication.getPrincipal();
         notificationRequestDTO.setUserId(user.getUserId());
@@ -46,12 +45,26 @@ public class NotificationController {
 
     //SSE 구독을 위한 엔드포인트
     @GetMapping("/subscribe")
-    public SseEmitter subscribe(Authentication authentication){
+    public SseEmitter subscribe(Authentication authentication,@RequestParam("token") String token){
 
+        //JWT 토큰에서 유저 정보 추출
         CustomUserDetails user=(CustomUserDetails) authentication.getPrincipal();
         String userId=user.getUserId().toString();
-        return notificationService.subscribeUser(userId);
+
+        //SseEmitter 객체 생성 및 테스트 메시지 전송
+        SseEmitter emitter=notificationService.subscribeUser(userId);
+        System.out.println("emitter******************************"+emitter);
+
+        try{
+            emitter.send(SseEmitter.event().name("test").data("Test notification"));
+            System.out.println("send emitter***********************");
+        } catch (IOException e){
+            e.printStackTrace();
+            emitter.completeWithError(e);
+        }
+        return emitter;
     }
+
 
 //    //user당 emitter 객체 저장
 //    private final ConcurrentHashMap<String , SseEmitter> emitters=new ConcurrentHashMap<>();
