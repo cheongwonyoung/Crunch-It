@@ -43,6 +43,8 @@
 <script>
     import HeaderB from "@/components/HeaderB.vue";
     import ButtonA from "@/components/ButtonA.vue";
+    import { useUserStore } from "@/stores/userStore";
+    import { mapActions, mapState } from "pinia";
     import apiClient from "@/axios";
 
     export default {
@@ -50,6 +52,9 @@
         components: {
             HeaderB,
             ButtonA,
+        },
+        computed: {
+            ...mapState(useUserStore, ["userInfo"]),
         },
         data() {
             return {
@@ -63,6 +68,7 @@
             };
         },
         methods: {
+            ...mapActions(useUserStore, ["setUserInfo"]),
             goBack() {
                 this.$router.push("/");
             },
@@ -82,7 +88,7 @@
                         this.user.nickname = data.nickname;
                         this.user.phoneNumber = data.phone_number;
                         this.profileUrl = data.profile_url;
-                        console.log(response.data);
+                        this.setUserInfo({ nickname: data.nickname, profileUrl: data.profileUrl });
                     })
                     .catch((error) => {
                         console.error("Error fetching user profile:", error);
