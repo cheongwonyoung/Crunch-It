@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.kb.crunchit.mapper.analysis.UserOctopusMapper">
+    <select id="getUserOctopus" resultType="com.kb.crunchit.entity.Octopus" parameterType="integer">
+        select bond_octopus_level as bondOctopusLevel,
+               fund_octopus_level as fundOctopusLevel,
+               saving_octopus_level as savingOctopusLevel,
+               stock_octopus_level as stockOctopusLevel
+        from user_octopus
+        where user_id = #{userId};
+    </select>
+</mapper>

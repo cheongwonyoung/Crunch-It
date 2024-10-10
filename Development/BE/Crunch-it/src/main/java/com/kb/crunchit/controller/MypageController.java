@@ -37,7 +37,7 @@ public class MypageController {
     }
 
     @PutMapping("/updateUserInfo")
-    ResponseEntity<Map<String,Object>> updateUserInfo(UserRequestDto dto, Authentication auth){
+    ResponseEntity<Map<String,Object>> updateUserInfo(@RequestBody UserRequestDto dto, Authentication auth){
         Map<String,Object> result = new HashMap<>();
         CustomUserDetails customUserDetails = (CustomUserDetails) auth.getPrincipal();
         String email = customUserDetails.getUsername();
@@ -83,7 +83,7 @@ public class MypageController {
 
             User user = User.builder()
                     .email(email)
-                    .profile_url(newProfileUrl)
+                    .profileUrl(newProfileUrl)
                     .build();
 
             mypageService.updateUserProfile(user);

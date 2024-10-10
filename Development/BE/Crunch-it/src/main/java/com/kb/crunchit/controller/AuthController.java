@@ -52,9 +52,16 @@ public class AuthController {
     @PostMapping("/sendAuthCode")
     public ResponseEntity<Map<String, Object>> sendAuthCode(@RequestBody EmailRequestDto request){
         Map<String, Object> resultMap = new HashMap<>();
-        if(authService.checkEmail(request.getEmail())){
+        boolean isForSignUp = request.isForSignUp();
+        boolean isEmail = authService.checkEmail(request.getEmail());
+        if(isEmail && isForSignUp){
             resultMap.put("code", 422);
             resultMap.put("message", "이미 존재하는 이메일입니다.");
+            return new ResponseEntity<>(resultMap, HttpStatus.UNAUTHORIZED);
+        }
+        if(!isEmail && !isForSignUp){
+            resultMap.put("code", 422);
+            resultMap.put("message", "존재하지 않는 이메일입니다.");
             return new ResponseEntity<>(resultMap, HttpStatus.UNAUTHORIZED);
         }
         authService.sendCodeToEmail(request.getEmail());
@@ -80,6 +87,27 @@ public class AuthController {
 
     }
 
+    @PostMapping("/changePassword")
+    public ResponseEntity<Map<String, Object>> changePassword(@RequestBody UserRequestDto dto){
+        Map<String, Object> resultMap = new HashMap<>();
+        String password = dto.getPassword();
+        if(dto.getPassword() == null || dto.getEmail() == null){
+            resultMap.put("code" , 500);
+            resultMap.put("message", "제대로 입력해주세요");
+            return new ResponseEntity<>(resultMap, HttpStatus.NOT_ACCEPTABLE);
+        }
+        BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
+        String encodedPassword = encoder.encode(password);
+        User user = User.builder()
+                .email(dto.getEmail())
+                .password(encodedPassword)
+                .build();
+
+        if(authService.changePassword(user)) resultMap.put("code" , 200);
+        else return new ResponseEntity<>(resultMap, HttpStatus.NOT_ACCEPTABLE);
+        return ResponseEntity.ok(resultMap);
+    }
+
 
     @PostMapping("/signUp")
     public ResponseEntity<Map<String, Object>> signUp(@RequestBody UserRequestDto dto){
@@ -96,6 +124,8 @@ public class AuthController {
                 .email(dto.getEmail())
                 .password(encodedPassword)
                 .nickname(dto.getNickname())
+                .phoneNumber(dto.getPhone_number())
+                .birth(dto.getBirth())
                 .build();
 
         if(authService.singUp(user)) resultMap.put("code" , 200);
