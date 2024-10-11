@@ -9,7 +9,11 @@
                     :src="profileUrl ? profileUrl : require('@/assets/profile.svg')"
                     alt="프로필 이미지"
                     class="profile-image" />
+<<<<<<< HEAD
+                <button class="edit-icon">
+=======
                 <button class="edit-icon" @click="showProfileModal">
+>>>>>>> develop
                     <img src="@/assets/edit.svg" alt="프로필 수정" />
                 </button>
             </div>
