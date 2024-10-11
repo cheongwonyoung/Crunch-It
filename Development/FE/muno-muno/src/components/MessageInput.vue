@@ -1,7 +1,23 @@
 <template>
   <div class="message-input">
-    <img class="icon-image" src="@/assets/picture.svg" alt="이미지 첨부" />
+    <!-- 이미지 첨부 아이콘 -->
+    <img
+      class="icon-image"
+      src="@/assets/picture.svg"
+      alt="이미지 첨부"
+      @click="selectImage"
+    />
 
+    <!-- 파일 선택 input (화면에 표시되지 않음) -->
+    <input
+      type="file"
+      ref="fileInput"
+      accept="image/*"
+      @change="handleImageSelected"
+      style="display: none"
+    />
+
+    <!-- 메시지 입력 필드 -->
     <input
       type="text"
       v-model="message"
@@ -10,6 +26,7 @@
       @keyup.enter="sendMessage"
     />
 
+    <!-- 메시지 전송 아이콘 -->
     <img
       class="icon-send"
       src="@/assets/send.svg"
@@ -31,6 +48,16 @@ export default {
       if (this.message.trim()) {
         this.$emit('send', this.message);
         this.message = '';
+      }
+    },
+    selectImage() {
+      // 파일 선택창 열기
+      this.$refs.fileInput.click();
+    },
+    handleImageSelected(event) {
+      const file = event.target.files[0];
+      if (file) {
+        this.$emit('sendImage', file); // 이미지 파일 상위 컴포넌트에 전달
       }
     },
   },
@@ -65,7 +92,6 @@ export default {
   background: var(--gr80);
   font-size: 14px;
   outline: none;
-  margin-right: 8px;
   margin: 0 10px 0 8px;
   box-sizing: border-box;
 }

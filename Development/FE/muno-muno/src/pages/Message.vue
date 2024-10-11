@@ -8,9 +8,10 @@
       <div v-for="message in messages" :key="message.id">
         <!-- 사용자 메시지 -->
         <MessageUser
-          v-if="message.sender === this.nickname"
+          v-if="message.sender === nickname"
           :message="message.content"
           :time="message.time"
+          :image="message.image"
         />
         <!-- 상대방 메시지 -->
         <MessageBot
@@ -24,7 +25,7 @@
     </div>
 
     <!-- 메시지 입력창 컴포넌트 -->
-    <MessageInput @send="handleSendMessage" />
+    <MessageInput @send="handleSendMessage" @sendImage="handleSendImage" />
   </div>
 </template>
 
@@ -33,11 +34,9 @@ import HeaderB from '@/components/HeaderB.vue';
 import MessageUser from '@/components/MessageUser.vue';
 import MessageBot from '@/components/MessageOther.vue';
 import MessageInput from '@/components/MessageInput.vue';
-// import SockJS from 'sockjs-client';
-// import Stomp from 'webstomp-client';
+
 function decodeJwt(token) {
   if (!token) return null;
-
   const base64Url = token.split('.')[1];
   const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
   const jsonPayload = decodeURIComponent(
@@ -48,6 +47,7 @@ function decodeJwt(token) {
   );
   return JSON.parse(jsonPayload);
 }
+
 export default {
   name: 'MessageP',
   components: {
@@ -59,26 +59,11 @@ export default {
   data() {
     return {
       stompClient: null,
-      // 임의로 추가한 메시지 데이터
-      messages: [
-        // {
-        //   id: 1,
-        //   sender: '장태용',
-        //   content: '안녕하세요!',
-        //   time: '오후 10:00',
-        // },
-        // {
-        //   id: 2,
-        //   sender: 'Bot',
-        //   content: '안녕하세요! 반갑습니다.',
-        //   time: '오후 10:01',
-        // }, 
-   
-      ],
+      messages: [],
       currentRoomId: 2,
-      currentRoomName: '거지방', // 백엔드에서 값을 받으면 여기에 표시되도록 함
+      currentRoomName: '거지방',
       user: null,
-      nickname:""
+      nickname: '',
     };
   },
   methods: {
@@ -93,8 +78,9 @@ export default {
           time: new Date().toLocaleTimeString('ko-KR', {
             hour: '2-digit',
             minute: '2-digit',
-          }), // 한글 형식 시간
+          }),
           roomId: this.currentRoomId,
+          image: null, // 텍스트 메시지에는 이미지가 없으므로 null
         };
         this.stompClient.send(
           `/topic/chat/${this.currentRoomId}`,
@@ -105,13 +91,36 @@ export default {
         this.scrollToBottom();
       }
     },
+    handleSendImage(file) {
+      const reader = new FileReader();
+      reader.onload = (event) => {
+        const base64Image = event.target.result;
+        const message = {
+          sender: this.nickname,
+          content: '', // 이미지 전송 메시지의 경우 텍스트 비우기
+          time: new Date().toLocaleTimeString('ko-KR', {
+            hour: '2-digit',
+            minute: '2-digit',
+          }),
+          roomId: this.currentRoomId,
+          image: base64Image, // Base64 인코딩된 이미지
+        };
+        this.stompClient.send(
+          `/topic/chat/${this.currentRoomId}`,
+          {},
+          JSON.stringify(message)
+        );
+        this.messages.push(message);
+        this.scrollToBottom();
+      };
+      reader.readAsDataURL(file);
+    },
     connect() {
       const socket = new window.SockJS('http://localhost:8080/ws');
       this.stompClient = window.Stomp.over(socket);
       this.stompClient.connect({}, this.onConnected, this.onError);
     },
     onConnected() {
-      // 백엔드에서 방 이름 값을 받아서 currentRoomName에 설정
       this.stompClient.subscribe(
         `/topic/chat/${this.currentRoomId}`,
         this.onMessageReceived
@@ -123,7 +132,7 @@ export default {
     },
     onMessageReceived(payload) {
       const message = JSON.parse(payload.body);
-      if(message.sender===this.nickname) return;
+      if (message.sender === this.nickname) return;
       this.messages.push({
         ...message,
         time: new Date().toLocaleTimeString('ko-KR', {
@@ -142,16 +151,11 @@ export default {
   },
   mounted() {
     const token = localStorage.getItem('JwtToken');
-
-    this.user =  decodeJwt(token);
-    
-    console.log("nickname= " +this.user.nickname);
+    this.user = decodeJwt(token);
     this.nickname = this.user.nickname;
     this.connect();
-    window.addEventListener('resize', this.handleResize);
   },
   beforeUnmount() {
-    window.removeEventListener('resize', this.handleResize);
     if (this.stompClient) {
       this.stompClient.disconnect();
     }
