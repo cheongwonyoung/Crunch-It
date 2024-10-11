@@ -20,4 +20,10 @@ public interface FundMapper {
     void deleteFund(@Param("fundCode") String fundCode, @Param("userId") int userId); // 사용자가 판 펀드를 삭제
 
     List<String> getAllFundCodes(int userId); // 특정 user_id의 모든 펀드 코드를 가져옴
+
+    // 펀드에 투자한 총 비용
+    long calculateInvestAmount(int userId);
+
+    // 펀드 총 수익
+    long calculateProfitAmount(int userId);
 }

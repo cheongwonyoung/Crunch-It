@@ -1,14 +1,14 @@
-import Message from "@/pages/Message.vue";
-import { createRouter, createWebHistory } from "vue-router";
-import HomeP from "@/pages/Home.vue";
-import ProductP from "@/pages/Product.vue";
-import PropertyP from "@/pages/Property.vue";
-import LoginP from "@/pages/LoginPage.vue";
-import SignupP from "@/pages/SignUpPage.vue";
-import MyPage from "@/pages/MyPage.vue";
-import MyPageEdit from "@/pages/MyPageEdit.vue";
-import Search from "@/pages/Search.vue";
-import Modal from "@/components/Modal.vue";
+import Message from '@/pages/Message.vue';
+import { createRouter, createWebHistory } from 'vue-router';
+import HomeP from '@/pages/Home.vue';
+import ProductP from '@/pages/Product.vue';
+import PropertyP from '@/pages/Property.vue';
+import LoginP from '@/pages/LoginPage.vue';
+import SignupP from '@/pages/SignUpPage.vue';
+import MyPage from '@/pages/MyPage.vue';
+import MyPageEdit from '@/pages/MyPageEdit.vue';
+import Search from '@/pages/Search.vue';
+import Modal from '@/components/Modal.vue';
 
 import CommunityP from "@/pages/CommunityPage.vue";
 import PostDetailP from "@/pages/PostDetailPage.vue";
@@ -19,7 +19,6 @@ import MyData from "@/pages/MyData.vue";
 import IncomeSetting from "@/pages/IncomeSetting.vue";
 import LimitSetting from "@/pages/LimitSetting.vue";
 import FindPasswordP from "@/pages/FindPassword.vue";
-import ChatP from "@/pages/ChatPage.vue";
 // import apiClient from "@/axios";
 
 const routes = [
@@ -42,12 +41,11 @@ const routes = [
     { path: "/community/create", name: "WritePost", component: WritePostP, props: true },
     { path: "/community/modify/:id", name: "EditPost", component: EditPostP, props: true },
     { path: "/community/notification", name: "Notification", component: NotificationP, props: true },
-    { path: "/chat", name: "Chat", component: ChatP },
 ];
 
 const router = createRouter({
-    history: createWebHistory(),
-    routes,
+  history: createWebHistory(),
+  routes,
 });
 
 // const navigationRoutes = ["Login", "SignUp"];

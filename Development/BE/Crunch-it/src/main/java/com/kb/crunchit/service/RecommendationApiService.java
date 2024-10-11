@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.reactive.function.client.WebClient;
@@ -54,13 +55,18 @@ public class RecommendationApiService {
     @Value("${api.serviceKey.bond}")
     private String bondServiceKey;
 
-    // 모든 상품 데이터를 한꺼번에 업데이트
-    public void fetchAndUpdateAllProductData(String beginBasDt) {
-        fetchAndUpdateDepositData(beginBasDt);
-        fetchAndUpdateSavingData(beginBasDt);
-        fetchAndUpdateFundData(beginBasDt);
-        fetchAndUpdateBondData(beginBasDt);
+    // 매일 오전 12시에 API 호출하여 DB 업데이트
+    @Scheduled(cron = "0 0 0 * * *", zone = "Asia/Seoul")  // 매일 00:00 실행
+    public void fetchAndUpdateAllProductData() {
+        String beginBaseDt = "20240101";
+        fetchAndUpdateDepositData(beginBaseDt);
+        fetchAndUpdateSavingData(beginBaseDt);
+        fetchAndUpdateFundData(beginBaseDt);
+        fetchAndUpdateBondData(beginBaseDt);
     }
+
+
+
 
     public void fetchAndUpdateDepositData(String beginBasDt) {
         RecommendationApiRequestDto requestDto = new RecommendationApiRequestDto(depositServiceKey, "1", "json", beginBasDt, "deposit");

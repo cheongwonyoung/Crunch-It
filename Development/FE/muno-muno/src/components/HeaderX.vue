@@ -1,7 +1,16 @@
 <template>
   <div class="header">
     <div class="header-text">{{ title }}</div>
-    <img class="close-icon" src="@/assets/x.svg" @click="onClose" />
+    <div class="header-icons">
+      <img
+        v-for="icon in resolvedIcons"
+        :key="icon.alt"
+        :src="icon.src"
+        :alt="icon.alt"
+        class="icon"
+        @click="icon.onClick"
+      />
+    </div>
   </div>
 </template>
 
@@ -13,10 +22,24 @@ export default {
       required: true,
       default: '제목',
     },
+    icons: {
+      type: Array,
+      default: () => [],
+    },
   },
-  methods: {
-    onClose() {
-      this.$emit('close');
+  computed: {
+    resolvedIcons() {
+      // 아이콘이 없으면 기본 아이콘으로 설정
+      if (this.icons.length === 0) {
+        return [
+          {
+            src: require('@/assets/x.svg'),
+            alt: 'Default Icon',
+            onClick: () => {},
+          },
+        ];
+      }
+      return this.icons;
     },
   },
 };
@@ -27,7 +50,7 @@ export default {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 0 22px;
+  padding: 0 25px 0 22px;
   height: 65px;
   background-color: var(--gr100);
   position: fixed;
@@ -44,7 +67,12 @@ export default {
   font-weight: 600;
 }
 
-.close-icon {
+.header-icons {
+  display: flex;
+  gap: 10px;
+}
+
+.icon {
   width: 24px;
   height: 24px;
   cursor: pointer;
