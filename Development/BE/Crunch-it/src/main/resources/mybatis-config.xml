@@ -54,7 +54,6 @@
         <mapper resource="com/kb/crunchit/mapper/recommendation/top/UserBondMapper.xml"/>
         <mapper resource="com/kb/crunchit/mapper/recommendation/top/UserFundMapper.xml"/>
         <mapper resource="com/kb/crunchit/mapper/recommendation/top/UserStockMapper.xml"/>
-        <mapper resource="com/kb/crunchit/mapper/ChatRoomMapper.xml"/>
         <mapper resource="com/kb/crunchit/mapper/UserMapper.xml"/>
         <mapper resource="com/kb/crunchit/mapper/BoardMapper.xml"/>
     </mappers>
