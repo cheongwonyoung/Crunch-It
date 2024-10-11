@@ -155,7 +155,7 @@ export default {
 .community-page {
   padding: 0 20px;
   position: absolute;
-  top: 112px;
+  top: 120px;
   width: 375px;
   height: auto;
   box-sizing: border-box;
@@ -218,15 +218,14 @@ export default {
 
 .floating-button {
   position: fixed;
-  bottom: 106px;
-  right: 20px;
+  bottom: 98px;
+  right: 10px;
   border-radius: 50%;
   display: flex;
   align-items: center;
   justify-content: center;
   cursor: pointer;
   z-index: 1100;
-  transition: transform 0.3s ease;
 }
 
 .floating-button:hover {
