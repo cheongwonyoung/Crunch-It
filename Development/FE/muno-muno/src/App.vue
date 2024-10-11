@@ -31,11 +31,13 @@ export default {
         '/limitsetting',
         '/community/notification',
         '/community/create',
+        '/community/modify',
       ],
     };
   },
   computed: {
     showTabBar() {
+      if (this.$route.path.includes('/community/modify')) return false;
       return !this.hideRoutes.includes(this.$route.path);
     },
   },

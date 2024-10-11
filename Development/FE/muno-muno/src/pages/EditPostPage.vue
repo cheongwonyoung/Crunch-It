@@ -1,49 +1,81 @@
 <template>
   <div class="edit-post-page">
-    <h1>게시글 수정</h1>
+    <HeaderB title="게시글 수정" @back="onBack" />
+
     <form @submit.prevent="submitEdit">
-      <div class="form-group">
-        <label for="title">제목</label>
-        <input type="text" id="title" v-model="editTitle" />
-      </div>
-      <div class="form-group">
-        <label for="category">카테고리</label>
-        <select v-model="category" id="category" required>
-          <option disabled value="">카테고리를 선택하세요</option>
-          <option v-for="cat in categories" :key="cat" :value="cat">
-            {{ cat }}
-          </option>
-        </select>
+      <div class="form-group category-wrapper">
+        <label for="category" class="category-label">카테고리</label>
+        <div class="select-wrapper">
+          <select
+            v-model="category"
+            id="category"
+            required
+            class="category-select"
+          >
+            <option disabled value="">카테고리를 선택하세요</option>
+            <option v-for="cat in categories" :key="cat" :value="cat">
+              {{ cat }}
+            </option>
+          </select>
+          <img
+            src="@/assets/chevronDown.svg"
+            alt="Dropdown Icon"
+            class="dropdown-icon"
+          />
+        </div>
       </div>
 
       <div class="form-group">
-        <label for="content">내용</label>
-        <textarea id="content" v-model="editContent" rows="6"></textarea>
+        <input
+          type="text"
+          v-model="editTitle"
+          id="title"
+          placeholder="제목을 입력해주세요"
+          required
+          class="input-field"
+        />
       </div>
-      <button type="submit" class="submit-btn">수정 완료</button>
+
+      <div class="form-group">
+        <textarea
+          v-model="editContent"
+          id="content"
+          rows="8"
+          placeholder="내용을 입력해주세요"
+          required
+          class="input-field"
+        ></textarea>
+      </div>
+
+      <ButtonA @onClick="submitEdit">수정 완료</ButtonA>
     </form>
   </div>
 </template>
 
 <script>
 import { ref, onMounted } from 'vue';
-import apiClient from '../axios';
+import apiClient from '@/axios';
 import { useRoute, useRouter } from 'vue-router';
+import HeaderB from '@/components/HeaderB.vue';
+import ButtonA from '@/components/ButtonA.vue';
 
 export default {
   name: 'EditPostP',
+  components: {
+    HeaderB,
+    ButtonA,
+  },
   setup() {
     const route = useRoute();
     const router = useRouter();
     const postId = route.params.id;
 
-    const categories = ['지출', '예적금', '펀드', '주식', '채권'];
+    const categories = ['전체', '지출', '예적금', '펀드', '주식', '채권'];
 
     const editTitle = ref('');
     const editContent = ref('');
-    const category = ref(''); // 카테고리 선택
+    const category = ref('');
 
-    // 게시글 정보 가져오기
     const fetchPost = async () => {
       try {
         const response = await apiClient.get(
@@ -51,20 +83,19 @@ export default {
         );
         editTitle.value = response.data.title;
         editContent.value = response.data.content;
-        category.value = response.data.category; // 카테고리 초기화
+        category.value = response.data.category;
       } catch (error) {
         console.error('Error fetching post:', error);
       }
     };
 
-    // 게시글 수정하기
     const submitEdit = async () => {
       try {
         await apiClient.put(
           `http://localhost:8080/community/${postId}/modify`,
           {
             title: editTitle.value,
-            category: category.value, // 카테고리 포함
+            category: category.value,
             content: editContent.value,
           }
         );
@@ -75,16 +106,21 @@ export default {
       }
     };
 
+    const onBack = () => {
+      router.back();
+    };
+
     onMounted(() => {
-      fetchPost(); // 초기 게시글 정보 가져오기
+      fetchPost();
     });
 
     return {
       editTitle,
       editContent,
-      category, // 추가
-      categories, // 카테고리 리스트
+      category,
+      categories,
       submitEdit,
+      onBack,
     };
   },
 };
@@ -92,47 +128,79 @@ export default {
 
 <style scoped>
 .edit-post-page {
-  max-width: 720px;
-  margin: 0 auto;
-  padding: 20px;
-  font-family: 'Helvetica Neue', Arial, sans-serif;
-}
-
-h1 {
-  font-size: 24px;
-  margin-bottom: 20px;
+  position: absolute;
+  top: 108px;
+  left: 0;
+  width: 100%;
+  max-width: 600px;
+  padding: 0 20px;
+  box-sizing: border-box;
+  overflow-y: auto;
 }
 
 .form-group {
-  margin-bottom: 15px;
+  margin-top: 12px;
 }
 
-label {
-  display: block;
-  font-size: 14px;
-  margin-bottom: 5px;
+.category-label {
+  margin-right: 10px;
+  color: var(--gr40);
+  font-size: 20px;
+  font-weight: 400;
+  line-height: 100%;
 }
 
-input,
-textarea,
-select {
-  width: 100%;
-  padding: 10px;
-  font-size: 14px;
-  border: 1px solid #ddd;
-  border-radius: 5px;
+.category-wrapper {
+  display: flex;
+  align-items: center;
 }
 
-.submit-btn {
-  padding: 10px 20px;
-  background-color: #007bff;
-  color: white;
+.select-wrapper {
+  display: flex;
+  align-items: center;
+}
+
+.category-select {
+  -webkit-appearance: none;
+  color: var(--gr20);
+  font-size: 20px;
+  font-weight: 600;
+  line-height: 100%;
   border: none;
-  border-radius: 5px;
-  cursor: pointer;
+  width: auto;
+  max-width: 60px;
 }
 
-.submit-btn:hover {
-  background-color: #0056b3;
+.input-field {
+  width: 335px;
+  height: 56px;
+  flex-shrink: 0;
+  border-radius: 12px;
+  border: 0.5px solid var(--gr60);
+  background: var(--gr100);
+  margin: 0;
+  padding: 20px;
+  color: var(--gr30);
+  font-size: 16px;
+}
+
+textarea.input-field {
+  width: 335px;
+  height: 306px;
+  box-sizing: border-box;
+  padding: 20px;
+  color: var(--gr30);
+  font-size: 16px;
+}
+
+.input-field::placeholder,
+textarea.input-field::placeholder {
+  color: var(--gr60);
+}
+
+.input-field:focus,
+textarea.input-field:focus {
+  color: var(--gr20);
+  font-size: 16px;
 }
 </style>
