@@ -1,7 +1,7 @@
 package com.kb.crunchit.service;
 
 import com.kb.crunchit.entity.User;
-import com.kb.crunchit.mapper.recommendation.top.UserMapper;
+import com.kb.crunchit.mapper.UserMapper;
 import com.kb.crunchit.security.CustomUserDetails;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
