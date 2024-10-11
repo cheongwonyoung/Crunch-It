@@ -2,7 +2,6 @@
   <div class="message-page">
     <!-- 상단 헤더 -->
     <HeaderB :title="currentRoomName" @back="goBack" />
-
     <!-- 메시지 컨테이너 -->
     <div class="message-container" ref="messageContainer">
       <div v-for="message in messages" :key="message.id">
@@ -25,7 +24,7 @@
       </div>
     </div>
 
-    <!-- 메시지 입력창 컴포넌트 -->
+    <!-- 메시지 입력창 컴포넌트  -->
     <MessageInput @send="handleSendMessage" @sendImage="handleSendImage" />
   </div>
 </template>
@@ -37,7 +36,7 @@ import MessageBot from '@/components/MessageOther.vue';
 import MessageInput from '@/components/MessageInput.vue';
 import { useUserStore } from "@/stores/userStore";
 import { mapState } from "pinia";
-
+import { useRoute } from 'vue-router';
 function decodeJwt(token) {
   if (!token) return null;
   const base64Url = token.split('.')[1];
@@ -194,12 +193,21 @@ export default {
     },
   },
   mounted() {
+    const route = useRoute();
+    // const postId = route.params.id;
+
+    this.currentRoomId = route.params.roomId;
+    this.currentRoomName = decodeURIComponent(route.params.roomName);
+
+    console.log(this.currentRoomId); // 전달받은 roomId 확인
+    console.log(this.currentRoomName); // 전달받은 roomName 확인
     const token = localStorage.getItem('JwtToken');
     this.user = decodeJwt(token);
     this.nickname = this.userInfo.nickname;
     this.profile = this.userInfo.profileUrl;
     console.log(this.userInfo.nickname)
     console.log(this.userInfo.profileUrl)
+    
     this.connect();
   },
   beforeUnmount() {
