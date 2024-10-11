@@ -1,6 +1,7 @@
 package com.kb.crunchit.mapper.analysis;
 
 import com.kb.crunchit.dto.response.analysis.BondResponseDto;
+import com.kb.crunchit.entity.Bond;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
@@ -20,4 +21,19 @@ public interface BondMapper {
     void deleteBond(@Param("bondCode") String bondCode, @Param("userId") int userId); // 사용자가 판매한 채권을 삭제
 
     List<String> getAllBondCodes(int userId); // 특정 user_id의 모든 채권 코드를 가져옴
+
+    // 채권에 투자한 총 비용
+    long calculateInvestAmount(int userId);
+
+    // 사용자가 보유한 채권 코드를 반환
+    List<String> getUserBonds(int userId);
+
+    // 사용자가 보유한 채권 코드에 맞는 채권 평균 단가
+    int getAveragePurchasePrice(@Param("userId") int user_id, @Param("bondCode") String bondCode);
+
+    // 사용자가 보유한 채권 코드에 맞는 수량
+    int getBondQuantity (@Param("userId") int user_id, @Param("bondCode") String bondCode);
+
+    // 사용자가 보유한 채권 코드에 맞는 채권 이자율
+    int getBondInterestRate (@Param("userId") int user_id, @Param("bondCode") String bondCode);
 }

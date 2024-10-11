@@ -6,12 +6,12 @@ import java.util.List;
 
 @Getter
 public class Account {
-    public int account_id;
-    public int user_id;
-    public int account_type;
-    public String account_number;
-    public String bank_name;
-    public String account_name;
+    public int accountId;
+    public int userId;
+    public int accountType;
+    public String accountNumber;
+    public String bankName;
+    public String accountName;
     public long balance;
 
     public List<IncomeOutcomeHistory> incomeOutcomeHistories;

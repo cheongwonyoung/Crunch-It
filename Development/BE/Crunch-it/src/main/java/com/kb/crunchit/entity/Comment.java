@@ -14,7 +14,7 @@ public class Comment {
     public int likes;
     public LocalDateTime registerDate;
     public LocalDateTime modifyDate;
-
+    public int userId;
     public List<Reply> replyList;
 
     public void addReplyList(List<Reply> replyList){

@@ -17,7 +17,7 @@ export default {
   left: 0;
   width: 100%;
   height: 44px;
-  background-color: '';
+  background-color: white;
   z-index: 1000;
 }
 </style>

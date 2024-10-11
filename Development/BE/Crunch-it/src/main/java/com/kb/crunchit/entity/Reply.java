@@ -12,4 +12,5 @@ public class Reply {
     public int likes;
     public LocalDateTime registerDate;
     public LocalDateTime modifyDate;
+    public int userId;
 }

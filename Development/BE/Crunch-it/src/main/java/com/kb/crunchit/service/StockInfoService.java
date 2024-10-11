@@ -42,11 +42,10 @@ public class StockInfoService { // API 호출을 보내고, 응답을 받아서 
     @Value("${stock.api.baseUri}")
     private String baseUri;
 
-    // 매일 오전 12시에 API 호출하여 DB 업데이트
-    @Scheduled(cron = "0 0 12 * * *", zone = "Asia/Seoul")  // 매일 00:00 실행
+    // 주식 API 호출하여 DB 업데이트
     public void fetchAndUpdateStockData() {
         String yesterday = LocalDate.now().minusDays(1).toString().replace("-", "");
-//        String fixedDate = "20240927"; // 테스트용 고정 날짜
+//        String fixedDate = "20241008"; // 테스트용 고정 날짜
 
         for (int pageNo = 1; pageNo <= 3; pageNo++) {
             StockInfoRequestDto requestDto = new StockInfoRequestDto(serviceKey, "1000", String.valueOf(pageNo), "json", yesterday);

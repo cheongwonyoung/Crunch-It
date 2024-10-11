@@ -17,6 +17,7 @@ public class Board {
     public String title;
     public String content;
     public String category;
+
     public LocalDateTime registerDate;
     public LocalDateTime modifyDate;
     public int likes;
