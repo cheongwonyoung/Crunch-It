@@ -45,7 +45,15 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                 filterChain.doFilter(request, response);
                 return;
             }
-            String accessToken = jwtService.extractAccessToken(request);
+            String accessToken ="";
+            if(requestURI.contains("/notifications/subscribe")){
+                accessToken= request.getParameter("token");
+                System.out.println("123123231123132312123321132312213132");
+                System.out.println(accessToken);
+            }else{
+                accessToken = jwtService.extractAccessToken(request);
+            }
+
             if(accessToken == null|| !jwtTokenUtil.validateToken(accessToken)){
                 throw new AuthenticationException("invalid token"){};
             }

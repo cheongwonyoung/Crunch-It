@@ -28,7 +28,7 @@ import software.amazon.awssdk.regions.Region;
 
 @EnableScheduling
 @Configuration
-@ComponentScan(basePackages = {"com.kb.crunchit.util", "com.kb.crunchit.service"})
+@ComponentScan(basePackages = {"com.kb.crunchit.util", "com.kb.crunchit.service","com.kb.crunchit.controller"})
 @MapperScan(basePackages = {"com.kb.crunchit.mapper"})
 public class AppConfig {
     @Bean  //(destroyMethod="close")
