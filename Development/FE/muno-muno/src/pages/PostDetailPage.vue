@@ -1,11 +1,13 @@
 <template>
   <div class="post-detail-page">
     <header class="header">
-      <h1 class="title">{{ post.title }}</h1>
+<!--      <h1 class="title">{{ post.title }}</h1>-->
+      <!-- Back Icon -->
+      <img src="@/assets/arrowLeft.svg" alt="back-icon" @click="goBack" class="back-icon"/>
 
       <!-- 설정 아이콘 및 드롭다운 메뉴 -->
       <div class="settings-menu">
-        <i class="fas fa-ellipsis-v" @click="toggleSettingsMenu"></i>
+        <img src="@/assets/dots-vertical.svg" alt="dots-vertical"  @click="toggleSettingsMenu"/>
         <div v-if="showSettingsMenu" class="dropdown-menu">
           <ul>
             <li @click="goToEditPage">수정</li>
@@ -13,26 +15,45 @@
           </ul>
         </div>
       </div>
-
-      <div class="post-meta">
-        <span class="category">{{ post.category }}</span> |
-        <span class="user">{{ post.writerId }}</span> |
-        <span class="date">{{ formattedDate }}</span>
-      </div>
     </header>
+    <div class="post-meta">
+      <span class="category">{{ post.category }}</span>
+      <h1 class="title">{{ post.title }}</h1>
+      <div class="user-info">
+        <img class="user-avatar" src="https://via.placeholder.com/40" alt="avatar" />
+        <div class="user-meta">
+          <span class="user">{{ post.writerId }}</span>
+          <span class="date">{{ formattedDate }}</span>
+        </div>
+      </div>
+    </div>
 
+
+<!--    <div class="post-content">-->
+<!--      <p>{{ post.content }}</p>-->
+<!--    </div>-->
+
+<!--    <div class="post-likes" @click="likePost">-->
+<!--      <span :class="likedByUser ? 'liked' : ''">❤️ {{ post.likes }}</span>-->
+<!--    </div>-->
     <div class="post-content">
       <p>{{ post.content }}</p>
     </div>
 
-    <div class="post-likes" @click="likePost">
-      <span :class="likedByUser ? 'liked' : ''">❤️ {{ post.likes }}</span>
+    <div class="post-actions">
+      <div class="likes-comments">
+        <img src="@/assets/heart-rounded.svg" alt="like" @click="likePost" class="action-icon" />
+        <!-- Fix the class binding for likedByUser -->
+        <span :class="{ liked: likedByUser }" class="likes-count">공감 {{ post.likes }}</span>
+        <img src="@/assets/message-square.svg" alt="comments" class="action-icon" />
+        <span class="comment-count">댓글 {{ post.commentsCount }}</span>
+      </div>
     </div>
-
 
 
     <!-- 댓글 리스트 및 수정/삭제 기능 추가 -->
     <CommentList :comments="comments" :replies="replies"
+                 @update-comment-reply-count="updateCommentReplyCount"
                  @update-comment="handleUpdateComment"
                  @delete-comment="handleDeleteComment"
                  @submit-reply="submitReply"
@@ -48,6 +69,8 @@
       ></textarea>
       <button @click="submitComment" class="submit-btn">댓글 등록</button>
     </div>
+    <MessageInput></MessageInput>
+
 
     <router-link to="/community" class="back-link">목록</router-link>
   </div>
@@ -80,12 +103,20 @@ export default {
       registerDate: '',
       modifyDate: '',
       likes: 0,
+      commentsCount:0,
     });
 
     const comments = ref([]);
     const replies = ref([]); // 모든 답글 데이터를 저장
     const newComment = ref('');
     const showSettingsMenu = ref(false);
+    const goBack = () => {
+      router.push('/community');
+    };
+
+    const updateCommentReplyCount = ({ commentCount, replyCount }) => {
+      post.value.commentsCount = commentCount + replyCount; // Sum of comments and replies
+    };
 
     const token=localStorage.getItem('JwtToken');
     let userId=null;
@@ -164,6 +195,8 @@ export default {
         } catch (error) {
           console.error('Error deleting post:', error);
         }
+      } else {
+        showSettingsMenu.value=false;
       }
     };
 
@@ -284,7 +317,9 @@ export default {
       handleUpdateReply,
       handleDeleteReply,
       likePost,
-      nickname
+      nickname,
+      goBack,
+      updateCommentReplyCount,
     };
   },
 };
@@ -300,33 +335,33 @@ export default {
 }
 
 .header {
-  border-bottom: 2px solid #eee;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
   margin-bottom: 20px;
-  padding: 5px;
-  position: relative;
+  padding: 5px 0;
 }
 
-.title {
-  font-size: 25px;
-  font-weight: bold;
-  margin-bottom: 5px;
+.back-icon {
+  cursor: pointer;
+  width: 24px;
+  height: 24px;
 }
 
 .settings-menu {
-  position: absolute;
-  top: 0;
-  right: 0;
   cursor: pointer;
+  position: relative;
 }
 
 .settings-menu .dropdown-menu {
   position: absolute;
-  top: 20px;
-  left: 0;
+  top: 24px;
+  right: 0;
   background-color: #fff;
   border: 1px solid #ddd;
   border-radius: 5px;
   box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  z-index: 100;
 }
 
 .settings-menu .dropdown-menu ul {
@@ -339,10 +374,9 @@ export default {
   padding: 10px;
   cursor: pointer;
   font-size: 14px;
-  display: inline-block; /* inline-block으로 수정하여 세로로 나열되지 않도록 */
-  writing-mode: horizontal-tb; /* 가로 텍스트 유지 */
-  white-space: nowrap; /* 줄바꿈 없이 가로로 출력 */
-  font-family: Arial, sans-serif; /* 기본 폰트 설정 */
+  writing-mode: horizontal-tb;
+  white-space: nowrap;
+  font-family: Arial, sans-serif;
 }
 
 .settings-menu .dropdown-menu li:hover {
@@ -350,16 +384,65 @@ export default {
 }
 
 .post-meta {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 15px;
+}
+
+.category {
   font-size: 14px;
-  color: #999;
-  margin-bottom: 20px;
+  font-weight: 500;
+  color: #383E47;
+  margin-bottom: 5px;
+}
+
+.title {
+  font-size: 20px;
+  font-weight: 600;
+  color: #292D33;
+  line-height: 1.5;
+  margin: 8px 0;
+}
+
+.user-info {
+  display: flex;
+  align-items: center;
+}
+
+.user-avatar {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  margin-right: 8px;
+}
+.user-meta {
+  display: flex;
+  flex-direction: column; /* Stack the user and date vertically */
+}
+
+.user {
+  font-size: 14px;
+  color: #383E47;
+  margin-right: 8px;
+  margin-bottom: 2px; /* Add a small space between the user and date */
+}
+
+.date {
+  font-size: 12px;
+  color: #909090;
 }
 
 .post-content {
   font-size: 16px;
   line-height: 1.6;
   color: #333;
-  margin-bottom: 20px;
+  //margin-bottom: 20px;
+  margin-top: 10px; /* Add some space above and below the post content */
+  padding: 10px 0; /* Add padding to make the borders stand out */
+  border-top: 1px solid #ddd; /* Light gray line above the content */
+  border-bottom: 1px solid #ddd; /* Light gray line below the content */
+  white-space: pre-wrap; /* Ensure new lines are rendered as in the post */
+
 }
 
 .post-likes {
@@ -414,4 +497,55 @@ export default {
 .back-link:hover {
   text-decoration: underline;
 }
+
+.post-actions {
+  display: flex;
+  align-items: center;
+  justify-content: space-between; /* Space between likes and comments */
+  padding: 10px 0; /* Add padding to give some space */
+  border-bottom: 6px solid #F5F6F7; /* Divider line below the actions */
+  margin-bottom: 16px; /* Space below the post actions */
+
+}
+
+.likes-comments {
+  display: flex;
+  align-items: center;
+  font-family: 'Pretendard', sans-serif;
+  font-size: 14px;
+  font-weight: 400;
+  line-height: 14px;
+  text-align: left;
+  gap: 6px; /* Adjust the gap between icons and text */
+}
+
+.action-icon {
+  width: 16px;
+  height: 18px;
+  cursor: pointer;
+}
+
+.likes-count {
+  margin-right: 10px; /* Increased margin between heart icon and "공감" text */
+  color:#383E47;
+}
+
+.comment-count {
+  font-family: 'Pretendard', sans-serif;
+  font-size: 14px;
+  font-weight: 400;
+  line-height: 14px;
+  color:#383E47;
+}
+
+.liked:hover,
+.comment-count:hover {
+  text-decoration: underline;
+}
+
+.liked {
+  color: red; /* Example for liked color, adjust as necessary */
+}
+
+
 </style>
