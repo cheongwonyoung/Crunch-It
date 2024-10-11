@@ -101,6 +101,7 @@ export default {
 
 .divider {
   border: none;
+  margin: 0 0;
   margin: 0;
   border-top: 1px solid var(--gr60);
 }
