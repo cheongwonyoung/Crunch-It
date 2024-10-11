@@ -7,36 +7,43 @@
 
     <!-- 마이데이터의 md_user_id로 메인 DB의 user_id를 조회 -->
     <select id="getUserIdByMdUserId" resultType="int" parameterType="int">
-        SELECT user_id FROM user WHERE md_user_id = #{mdUserId}
+        SELECT user_id
+        FROM user
+        WHERE md_user_id = #{mdUserId}
     </select>
 
     <!-- 채권이 특정 user_id에 대해 메인 DB에 존재하는지 확인 -->
     <select id="exists" resultType="boolean" parameterType="map">
         SELECT COUNT(1)
         FROM user_bond
-        WHERE bond_code = #{bondCode} AND user_id = #{userId}
+        WHERE bond_code = #{bondCode}
+          AND user_id = #{userId}
     </select>
 
     <!-- 사용자가 보유한 채권 업데이트 -->
     <update id="updateBond" parameterType="map">
         UPDATE user_bond
-        SET bond_name = #{bond.bondName},
+        SET bond_name              = #{bond.bondName},
             average_purchase_price = #{bond.averagePurchasePrice},
-            quantity = #{bond.quantity},
-            interest_rate = #{bond.interestRate}
-        WHERE bond_code = #{bond.bondCode} AND user_id = #{userId}
+            quantity               = #{bond.quantity},
+            interest_rate          = #{bond.interestRate}
+        WHERE bond_code = #{bond.bondCode}
+          AND user_id = #{userId}
     </update>
 
     <!-- 새로 산 채권 추가 -->
     <insert id="insertBond" parameterType="map">
         INSERT INTO user_bond (bond_code, user_id, bond_name, average_purchase_price, quantity, interest_rate)
-        VALUES (#{bond.bondCode}, #{userId}, #{bond.bondName}, #{bond.averagePurchasePrice}, #{bond.quantity}, #{bond.interestRate})
+        VALUES (#{bond.bondCode}, #{userId}, #{bond.bondName}, #{bond.averagePurchasePrice}, #{bond.quantity},
+                #{bond.interestRate})
     </insert>
 
     <!-- 판매한 채권 정보 삭제 -->
     <delete id="deleteBond" parameterType="map">
-        DELETE FROM user_bond
-        WHERE bond_code = #{bondCode} AND user_id = #{userId}
+        DELETE
+        FROM user_bond
+        WHERE bond_code = #{bondCode}
+          AND user_id = #{userId}
     </delete>
 
     <!-- 특정 사용자의 모든 채권코드 가져오기 -->
@@ -46,4 +53,39 @@
         WHERE user_id = #{userId}
     </select>
 
+    <!-- 채권에 투자한 총 비용 -->
+    <!-- user_bond (채권) 테이블에서 각 채권의 {average_purchase_price(평균단가) X quantity(채권개수)} 의 합 -->
+    <select id="calculateInvestAmount" resultType="long">
+        SELECT COALESCE(SUM(average_purchase_price * quantity), 0)
+        FROM user_bond
+        WHERE user_id = #{userId}
+    </select>
+
+    <!-- 사용자가 보유한 채권 코드를 반환 -->
+    <select id="getUserBonds" resultType="String">
+        SELECT bond_code
+        FROM user_bond
+        WHERE user_id = #{userId}
+    </select>
+
+    <!-- 사용자가 보유한 펀드 코드에 맞는 펀드 평균 단가 -->
+    <select id="getAveragePurchasePrice" resultType="int">
+        SELECT average_purchase_price
+        FROM user_bond
+        WHERE user_id = #{userId} AND bond_code = #{bondCode}
+    </select>
+
+    <!-- 사용자가 보유한 주식 코드에 맞는 수량 -->
+    <select id="getBondQuantity" resultType="int">
+        SELECT quantity
+        FROM user_bond
+        WHERE user_id = #{userId} AND bond_code = #{bondCode}
+    </select>
+
+    <!-- 사용자가 보유한 채권 코드에 맞는 채권 이자율 -->
+    <select id="getBondInterestRate" resultType="int">
+        SELECT interest_rate
+        FROM user_bond
+        WHERE user_id = #{userId} AND bond_code = #{bondCode}
+    </select>
 </mapper>

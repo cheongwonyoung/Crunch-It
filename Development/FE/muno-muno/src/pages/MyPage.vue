@@ -9,7 +9,11 @@
                     :src="profileUrl ? profileUrl : require('@/assets/profile.svg')"
                     alt="프로필 이미지"
                     class="profile-image" />
+<<<<<<< HEAD
                 <button class="edit-icon">
+=======
+                <button class="edit-icon" @click="showProfileModal">
+>>>>>>> develop
                     <img src="@/assets/edit.svg" alt="프로필 수정" />
                 </button>
             </div>
@@ -37,19 +41,29 @@
 
         <!-- 프로필 수정 버튼 -->
         <ButtonA class="profile-button" @click="goToEditPage">프로필 수정</ButtonA>
+
+        <!-- 프로필 모달 컴포넌트 -->
+        <ProfileModal v-if="isProfileModalVisible" @close="profileModalClose" :isVisible="isProfileModalVisible" />
     </div>
 </template>
 
 <script>
     import HeaderB from "@/components/HeaderB.vue";
     import ButtonA from "@/components/ButtonA.vue";
+    import { useUserStore } from "@/stores/userStore";
+    import { mapActions, mapState } from "pinia";
     import apiClient from "@/axios";
+    import ProfileModal from "@/components/ProfileModal.vue";
 
     export default {
         name: "MyPage",
         components: {
             HeaderB,
             ButtonA,
+            ProfileModal,
+        },
+        computed: {
+            ...mapState(useUserStore, ["userInfo"]),
         },
         data() {
             return {
@@ -60,9 +74,15 @@
                     email: "",
                 },
                 profileUrl: "",
+                isProfileModalVisible: false,
             };
         },
         methods: {
+            ...mapActions(useUserStore, ["setUserInfo"]),
+            profileModalClose() {
+                this.isProfileModalVisible = false;
+                this.fetchUserProfile();
+            },
             goBack() {
                 this.$router.push("/");
             },
@@ -82,11 +102,17 @@
                         this.user.nickname = data.nickname;
                         this.user.phoneNumber = data.phone_number;
                         this.profileUrl = data.profile_url;
-                        console.log(response.data);
+                        this.setUserInfo({
+                            nickname: data.nickname,
+                            profileUrl: data.profileUrl,
+                        });
                     })
                     .catch((error) => {
                         console.error("Error fetching user profile:", error);
                     });
+            },
+            showProfileModal() {
+                this.isProfileModalVisible = true;
             },
         },
         mounted() {
@@ -99,7 +125,8 @@
     .mypage {
         padding: 0 25px;
         background-color: var(--gr100);
-        height: 100vh;
+        height: 678px;
+        overflow: hidden;
     }
 
     .profile-section {
@@ -117,16 +144,17 @@
         width: 100px;
         height: 100px;
         border-radius: 50%;
-        margin-bottom: 40px;
+        border: 0.5px solid var(--gr80);
+        box-shadow: 0px 0px 10px 0px rgba(0, 0, 0, 0.06);
     }
 
     .edit-icon {
         position: absolute;
-        bottom: 0;
-        right: 0;
-        background-color: var(--gr100);
+        bottom: -2px;
+        right: 105px;
         border: none;
         cursor: pointer;
+        background-color: transparent;
     }
 
     .user-info {
@@ -151,21 +179,5 @@
         font-size: 16px;
         font-weight: 400;
         text-align: right;
-    }
-
-    .profile-button {
-        position: fixed;
-        bottom: 34px;
-        left: 50%;
-        transform: translateX(-50%);
-        width: calc(100% - 40px);
-        background-color: var(--p10);
-        color: var(--gr100);
-        font-size: 16px;
-        padding: 10px;
-        border: none;
-        cursor: pointer;
-        border-radius: 8px;
-        text-align: center;
     }
 </style>

@@ -1,273 +1,53 @@
-<!--<template>-->
-<!--  <div class="community-page">-->
-<!--    <header class="header">-->
-<!--      <h1>커뮤니티</h1>-->
-<!--      <div class="search-icon">-->
-<!--        <i class="fas fa-search"></i>-->
-<!--      </div>-->
-<!--    </header>-->
-
-<!--    <div class="category-tabs">-->
-<!--      <button-->
-<!--          v-for="category in categories"-->
-<!--          :key="category.name"-->
-<!--          :class="{ active: selectedCategory === category.name }"-->
-<!--          @click="selectCategory(category.name)"-->
-<!--      >-->
-<!--        {{ category.name }}-->
-<!--      </button>-->
-<!--    </div>-->
-
-<!--    &lt;!&ndash; 서버로부터 데이터를 받아와 게시글 표시 &ndash;&gt;-->
-<!--    <div class="post-list">-->
-<!--      <div-->
-<!--          v-for="post in filteredPosts"-->
-<!--          :key="post.boardId"-->
-<!--          :v-if="post && post.boardId"-->
-<!--          class="post-item"-->
-<!--          @click="goToDetail(post.boardId)"-->
-<!--      >-->
-<!--        <div class="post-header">-->
-<!--          <span class="category">{{ post.category }}</span>-->
-<!--          <span class="user">{{ post.writerId }}</span>-->
-<!--        </div>-->
-<!--        <h3 class="post-title">{{ post.title }}</h3>-->
-<!--        <p class="post-content">{{ post.content }}</p>-->
-<!--        <div class="post-footer">-->
-<!--          &lt;!&ndash; modifyDate가 있으면 그걸 사용, 없으면 registerDate 사용 &ndash;&gt;-->
-<!--          <span class="date">{{ post.modifyDate ? formatDate(post.modifyDate) : formatDate(post.registerDate) }}</span>-->
-<!--&lt;!&ndash;          <span class="comments">댓글 {{ post.comments }}</span>&ndash;&gt;-->
-<!--        </div>-->
-<!--      </div>-->
-<!--    </div>-->
-
-<!--    &lt;!&ndash; 하단 + 버튼 &ndash;&gt;-->
-<!--    <button class="floating-button" @click="goToWritePage">+</button>-->
-<!--  </div>-->
-<!--</template>-->
-
-<!--<script>-->
-<!--import { ref, computed, onMounted } from 'vue';-->
-<!--//import axios from 'axios';-->
-<!--import apiClient from '../axios';-->
-<!--import { useRouter } from 'vue-router';-->
-
-<!--export default {-->
-<!--  name: 'CommunityPage',-->
-<!--  setup() {-->
-<!--    const categories = ref([-->
-<!--      { name: '전체' },-->
-<!--      { name: '지출' },-->
-<!--      { name: '예적금' },-->
-<!--      { name: '펀드' },-->
-<!--      { name: '주식' },-->
-<!--      { name: '채권' }-->
-<!--    ]);-->
-
-<!--    const selectedCategory = ref('전체');-->
-<!--    const posts = ref([]);-->
-<!--    const router = useRouter();-->
-
-<!--    const fetchPosts = async () => {-->
-<!--      try {-->
-<!--        const response = await apiClient.get('http://localhost:8080/community');-->
-<!--        posts.value = response.data;-->
-<!--      } catch (error) {-->
-<!--        console.error('서버로부터 데이터를 받아오는 중 오류 발생:', error);-->
-<!--      }-->
-<!--    };-->
-
-<!--    const filteredPosts = computed(() => {-->
-<!--      if (selectedCategory.value === '전체') {-->
-<!--        return posts.value;-->
-<!--      }-->
-<!--      return posts.value.filter((post) => post.category === selectedCategory.value);-->
-<!--    });-->
-
-<!--    const selectCategory = (category) => {-->
-<!--      selectedCategory.value = category;-->
-<!--    };-->
-
-<!--    // 클릭 시 상세 페이지로 이동-->
-<!--    const goToDetail = (boardId) => {-->
-<!--      router.push({ name: 'PostDetail', params: { id: boardId }}); // 라우트 이동-->
-<!--    };-->
-
-<!--    // 글쓰기 페이지로 이동-->
-<!--    const goToWritePage = () => {-->
-<!--      router.push({ name: 'WritePost' }); // WritePostPage.vue로 이동-->
-<!--    };-->
-
-<!--    // 날짜 포맷 함수-->
-<!--    const formatDate = (dateArray) => {-->
-<!--      if (!dateArray || dateArray.length < 3) return '날짜 없음'; // 날짜 배열이 올바른지 확인-->
-<!--      const [year, month, day] = dateArray;-->
-<!--      return `${year}. ${String(month).padStart(2, '0')}. ${String(day).padStart(2, '0')}`; // "2024. 10. 03" 형식으로 변환-->
-<!--    };-->
-
-<!--    onMounted(() => {-->
-<!--      fetchPosts();-->
-<!--    });-->
-
-<!--    return {-->
-<!--      categories,-->
-<!--      selectedCategory,-->
-<!--      filteredPosts,-->
-<!--      selectCategory,-->
-<!--      goToDetail,-->
-<!--      goToWritePage,-->
-<!--      formatDate-->
-<!--    };-->
-<!--  }-->
-<!--};-->
-<!--</script>-->
-
-<!--<style scoped>-->
-<!--.community-page {-->
-<!--  padding: 20px;-->
-<!--}-->
-
-<!--.header {-->
-<!--  display: flex;-->
-<!--  justify-content: space-between;-->
-<!--  align-items: center;-->
-<!--  font-size: 24px;-->
-<!--  margin-bottom: 20px;-->
-<!--}-->
-
-<!--.category-tabs {-->
-<!--  display: flex;-->
-<!--  gap: 5px;-->
-<!--  margin-bottom: 20px;-->
-<!--}-->
-
-<!--.category-tabs button {-->
-<!--  padding: 10px;-->
-<!--  border: none;-->
-<!--  //background-color: #f0f0f0;-->
-<!--  border-radius: 10px;-->
-<!--  cursor: pointer;-->
-<!--}-->
-
-<!--.category-tabs .active {-->
-<!--  background-color: #333;-->
-<!--  color: white;-->
-<!--}-->
-
-<!--.post-list .post-item {-->
-<!--  margin-bottom: 20px;-->
-<!--  border: 1px solid #e0e0e0;-->
-<!--  padding: 20px;-->
-<!--  border-radius: 10px;-->
-<!--  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);-->
-<!--  background-color: #fff;-->
-<!--  cursor: pointer;-->
-<!--  transition: transform 0.2s ease;-->
-<!--}-->
-
-<!--.post-list .post-item:hover {-->
-<!--  transform: scale(1.02);-->
-<!--}-->
-
-<!--.post-header {-->
-<!--  display: flex;-->
-<!--  justify-content: space-between;-->
-<!--  font-size: 14px;-->
-<!--  color: #888;-->
-<!--}-->
-
-<!--.post-title {-->
-<!--  font-size: 18px;-->
-<!--  margin: 5px 0;-->
-<!--  font-weight: bold;-->
-<!--  color: #333;-->
-<!--}-->
-
-<!--.post-content {-->
-<!--  font-size: 16px;-->
-<!--  color: #555;-->
-<!--  margin-bottom: 10px;-->
-<!--}-->
-
-<!--.post-footer {-->
-<!--  display: flex;-->
-<!--  justify-content: space-between;-->
-<!--  font-size: 12px;-->
-<!--  color: #aaa;-->
-<!--}-->
-
-<!--.floating-button {-->
-<!--  position: fixed;-->
-<!--  bottom: 100px;-->
-<!--  right: 20px;-->
-<!--  background-color: #007BFF;-->
-<!--  color: white;-->
-<!--  border: none;-->
-<!--  border-radius: 50%;-->
-<!--  width: 60px;-->
-<!--  height: 60px;-->
-<!--  font-size: 36px;-->
-<!--  line-height: 60px;-->
-<!--  text-align: center;-->
-<!--  cursor: pointer;-->
-<!--  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);-->
-<!--  z-index: 1100;-->
-<!--}-->
-
-<!--.floating-button:hover {-->
-<!--  background-color: #0056b3;-->
-<!--}-->
-<!--</style>-->
 <template>
   <div class="community-page">
-    <header class="header">
-      <h1>커뮤니티</h1>
+    <!-- HeaderX 컴포넌트를 사용 -->
+    <HeaderX title="커뮤니티" :icons="headerIcons" />
 
-      <!-- 알림 아이콘 추가 -->
-      <div class="icons">
-        <button @click="goToNotifications" class="notification-icon">
-          <img src="@/assets/notification.svg" alt="Notification Icon" class="icon-svg" />
-        </button>
-        <div class="search-icon">
-          <i class="fas fa-search"></i>
-        </div>
-      </div>
-    </header>
+    <!-- 채팅 메시지 섹션 -->
+    <div class="chat-header">
+      <span>💬 문어봐도돼요?</span>
+    </div>
 
-    <div class="category-tabs">
-      <button
-          v-for="category in categories"
-          :key="category.name"
-          :class="{ active: selectedCategory === category.name }"
-          @click="selectCategory(category.name)"
+    <!-- 커뮤니티 카테고리 섹션 -->
+    <div class="community-categories">
+      <div
+        v-for="category in communityCategories"
+        :key="category.name"
+        class="category-item"
       >
-        {{ category.name }}
-      </button>
+        <img :src="category.imgSrc" :alt="category.name" class="category-img" />
+        <span class="category-name">{{ category.name }}</span>
+      </div>
+    </div>
+
+    <!-- CategoryP 컴포넌트를 사용한 카테고리 렌더링 -->
+    <div class="category-tabs">
+      <CategoryP
+        v-for="category in categories"
+        :key="category.name"
+        :category="category.name"
+        :isActive="selectedCategory === category.name"
+        @category-selected="selectCategory"
+      />
     </div>
 
     <!-- 서버로부터 데이터를 받아와 게시글 표시 -->
     <div class="post-list">
-      <div
-          v-for="post in filteredPosts"
-          :key="post.boardId"
-          :v-if="post && post.boardId"
-          class="post-item"
-          @click="goToDetail(post.boardId)"
-      >
-        <div class="post-header">
-          <span class="category">{{ post.category }}</span>
-          <span class="user">{{ post.writerId }}</span>
-        </div>
-        <h3 class="post-title">{{ post.title }}</h3>
-        <p class="post-content">{{ post.content }}</p>
-        <div class="post-footer">
-          <span class="date">{{ post.modifyDate ? formatDate(post.modifyDate) : formatDate(post.registerDate) }}</span>
-        </div>
-      </div>
+      <PostItem
+        v-for="post in filteredPosts"
+        :key="post.boardId"
+        :post="post"
+        :onClick="goToDetail"
+      />
     </div>
 
-    <!-- 하단 + 버튼 -->
-    <button class="floating-button" @click="goToWritePage">+</button>
+    <!-- 이미지 버튼 -->
+    <img
+      src="@/assets/plus.svg"
+      alt="Plus Icon"
+      class="floating-button"
+      @click="goToWritePage"
+    />
   </div>
 </template>
 
@@ -275,9 +55,17 @@
 import { ref, computed, onMounted } from 'vue';
 import apiClient from '../axios';
 import { useRouter } from 'vue-router';
+import CategoryP from '../components/Category.vue';
+import HeaderX from '../components/HeaderX.vue';
+import PostItem from '../components/PostItem.vue';
 
 export default {
   name: 'CommunityPage',
+  components: {
+    CategoryP,
+    HeaderX,
+    PostItem,
+  },
   setup() {
     const categories = ref([
       { name: '전체' },
@@ -285,12 +73,27 @@ export default {
       { name: '예적금' },
       { name: '펀드' },
       { name: '주식' },
-      { name: '채권' }
+      { name: '채권' },
+    ]);
+
+    const communityCategories = ref([
+      { name: '문어방', imgSrc: require('@/assets/muno_room.svg') },
+      { name: '거지방', imgSrc: require('@/assets/geoji_room.svg') },
+      { name: '종토방', imgSrc: require('@/assets/jongto_room.svg') },
+      { name: '자유방', imgSrc: require('@/assets/free_room.svg') },
     ]);
 
     const selectedCategory = ref('전체');
     const posts = ref([]);
     const router = useRouter();
+
+    const headerIcons = ref([
+      {
+        src: require('@/assets/notification.svg'),
+        alt: 'Notification Icon',
+        onClick: () => goToNotifications(),
+      },
+    ]);
 
     const fetchPosts = async () => {
       try {
@@ -302,36 +105,31 @@ export default {
     };
 
     const filteredPosts = computed(() => {
-      if (selectedCategory.value === '전체') {
-        return posts.value;
-      }
-      return posts.value.filter((post) => post.category === selectedCategory.value);
+      return posts.value.filter((post) => {
+        if (!post || !post.boardId) {
+          return false;
+        }
+        if (selectedCategory.value === '전체') {
+          return true;
+        }
+        return post.category === selectedCategory.value;
+      });
     });
 
     const selectCategory = (category) => {
       selectedCategory.value = category;
     };
 
-    // 클릭 시 상세 페이지로 이동
     const goToDetail = (boardId) => {
-      router.push({ name: 'PostDetail', params: { id: boardId }}); // 라우트 이동
+      router.push({ name: 'PostDetail', params: { id: boardId } });
     };
 
-    // 글쓰기 페이지로 이동
     const goToWritePage = () => {
-      router.push({ name: 'WritePost' }); // WritePostPage.vue로 이동
+      router.push({ name: 'WritePost' });
     };
 
-    // 알림 페이지로 이동
     const goToNotifications = () => {
-      router.push({ name: 'Notification' }); // NotificationPage로 이동
-    };
-
-    // 날짜 포맷 함수
-    const formatDate = (dateArray) => {
-      if (!dateArray || dateArray.length < 3) return '날짜 없음'; // 날짜 배열이 올바른지 확인
-      const [year, month, day] = dateArray;
-      return `${year}. ${String(month).padStart(2, '0')}. ${String(day).padStart(2, '0')}`; // "2024. 10. 03" 형식으로 변환
+      router.push({ name: 'Notification' });
     };
 
     onMounted(() => {
@@ -340,127 +138,98 @@ export default {
 
     return {
       categories,
+      communityCategories,
       selectedCategory,
       filteredPosts,
       selectCategory,
       goToDetail,
       goToWritePage,
-      goToNotifications, // 알림 페이지로 이동 함수 반환
-      formatDate
+      goToNotifications,
+      headerIcons,
     };
-  }
+  },
 };
 </script>
 
 <style scoped>
 .community-page {
-  padding: 20px;
+  padding: 0 20px;
+  position: absolute;
+  top: 112px;
+  width: 375px;
+  height: auto;
+  box-sizing: border-box;
+  padding-bottom: 86px;
 }
 
-.header {
+.chat-header {
   display: flex;
-  justify-content: space-between;
   align-items: center;
-  font-size: 24px;
+  margin-bottom: 18px;
+  color: var(--gr30);
+  font-size: 20px;
+  font-weight: 600;
+  line-height: 100%;
+}
+
+.community-categories {
+  display: flex;
+  gap: 16px;
   margin-bottom: 20px;
+  overflow-x: auto;
+  scrollbar-width: none;
 }
 
-.icons {
+.community-categories::-webkit-scrollbar {
+  display: none;
+}
+
+.category-item {
+  text-align: center;
   display: flex;
-  gap: 10px;
+  flex-direction: column;
   align-items: center;
 }
 
-.notification-icon {
-  border: none;
-  background: none;
-  cursor: pointer;
+.category-img {
+  margin-bottom: 6px;
 }
 
-.icon-svg {
-  width: 24px;
-  height: 24px;
+.category-name {
+  color: var(--gr30);
+  text-align: center;
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 150%;
 }
 
 .category-tabs {
   display: flex;
-  gap: 5px;
-  margin-bottom: 20px;
+  justify-content: flex-start;
+  overflow-x: auto;
+  white-space: nowrap;
+  scrollbar-width: none;
+  border-bottom: 0.5px solid var(--gr70);
 }
 
-.category-tabs button {
-  padding: 10px;
-  border: none;
-  border-radius: 10px;
-  cursor: pointer;
-}
-
-.category-tabs .active {
-  background-color: #333;
-  color: white;
-}
-
-.post-list .post-item {
-  margin-bottom: 20px;
-  border: 1px solid #e0e0e0;
-  padding: 20px;
-  border-radius: 10px;
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-  background-color: #fff;
-  cursor: pointer;
-  transition: transform 0.2s ease;
-}
-
-.post-list .post-item:hover {
-  transform: scale(1.02);
-}
-
-.post-header {
-  display: flex;
-  justify-content: space-between;
-  font-size: 14px;
-  color: #888;
-}
-
-.post-title {
-  font-size: 18px;
-  margin: 5px 0;
-  font-weight: bold;
-  color: #333;
-}
-
-.post-content {
-  font-size: 16px;
-  color: #555;
-  margin-bottom: 10px;
-}
-
-.post-footer {
-  display: flex;
-  justify-content: space-between;
-  font-size: 12px;
-  color: #aaa;
+.category-tabs::-webkit-scrollbar {
+  display: none;
 }
 
 .floating-button {
   position: fixed;
-  bottom: 100px;
+  bottom: 106px;
   right: 20px;
-  background-color: #007BFF;
-  color: white;
-  border: none;
   border-radius: 50%;
-  width: 60px;
-  height: 60px;
-  font-size: 36px;
-  line-height: 60px;
-  text-align: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   cursor: pointer;
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
   z-index: 1100;
+  transition: transform 0.3s ease;
 }
 
 .floating-button:hover {
-  background-color: #0056b3;
+  transform: scale(1.05);
 }
 </style>

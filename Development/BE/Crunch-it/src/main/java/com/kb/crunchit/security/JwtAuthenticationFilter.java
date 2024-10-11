@@ -48,8 +48,6 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             String accessToken ="";
             if(requestURI.contains("/notifications/subscribe")){
                 accessToken= request.getParameter("token");
-                System.out.println("123123231123132312123321132312213132");
-                System.out.println(accessToken);
             }else{
                 accessToken = jwtService.extractAccessToken(request);
             }

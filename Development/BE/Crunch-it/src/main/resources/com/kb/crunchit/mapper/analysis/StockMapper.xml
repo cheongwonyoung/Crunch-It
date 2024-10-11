@@ -7,36 +7,43 @@
 
     <!-- 마이데이터의 md_user_id로 메인 DB의 user_id를 조회 -->
     <select id="getUserIdByMdUserId" resultType="int" parameterType="int">
-        SELECT user_id FROM user WHERE md_user_id = #{mdUserId}
+        SELECT user_id
+        FROM user
+        WHERE md_user_id = #{mdUserId}
     </select>
 
     <!-- 주식이 특정 user_id에 대해 메인 DB에 존재하는지 확인 -->
     <select id="exists" resultType="boolean" parameterType="map">
         SELECT COUNT(1)
         FROM user_stock
-        WHERE stock_code = #{stockCode} AND user_id = #{userId}
+        WHERE stock_code = #{stockCode}
+          AND user_id = #{userId}
     </select>
 
     <!-- 사용자가 보유한 주식 업데이트 -->
     <update id="updateStock" parameterType="map">
         UPDATE user_stock
-        SET stock_name = #{stock.stockName},
+        SET stock_name             = #{stock.stockName},
             average_purchase_price = #{stock.averagePurchasePrice},
-            quantity = #{stock.quantity},
-            stock_market = #{stock.stockMarket}
-        WHERE stock_code = #{stock.stockCode} AND user_id = #{userId}
+            quantity               = #{stock.quantity},
+            stock_market           = #{stock.stockMarket}
+        WHERE stock_code = #{stock.stockCode}
+          AND user_id = #{userId}
     </update>
 
     <!-- 새로 산 주식 추가 -->
     <insert id="insertStock" parameterType="map">
         INSERT INTO user_stock (stock_code, user_id, stock_name, average_purchase_price, quantity, stock_market)
-        VALUES (#{stock.stockCode}, #{userId}, #{stock.stockName}, #{stock.averagePurchasePrice}, #{stock.quantity}, #{stock.stockMarket})
+        VALUES (#{stock.stockCode}, #{userId}, #{stock.stockName}, #{stock.averagePurchasePrice}, #{stock.quantity},
+                #{stock.stockMarket})
     </insert>
 
     <!-- 매도한 주식 정보 삭제 -->
     <delete id="deleteStock" parameterType="map">
-        DELETE FROM user_stock
-        WHERE stock_code = #{stockCode} AND user_id = #{userId}
+        DELETE
+        FROM user_stock
+        WHERE stock_code = #{stockCode}
+          AND user_id = #{userId}
     </delete>
 
     <!-- 특정 사용자의 모든 주식코드 가져오기 -->
@@ -46,4 +53,32 @@
         WHERE user_id = #{userId}
     </select>
 
+    <!-- 주식에 투자한 총 비용 -->
+    <!-- user_stock (주식) 테이블에서 각 주식의 {average_purchase_price(평균단가) X quantity(주식개수)} 의 합 -->
+    <select id="calculateInvestAmount" resultType="long">
+        SELECT COALESCE(SUM(average_purchase_price * quantity), 0)
+        FROM user_stock
+        WHERE user_id = #{userId}
+    </select>
+
+    <!-- 사용자가 보유한 주식 코드를 반환 -->
+    <select id="getUserStocks" resultType="String">
+        SELECT stock_code
+        FROM user_stock
+        WHERE user_id = #{userId}
+    </select>
+
+    <!-- 사용자가 보유한 주식 코드에 맞는 주식 평균 단가 -->
+    <select id="getAveragePurchasePrice" resultType="int">
+        SELECT average_purchase_price
+        FROM user_stock
+        WHERE user_id = #{userId} AND stock_code = #{stockCode}
+    </select>
+
+    <!-- 사용자가 보유한 주식 코드에 맞는 수량 -->
+    <select id="getStockQuantity" resultType="int">
+        SELECT quantity
+        FROM user_stock
+        WHERE user_id = #{userId} AND stock_code = #{stockCode}
+    </select>
 </mapper>

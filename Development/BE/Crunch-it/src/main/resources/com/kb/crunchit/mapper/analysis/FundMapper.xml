@@ -7,36 +7,43 @@
 
     <!-- 마이데이터의 md_user_id로 메인 DB의 user_id를 조회 -->
     <select id="getUserIdByMdUserId" resultType="int" parameterType="int">
-        SELECT user_id FROM user WHERE md_user_id = #{mdUserId}
+        SELECT user_id
+        FROM user
+        WHERE md_user_id = #{mdUserId}
     </select>
 
     <!-- 펀드가 특정 user_id에 대해 메인 DB에 존재하는지 확인 -->
     <select id="exists" resultType="boolean" parameterType="map">
         SELECT COUNT(1)
         FROM user_fund
-        WHERE fund_code = #{fundCode} AND user_id = #{userId}
+        WHERE fund_code = #{fundCode}
+          AND user_id = #{userId}
     </select>
 
     <!-- 사용자가 보유한 펀드 업데이트 -->
     <update id="updateFund" parameterType="map">
         UPDATE user_fund
-        SET fund_name = #{fund.fundName},
-            fund_type = #{fund.fundType},
+        SET fund_name         = #{fund.fundName},
+            fund_type         = #{fund.fundType},
             evaluation_amount = #{fund.evaluationAmount},
-            investing_amount = #{fund.investingAmount}
-        WHERE fund_code = #{fund.fundCode} AND user_id = #{userId}
+            investing_amount  = #{fund.investingAmount}
+        WHERE fund_code = #{fund.fundCode}
+          AND user_id = #{userId}
     </update>
 
     <!-- 새로 산 펀드 추가 -->
     <insert id="insertFund" parameterType="map">
         INSERT INTO user_fund (fund_code, user_id, fund_type, fund_name, evaluation_amount, investing_amount)
-        VALUES (#{fund.fundCode}, #{userId}, #{fund.fundType}, #{fund.fundName}, #{fund.evaluationAmount}, #{fund.investingAmount})
+        VALUES (#{fund.fundCode}, #{userId}, #{fund.fundType}, #{fund.fundName}, #{fund.evaluationAmount},
+                #{fund.investingAmount})
     </insert>
 
     <!-- 판매한 펀드 정보 삭제 -->
     <delete id="deleteFund" parameterType="map">
-        DELETE FROM user_fund
-        WHERE fund_code = #{fundCode} AND user_id = #{userId}
+        DELETE
+        FROM user_fund
+        WHERE fund_code = #{fundCode}
+          AND user_id = #{userId}
     </delete>
 
     <!-- 특정 사용자의 모든 펀드코드 가져오기 -->
@@ -46,4 +53,19 @@
         WHERE user_id = #{userId}
     </select>
 
+    <!-- 펀드에 투자한 총 비용 -->
+    <!-- user_fund (펀드) 테이블에서 각 펀드의 investing_amount(투자금액) 의 합 -->
+    <select id="calculateInvestAmount" resultType="long">
+        SELECT COALESCE(SUM(investing_amount), 0)
+        FROM user_fund
+        WHERE user_id = #{userId}
+    </select>
+
+    <!-- 펀드 총 수익 -->
+    <!-- user_fund (펀드) 테이블에서 각 펀드의 {evaluation_amount(평가 금액) - investing_amount(투자 금액)} 의 합 -->
+    <select id="calculateProfitAmount" resultType="long">
+        SELECT COALESCE(SUM(evaluation_amount - investing_amount), 0)
+        FROM user_fund
+        WHERE user_id = #{userId}
+    </select>
 </mapper>
