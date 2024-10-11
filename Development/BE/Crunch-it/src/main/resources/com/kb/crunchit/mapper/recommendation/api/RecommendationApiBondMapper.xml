@@ -3,11 +3,11 @@
 <mapper namespace="com.kb.crunchit.mapper.recommendation.api.RecommendationApiBondMapper">
 
     <resultMap id="BondResultMap" type="com.kb.crunchit.entity.BondInfo">
-        <result property="issuerName" column="bondIsurNm" />
+        <result property="issuerName" column="bondsurlNm" />
         <result property="productName" column="isinCdNm" />
         <result property="creditRating" column="fnScrItsmKcdNm" />
-        <result property="surfaceRate" column="bondSrfcInrt" />
-        <result property="interestType" column="bondIntTcdNm" />
+        <result property="surfaceRate" column="bondSrfcIntr" />
+        <result property="interestType" column="bondIntrTcdNm" />
         <result property="maturityDate" column="bondExprDt" />
         <result property="interestPaymentCycle" column="intPayCyclCtt" />
     </resultMap>
@@ -34,4 +34,7 @@
         SELECT COUNT(*) FROM recommendation_api_bond WHERE isinCdNm = #{productName}
     </select>
 
+    <select id="selectAllBonds" resultMap="BondResultMap">
+        SELECT * FROM recommendation_api_bond
+    </select>
 </mapper>

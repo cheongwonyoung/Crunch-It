@@ -56,7 +56,7 @@ public class RecommendationApiService {
     private String bondServiceKey;
 
     // 매일 오전 12시에 API 호출하여 DB 업데이트
-    @Scheduled(cron = "0 0 0 * * *", zone = "Asia/Seoul")  // 매일 00:00 실행
+//    @Scheduled(cron = "0 0 0 * * *", zone = "Asia/Seoul")  // 매일 00:00 실행
     public void fetchAndUpdateAllProductData() {
         String beginBaseDt = "20240101";
         fetchAndUpdateDepositData(beginBaseDt);
