@@ -130,7 +130,8 @@ export default {
 .mypage {
   padding: 0 25px;
   background-color: var(--gr100);
-  height: 100vh;
+  height: 678px;
+  overflow: hidden;
 }
 
 .profile-section {
@@ -148,16 +149,17 @@ export default {
   width: 100px;
   height: 100px;
   border-radius: 50%;
-  margin-bottom: 40px;
+  border: 0.5px solid var(--gr80);
+  box-shadow: 0px 0px 10px 0px rgba(0, 0, 0, 0.06);
 }
 
 .edit-icon {
   position: absolute;
-  bottom: 0;
-  right: 0;
-  background-color: var(--gr100);
+  bottom: -2px;
+  right: 105px;
   border: none;
   cursor: pointer;
+  background-color: transparent;
 }
 
 .user-info {

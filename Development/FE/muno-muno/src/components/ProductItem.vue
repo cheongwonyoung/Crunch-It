@@ -33,9 +33,9 @@ export default {
   display: flex;
   flex-direction: column;
   align-items: flex-start;
+  background: var(--gr100);
   border-radius: 10px;
   border: 0.5px solid var(--gr60);
-  background: var(--gr100);
   box-shadow: 0px 0px 6px 0px rgba(0, 0, 0, 0.04);
   margin: 6px 20px;
 }
