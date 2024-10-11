@@ -1,14 +1,18 @@
 package com.kb.crunchit.service;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.kb.crunchit.dto.request.NotificationRequestDTO;
 import com.kb.crunchit.entity.Notification;
 import com.kb.crunchit.mapper.NotificationMapper;
 import io.jsonwebtoken.io.IOException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cglib.core.Local;
 import org.springframework.stereotype.Service;
 import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.List;
 
@@ -29,13 +33,23 @@ public class NotificationService {
 
     //새로운 알림 추가
     public void insertNotification(NotificationRequestDTO notificationRequestDTO){
+        // 데이터베이스에 알림 저장
         notificationMapper.insertNotification(notificationRequestDTO);
-        notifyUser(notificationRequestDTO.getUserId().toString(),notificationRequestDTO.getMessage());
+
+        // SSE로 알림을 전송하기 위해 JSON 형식으로 직렬화
+        ObjectMapper objectMapper = new ObjectMapper();
+        try {
+            String jsonMessage = objectMapper.writeValueAsString(notificationRequestDTO);
+            notifyUser(notificationRequestDTO.getUserId().toString(), jsonMessage);  // SSE로 JSON 데이터 전송
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     //sse 구독 메서드
     public SseEmitter subscribeUser(String userId){
-        SseEmitter emitter=new SseEmitter(0L); //만료 시간
+        //타임아웃 설정
+        SseEmitter emitter=new SseEmitter(60L*1000*60); //만료 시간 1시간으로 설정
         emitters.put(userId,emitter);
 
         emitter.onCompletion(()->emitters.remove(userId));
@@ -45,7 +59,7 @@ public class NotificationService {
     }
 
     //특정 사용자에게 알림을 전송하는 메서드
-    public void notifyUser(String userId,String message){
+    public void notifyUser(String userId, String message){
         SseEmitter emitter=emitters.get(userId);
 
         if(emitter!=null){

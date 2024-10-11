@@ -33,6 +33,12 @@
         VALUES (#{commentId},#{writerId},#{content}, NOW())
     </insert>
 
+    <select id="getCommentWriterId" parameterType="int" resultType="int">
+        SELECT writer_id AS writerId
+        FROM comment
+        WHERE comment_id=#{commentId}
+    </select>
+
     <update id="modifyReply" parameterType="ReplyRequest">
         UPDATE reply
         SET content=#{content},

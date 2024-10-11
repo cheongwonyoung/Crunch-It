@@ -13,6 +13,7 @@ public interface ReplyMapper {
     void insertReplyToReplyList(int commentId,Reply reply);
 
     void insertReply(ReplyRequestDTO ReplyRequestDTO);
+    int getCommentWriterId(int commentId);
     void modifyReply(ReplyRequestDTO ReplyRequestDTO);
     void deleteReply(int replyId);
 }

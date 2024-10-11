@@ -8,7 +8,7 @@
         </div>
       </div>
       <div class="ml-4">
-        <p class="font-semibold">{{ notification.title }}</p>
+<!--        <p class="font-semibold">{{ notification.title }}</p>-->
         <p class="text-sm text-gray-600">{{ notification.message }}</p>
         <p class="text-sm text-gray-500">{{ formatTime(notification.createdAt) }}</p>
       </div>
@@ -18,7 +18,6 @@
 
 <script>
 import { ref, onMounted } from 'vue';
-// import axios from 'axios';
 import apiClient from "@/axios";
 
 export default {
@@ -41,6 +40,7 @@ export default {
           }
         });
         notifications.value = response.data;
+        console.log(response.data);
       } catch (error) {
         console.error('알림 데이터를 불러오는 데 실패했습니다.', error);
       }
@@ -57,14 +57,11 @@ export default {
       const payload = JSON.parse(atob(token.split('.')[1])); // JWT 디코딩
       console.log('Decoded Token Payload:', payload);
 
-      // console.log('SSE 구독 요청 시작...',token);
-
       const eventSource = new EventSource(`http://localhost:8080/notifications/subscribe?token=${token}`);
 
       eventSource.onmessage = function(event) {
         console.log('New Notification:', event.data);
-        // 새로운 알림이 오면 notifications 배열에 추가
-        notifications.value.push(JSON.parse(event.data));
+        notifications.value.push(JSON.parse(event.data)); // 새로운 알림이 오면 notifications 배열에 추가
       };
 
       eventSource.onerror = function(error) {
@@ -77,12 +74,15 @@ export default {
         }
         eventSource.close();
       };
-
     };
 
-    const formatTime = (time) => {
-      const date = new Date(time);
-      return `${date.getFullYear()}.${date.getMonth() + 1}.${date.getDate()} ${date.getHours()}:${String(date.getMinutes()).padStart(2, '0')}`;
+    // createdAt 배열 데이터를 yyyy.MM.dd HH:mm 형식으로 변환하는 함수
+    const formatTime = (timeArray) => {
+      if (Array.isArray(timeArray)) {
+        const [year, month, day, hour, minute] = timeArray; // 배열에서 값 추출
+        return `${year}.${String(month).padStart(2, '0')}.${String(day).padStart(2, '0')} ${String(hour).padStart(2, '0')}:${String(minute).padStart(2, '0')}`;
+      }
+      return ''; // 배열이 아닌 경우 빈 문자열 반환
     };
 
     onMounted(() => {
@@ -97,7 +97,6 @@ export default {
   },
 };
 </script>
-
 
 <style scoped>
 .container {

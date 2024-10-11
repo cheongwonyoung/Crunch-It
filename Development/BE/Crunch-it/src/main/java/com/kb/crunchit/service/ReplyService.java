@@ -1,5 +1,6 @@
 package com.kb.crunchit.service;
 
+import com.kb.crunchit.dto.request.NotificationRequestDTO;
 import com.kb.crunchit.dto.request.ReplyRequestDTO;
 import com.kb.crunchit.entity.Reply;
 import com.kb.crunchit.entity.Comment;
@@ -17,6 +18,7 @@ public class ReplyService {
 
     private final ReplyMapper replyMapper;
     private final CommentMapper commentMapper;
+    private final NotificationService notificationService;
 
     //ReplyRequestDTO => Reply
     public Reply convertDtoToEntity(ReplyRequestDTO replyRequestDTO){
@@ -53,6 +55,15 @@ public class ReplyService {
 
         //comment 객체에  replyList 저장
         comment.addReplyList(replyList);
+
+        //알림 생성
+        int commentWriter=replyMapper.getCommentWriterId(commentId);
+        NotificationRequestDTO notificationRequestDTO=new NotificationRequestDTO();
+        notificationRequestDTO.setUserId(commentWriter);
+        notificationRequestDTO.setTitle("나의 댓글에 답글 달림");
+        notificationRequestDTO.setMessage(replyRequestDTO.getWriterId()+"님이 답글을 남겼습니다.");
+        notificationService.insertNotification(notificationRequestDTO);
+
     }
 
 

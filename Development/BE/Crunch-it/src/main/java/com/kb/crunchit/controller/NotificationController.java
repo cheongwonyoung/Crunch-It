@@ -53,48 +53,15 @@ public class NotificationController {
 
         //SseEmitter 객체 생성 및 테스트 메시지 전송
         SseEmitter emitter=notificationService.subscribeUser(userId);
-        System.out.println("emitter******************************"+emitter);
+//        System.out.println("emitter******************************"+emitter);
 
         try{
             emitter.send(SseEmitter.event().name("test").data("Test notification"));
-            System.out.println("send emitter***********************");
+//            System.out.println("send emitter***********************");
         } catch (IOException e){
             e.printStackTrace();
             emitter.completeWithError(e);
         }
         return emitter;
     }
-
-
-//    //user당 emitter 객체 저장
-//    private final ConcurrentHashMap<String , SseEmitter> emitters=new ConcurrentHashMap<>();
-//
-//    //Endpoint to register for notifications
-//    @GetMapping("/subscribe")
-//    public SseEmitter subscribe(Authentication authentication){
-//        CustomUserDetails user=(CustomUserDetails) authentication.getPrincipal();
-//        Integer userIdInt=user.getUserId();
-//        String userId = userIdInt.toString();
-//
-//        SseEmitter emitter=new SseEmitter(0L);  //0 means no timeout
-//        emitters.put(userId,emitter);
-//
-//        //clean up when done, clean up on timeout
-//        emitter.onCompletion(()->emitters.remove(userId));
-//        emitter.onTimeout(()->emitters.remove(userId));
-//
-//        return emitter;
-//    }
-//
-//    //notify a specific user
-//    public void notifyUser(String userId,String message){
-//        SseEmitter emitter=emitters.get(userId);
-//        if(emitter!=null){
-//            try{
-//                emitter.send(SseEmitter.event().name("message").data(message));
-//            } catch(IOException e){
-//                emitters.remove(userId);
-//            }
-//        }
-//    }
 }

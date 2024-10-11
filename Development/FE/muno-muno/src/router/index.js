@@ -11,7 +11,7 @@ import MyPage from '@/pages/MyPage.vue';
 import MyPageEdit from '@/pages/MyPageEdit.vue';
 import Search from '@/pages/Search.vue';
 import Modal from '@/components/Modal.vue';
-import apiClient from '@/axios';
+// import apiClient from '@/axios';
 import CommunityP from '@/pages/CommunityPage.vue';
 import PostDetailP from "@/pages/PostDetailPage.vue";
 import WritePostP from "@/pages/WritePostPage.vue"

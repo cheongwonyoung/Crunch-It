@@ -11,5 +11,5 @@ public class NotificationRequestDTO {
     private Integer userId;
     private String title;
     private String message;
-    private LocalDateTime createAt;
+    private LocalDateTime createdAt;
 }
