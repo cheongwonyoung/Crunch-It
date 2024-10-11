@@ -34,7 +34,7 @@ export default {
     },
     avatar: {
       type: String,
-      default: 'https://via.placeholder.com/32',
+      default: () => require('@/assets/profile.svg'),
     },
   },
 };

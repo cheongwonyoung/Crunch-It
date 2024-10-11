@@ -69,8 +69,8 @@ export default {
 
 .octopus-image {
   width: 374px;
-  height: 260px;
-  top: 76px;
+  height: 250px;
+  top: 80px;
   position: relative;
   display: block;
   left: 50%;
@@ -79,7 +79,7 @@ export default {
 
 .tooltip {
   position: absolute;
-  top: 221px;
+  top: 232px;
   left: 50%;
   transform: translateX(-50%);
   z-index: 2;

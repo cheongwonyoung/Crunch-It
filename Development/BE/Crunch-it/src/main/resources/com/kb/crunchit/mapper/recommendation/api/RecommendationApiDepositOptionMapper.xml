@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.kb.crunchit.mapper.recommendation.api.RecommendationApiDepositOptionMapper">
+
+    <resultMap id="DepositOptionResultMap" type="com.kb.crunchit.entity.DepositOptionInfo">
+        <result property="productCode" column="fin_prdt_cd"/>
+        <result property="rateTypeName" column="intr_rate_type_nm"/>
+        <result property="saveTerm" column="save_trm"/>
+        <result property="baseRate" column="intr_rate"/>
+        <result property="maxRate" column="intr_rate2"/>
+    </resultMap>
+
+    <select id="selectAllDepositOptions" resultMap="DepositOptionResultMap">
+        SELECT * FROM recommendation_api_deposit_option
+    </select>
+
+    <!-- Insert 쿼리 수정 -->
+    <insert id="insertDepositOption" parameterType="com.kb.crunchit.entity.DepositOptionInfo">
+        INSERT INTO recommendation_api_deposit_option (fin_prdt_cd, intr_rate_type_nm, save_trm, intr_rate, intr_rate2)
+        VALUES (#{productCode}, #{rateTypeName}, #{saveTerm}, #{baseRate}, #{maxRate})
+    </insert>
+
+    <!-- Update 쿼리 수정 -->
+    <update id="updateDepositOption" parameterType="com.kb.crunchit.entity.DepositOptionInfo">
+        UPDATE recommendation_api_deposit_option
+        SET intr_rate_type_nm = #{rateTypeName},
+            save_trm = #{saveTerm},
+            intr_rate = #{baseRate},
+            intr_rate2 = #{maxRate}
+        WHERE fin_prdt_cd = #{productCode}
+    </update>
+
+    <!-- 존재 여부 확인 쿼리 -->
+    <select id="existsDepositOption" resultType="int">
+        SELECT COUNT(*)
+        FROM recommendation_api_deposit_option
+        WHERE fin_prdt_cd = #{productCode}
+          AND intr_rate_type_nm = #{rateTypeName}
+          AND save_trm = #{saveTerm}
+    </select>
+
+</mapper>

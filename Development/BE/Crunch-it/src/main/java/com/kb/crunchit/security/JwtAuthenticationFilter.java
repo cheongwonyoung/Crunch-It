@@ -6,15 +6,9 @@ import com.kb.crunchit.util.JwtTokenUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
-import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
-import org.springframework.security.core.authority.mapping.GrantedAuthoritiesMapper;
-import org.springframework.security.core.authority.mapping.NullAuthoritiesMapper;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.web.authentication.AbstractAuthenticationProcessingFilter;
-import org.springframework.security.web.util.matcher.RequestMatcher;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import javax.servlet.FilterChain;
@@ -35,6 +29,10 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         String requestURI = request.getRequestURI();
         Map<String, String> resultMap = new HashMap<>();
         try{
+            if(requestURI.contains("/ws")){
+                filterChain.doFilter(request, response);
+                return;
+            }
             if(requestURI.contains("/auth/authenticate")){
                 String accessToken = jwtService.extractAccessToken(request);
                 if(accessToken == null|| !jwtTokenUtil.validateToken(accessToken)){
@@ -43,7 +41,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                 response.setStatus(HttpStatus.OK.value());
                 return;
             }
-            if(requestURI.contains("/auth")){
+            if(requestURI.contains("/")){
                 filterChain.doFilter(request, response);
                 return;
             }

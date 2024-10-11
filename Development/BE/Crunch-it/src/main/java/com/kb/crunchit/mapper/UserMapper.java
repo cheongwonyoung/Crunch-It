@@ -1,6 +1,5 @@
 package com.kb.crunchit.mapper;
 
-import com.kb.crunchit.dto.response.UserDto;
 import com.kb.crunchit.entity.User;
 import org.apache.ibatis.annotations.Mapper;
 
@@ -14,4 +13,8 @@ public interface UserMapper {
     void updateUserProfile(User user);
     String getUserProfile(String email);
     void updatePassword(User user);
+
+    Integer onBoardingCheck(Integer userId);
+
+    void updateUserOnBoarding(User user);
 }

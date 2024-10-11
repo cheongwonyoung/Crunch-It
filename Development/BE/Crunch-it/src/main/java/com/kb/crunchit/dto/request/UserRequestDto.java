@@ -18,4 +18,5 @@ public class UserRequestDto {
     public int md_user_id;
     public String profile_url;
     public int salary;
+    public int outcome_limit;
 }

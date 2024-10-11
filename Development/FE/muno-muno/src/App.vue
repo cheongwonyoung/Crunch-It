@@ -11,7 +11,6 @@
 <script>
     import TabBar from "./components/TabBar.vue";
     import StatusBar from "./components/StatusBar.vue";
-
     export default {
         components: {
             TabBar,
@@ -19,7 +18,18 @@
         },
         data() {
             return {
-                hideRoutes: ["/login", "/signup", "/mypage", "/mypageedit", "/search", "/message", "/findPassword"],
+                hideRoutes: [
+                    "/login",
+                    "/signup",
+                    "/mypage",
+                    "/mypageedit",
+                    "/search",
+                    "/message",
+                    "/findPassword",
+                    "/mydata",
+                    "/incomesetting",
+                    "/limitsetting",
+                ],
             };
         },
         computed: {
@@ -54,7 +64,7 @@
         --gr30: #383e47;
         --gr40: #616b79;
         --gr50: #8892a0;
-        --gr60: #d6dae0;
+        --gr60: #c4cad4;
         --gr70: #edeff2;
         --gr80: #f5f6f7;
         --gr90: #fbfbfc;
