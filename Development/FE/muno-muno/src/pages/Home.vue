@@ -41,7 +41,17 @@
     <OctopusSelection :octopuses="octopuses" @select-octopus="selectOctopus" />
 
     <!-- 지출 금액 섹션 -->
-    <ExpenseContainer :expenseAmount="expenseAmount" />
+    <div class="expense-container-wrapper">
+      <ExpenseContainer
+        :expenseAmount="expenseAmount"
+        class="expense-container"
+      />
+    </div>
+
+    <!-- 빨간 문어 이미지 추가 -->
+    <div class="red-octopus-container">
+      <img src="@/assets/red_octopus.svg" alt="빨간 문어" class="red-octopus" />
+    </div>
 
     <!-- TabBar 컴포넌트 사용 -->
     <TabBar />
@@ -118,7 +128,7 @@ export default {
   },
   methods: {
     selectOctopus(octopus) {
-      const octopusIndex = octopus.id - 1; // 배열 인덱스는 0부터 시작
+      const octopusIndex = octopus.id - 1;
       const octopusLevel = this.octopusesLevel[octopusIndex] || 1;
       this.currentOctopus = {
         name: octopus.name,
@@ -185,7 +195,23 @@ export default {
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  height: 570px;
+  height: 680px;
+}
+
+.expense-container-wrapper {
+  display: flex;
+  justify-content: center;
+  align-items: flex-end;
+  position: relative;
+  bottom: 56px;
+  z-index: 2;
+}
+
+.red-octopus-container {
+  display: flex;
+  position: absolute;
+  bottom: 150px;
+  left: 27px;
 }
 
 .status-bar {
