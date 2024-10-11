@@ -39,7 +39,6 @@
         },
     };
 </script>
-
 <style>
     body,
     html {

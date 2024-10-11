@@ -8,7 +8,12 @@
     <div class="message-content">
       <div class="message-row">
         <div class="message-other">
-          <div class="message-text">{{ message }}</div>
+          <!-- 이미지가 있을 경우 이미지 표시 -->
+          <div v-if="image">
+            <img :src="image" alt="이미지" class="message-image" />
+          </div>
+          <!-- 텍스트 메시지 -->
+          <div v-else class="message-text">{{ message }}</div>
         </div>
         <div class="message-time">{{ time }}</div>
       </div>
@@ -22,7 +27,7 @@ export default {
   props: {
     message: {
       type: String,
-      required: true,
+      default: '', // 메시지가 없을 수도 있으므로 기본값 설정
     },
     time: {
       type: String,
@@ -35,6 +40,10 @@ export default {
     avatar: {
       type: String,
       default: () => require('@/assets/profile.svg'),
+    },
+    image: {
+      type: String,
+      default: null, // 이미지가 없을 수도 있으므로 기본값 설정
     },
   },
 };
@@ -99,6 +108,13 @@ export default {
   font-size: 16px;
   font-weight: 400;
   line-height: 150%;
+}
+
+.message-image {
+  max-width: 100%;
+  max-height: 200px;
+  border-radius: 8px;
+  margin-top: 5px;
 }
 
 .message-time {

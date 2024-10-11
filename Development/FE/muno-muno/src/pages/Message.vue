@@ -8,9 +8,10 @@
       <div v-for="message in messages" :key="message.id">
         <!-- 사용자 메시지 -->
         <MessageUser
-          v-if="message.sender === 'User'"
+          v-if="message.sender === nickname"
           :message="message.content"
           :time="message.time"
+          :image="message.image"
         />
         <!-- 상대방 메시지 -->
         <MessageBot
@@ -24,7 +25,7 @@
     </div>
 
     <!-- 메시지 입력창 컴포넌트 -->
-    <MessageInput @send="handleSendMessage" />
+    <MessageInput @send="handleSendMessage" @sendImage="handleSendImage" />
   </div>
 </template>
 
@@ -33,8 +34,19 @@ import HeaderB from '@/components/HeaderB.vue';
 import MessageUser from '@/components/MessageUser.vue';
 import MessageBot from '@/components/MessageOther.vue';
 import MessageInput from '@/components/MessageInput.vue';
-import SockJS from 'sockjs-client';
-import Stomp from 'webstomp-client';
+
+function decodeJwt(token) {
+  if (!token) return null;
+  const base64Url = token.split('.')[1];
+  const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
+  const jsonPayload = decodeURIComponent(
+    atob(base64)
+      .split('')
+      .map((c) => '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2))
+      .join('')
+  );
+  return JSON.parse(jsonPayload);
+}
 
 export default {
   name: 'MessageP',
@@ -47,23 +59,11 @@ export default {
   data() {
     return {
       stompClient: null,
-      // 임의로 추가한 메시지 데이터
-      messages: [
-        {
-          id: 1,
-          sender: 'User',
-          content: '안녕하세요!',
-          time: '오후 10:00',
-        },
-        {
-          id: 2,
-          sender: 'Bot',
-          content: '안녕하세요! 반갑습니다.',
-          time: '오후 10:01',
-        },
-      ],
+      messages: [],
       currentRoomId: 2,
-      currentRoomName: '거지방', // 백엔드에서 값을 받으면 여기에 표시되도록 함
+      currentRoomName: '거지방',
+      user: null,
+      nickname: '',
     };
   },
   methods: {
@@ -73,13 +73,14 @@ export default {
     handleSendMessage(messageContent) {
       if (messageContent.trim() !== '') {
         const message = {
-          sender: 'User',
+          sender: this.nickname,
           content: messageContent,
           time: new Date().toLocaleTimeString('ko-KR', {
             hour: '2-digit',
             minute: '2-digit',
-          }), // 한글 형식 시간
+          }),
           roomId: this.currentRoomId,
+          image: null, // 텍스트 메시지에는 이미지가 없으므로 null
         };
         this.stompClient.send(
           `/topic/chat/${this.currentRoomId}`,
@@ -90,13 +91,70 @@ export default {
         this.scrollToBottom();
       }
     },
+    handleSendImage(file) {
+      const MAX_WIDTH = 800; // 최대 너비
+      const MAX_HEIGHT = 800; // 최대 높이
+      const QUALITY = 0.7; // JPEG 압축 품질 (0에서 1 사이)
+
+      const reader = new FileReader();
+      reader.onload = (event) => {
+        const img = new Image();
+        img.src = event.target.result;
+
+        img.onload = () => {
+          const canvas = document.createElement("canvas");
+          let width = img.width;
+          let height = img.height;
+
+          // 너비와 높이 조정
+          if (width > MAX_WIDTH || height > MAX_HEIGHT) {
+            if (width > height) {
+              height = Math.round((height * MAX_WIDTH) / width);
+              width = MAX_WIDTH;
+            } else {
+              width = Math.round((width * MAX_HEIGHT) / height);
+              height = MAX_HEIGHT;
+            }
+          }
+
+          // Canvas에 이미지 그리기 및 압축
+          canvas.width = width;
+          canvas.height = height;
+          const ctx = canvas.getContext("2d");
+          ctx.drawImage(img, 0, 0, width, height);
+
+          // Base64 인코딩된 이미지 생성
+          const base64Image = canvas.toDataURL("image/jpeg", QUALITY);
+
+          // WebSocket을 통해 이미지 전송
+          const message = {
+            sender: this.nickname,
+            content: '', // 이미지 전송 메시지의 경우 텍스트 비우기
+            time: new Date().toLocaleTimeString('ko-KR', {
+              hour: '2-digit',
+              minute: '2-digit',
+            }),
+            roomId: this.currentRoomId,
+            image: base64Image, // 압축된 Base64 인코딩 이미지
+          };
+
+          this.stompClient.send(
+            `/topic/chat/${this.currentRoomId}`,
+            {},
+            JSON.stringify(message)
+          );
+          this.messages.push(message);
+          this.scrollToBottom();
+        };
+      };
+      reader.readAsDataURL(file);
+    },
     connect() {
-      const socket = new SockJS('http://localhost:8080/ws');
-      this.stompClient = Stomp.over(socket);
+      const socket = new window.SockJS('http://localhost:8080/ws');
+      this.stompClient = window.Stomp.over(socket);
       this.stompClient.connect({}, this.onConnected, this.onError);
     },
     onConnected() {
-      // 백엔드에서 방 이름 값을 받아서 currentRoomName에 설정
       this.stompClient.subscribe(
         `/topic/chat/${this.currentRoomId}`,
         this.onMessageReceived
@@ -108,6 +166,7 @@ export default {
     },
     onMessageReceived(payload) {
       const message = JSON.parse(payload.body);
+      if (message.sender === this.nickname) return;
       this.messages.push({
         ...message,
         time: new Date().toLocaleTimeString('ko-KR', {
@@ -125,11 +184,12 @@ export default {
     },
   },
   mounted() {
+    const token = localStorage.getItem('JwtToken');
+    this.user = decodeJwt(token);
+    this.nickname = this.user.nickname;
     this.connect();
-    window.addEventListener('resize', this.handleResize);
   },
   beforeUnmount() {
-    window.removeEventListener('resize', this.handleResize);
     if (this.stompClient) {
       this.stompClient.disconnect();
     }
