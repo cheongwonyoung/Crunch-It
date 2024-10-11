@@ -3,6 +3,8 @@ package com.kb.crunchit.controller;
 import com.kb.crunchit.entity.RecommendationApiDeposit;
 import com.kb.crunchit.entity.RecommendationApiSaving;
 import com.kb.crunchit.service.RecService;
+import com.kb.crunchit.service.RecommendationApiBondService;
+import com.kb.crunchit.service.RecommendationApiFundService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -21,6 +23,8 @@ import java.util.Map;
 @RequestMapping("/recommend")
 public class RecController {
     private final RecService recService;
+    private final RecommendationApiFundService recommendationApiFundService;
+    private final RecommendationApiBondService recommendationApiBondService;
 
     @GetMapping("/deposit")
     ResponseEntity<?> getAllRecommendationDeposit(){
@@ -48,5 +52,15 @@ public class RecController {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(resultMap);
         }
         return ResponseEntity.ok(resultMap);
+    }
+
+    @GetMapping(value = "/fund", produces = "application/json")
+    public ResponseEntity<?> fund(){
+        return ResponseEntity.ok().body(recommendationApiFundService.getAllFunds());
+    }
+
+    @GetMapping(value = "/bond", produces = "application/json")
+    public ResponseEntity<?> bond(){
+        return ResponseEntity.ok().body(recommendationApiBondService.getAllBonds());
     }
 }
