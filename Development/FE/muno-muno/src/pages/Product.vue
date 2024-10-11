@@ -182,6 +182,10 @@ export default {
 </script>
 
 <style scoped>
+.product-recommendation {
+  overflow-x: hidden;
+}
+
 .popular-section {
   margin-top: 78px;
 }
