@@ -1,3 +1,4 @@
+<!-- PropertyCard.vue -->
 <template>
   <div class="property-card" :class="{ 'negative-background': isNegative }">
     <h3 class="title">{{ title }}</h3>
@@ -20,10 +21,15 @@ export default {
   name: 'PropertyCard',
   props: {
     title: String,
-    amount: Number,
-    previousAmount: Number,
+    amount: {
+      type: Number,
+      default: 0,
+    },
+    previousAmount: {
+      type: Number,
+      default: 0,
+    },
     type: String,
-    description: String,
   },
   computed: {
     diff() {

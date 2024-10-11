@@ -1,3 +1,4 @@
+<!-- PropertySubBar.vue -->
 <template>
   <div class="mid-section">
     <div class="left-section">

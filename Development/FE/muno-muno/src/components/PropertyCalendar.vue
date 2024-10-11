@@ -1,3 +1,4 @@
+<!-- PropertyCalendar.vue -->
 <template>
   <div class="calendar-popup">
     <div class="calendar-header">

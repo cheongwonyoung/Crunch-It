@@ -113,12 +113,14 @@ input {
   border: 0.5px solid var(--gr60);
   border-radius: 12px;
   padding: 0 0 0 16px;
+  font-size: 16px;
   color: var(--gr20);
   margin-bottom: 12px;
 }
 
 ::placeholder {
   color: var(--gr60);
+  color: #d6dae0;
   font-weight: 500;
   font-size: 16px;
 }
@@ -147,11 +149,17 @@ input {
   font-size: 13px;
   color: var(--gr50);
   margin-bottom: 148px;
+  width: 209px;
+  font-weight: 500;
+  font-size: 13px;
+  color: #8892a0;
+  margin-bottom: 130px;
 }
 
 .router-link {
   text-decoration: none;
   color: var(--gr50);
+  color: var(--gr60);
 }
 
 .router-link:hover {
@@ -169,6 +177,7 @@ input {
   font-size: 12px;
   color: var(--gr50);
   line-height: 100%;
+  color: #8892a0;
 }
 
 .login-img {
@@ -189,5 +198,7 @@ input {
   height: 1px;
   background-color: var(--gr60);
   margin: 0 20px 0 20px;
+  background-color: #d6dae0;
+  margin: 0 10px;
 }
 </style>

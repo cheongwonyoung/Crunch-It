@@ -16,8 +16,7 @@ public class SchedulerService {
     private final MyDataService myDataService;
 
     // 매일 오전 12시에 업데이트
-//    @Scheduled(cron = "0 0 0 * * *", zone = "Asia/Seoul")
-    @Scheduled(cron = "0 15 01 * * *", zone = "Asia/Seoul")
+    @Scheduled(cron = "0 0 0 * * *", zone = "Asia/Seoul")
     public void dailyUpdate() {
         log.info("이번달 자산정보 업데이트 시작 : {}", LocalDateTime.now());
         stockInfoService.fetchAndUpdateStockData(); // 주식 API 호출하여 DB 업데이트

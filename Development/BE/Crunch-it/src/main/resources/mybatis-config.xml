@@ -30,6 +30,7 @@
         <typeAlias alias="InvestHistory" type="com.kb.crunchit.entity.InvestHistory" />
         <typeAlias alias="Stock" type="com.kb.crunchit.entity.Stock" />
         <typeAlias alias="Bond" type="com.kb.crunchit.entity.Bond" />
+        <typeAlias alias="AssetResponseDto" type="com.kb.crunchit.dto.response.analysis.AssetResponseDto" />
     </typeAliases>
 
     <!-- 데이터베이스 환경 설정 -->

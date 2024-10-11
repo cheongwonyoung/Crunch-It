@@ -1,3 +1,4 @@
+<!-- Property.vue -->
 <template>
   <div class="property-container">
     <div class="sticky-header">
@@ -22,7 +23,7 @@
         />
       </div>
 
-      <PropertyChart />
+      <PropertyChart v-if="chartData" :chartData="chartData" />
 
       <div class="analysis">
         <span class="analysis-text"
@@ -30,7 +31,7 @@
         >
       </div>
 
-      <PropertyCardContainer />
+      <PropertyCardContainer v-if="cardData" :cardData="cardData" />
     </div>
   </div>
 </template>
@@ -40,6 +41,7 @@ import PropertyChart from '@/components/PropertyChart.vue';
 import PropertySubBar from '@/components/PropertySubBar.vue';
 import PropertyCalendar from '@/components/PropertyCalendar.vue';
 import PropertyCardContainer from '@/components/PropertyCardContainer.vue';
+import apiClient from '@/axios';
 
 export default {
   name: 'PropertyP',
@@ -55,6 +57,8 @@ export default {
       selectedYear: new Date().getFullYear(),
       lastUpdated: '2024.10.01',
       showCalendar: false,
+      chartData: null,
+      cardData: null,
     };
   },
   methods: {
@@ -65,7 +69,90 @@ export default {
       this.selectedYear = year;
       this.selectedMonth = month;
       this.showCalendar = false;
+      this.fetchPropertyData();
     },
+    async fetchPropertyData() {
+      try {
+        const response = await apiClient.get('/property/statistics', {
+          params: {
+            year: this.selectedYear,
+            month: this.selectedMonth,
+          },
+        });
+        const { currentMonth, previousMonth } = response.data;
+        console.log(response);
+
+        if (currentMonth && previousMonth) {
+          this.chartData = {
+            current: this.calculateChartLevels(currentMonth),
+            previous: this.calculateChartLevels(previousMonth),
+          };
+
+          this.cardData = {
+            asset: {
+              current: currentMonth.totalAccountBalance,
+              previous: previousMonth.totalAccountBalance,
+            },
+            expense: {
+              current: currentMonth.totalOutcome,
+              previous: previousMonth.totalOutcome,
+            },
+            investment: {
+              current:
+                currentMonth.stockProfitAmount +
+                currentMonth.fundProfitAmount +
+                currentMonth.bondProfitAmount,
+              previous:
+                previousMonth.stockProfitAmount +
+                previousMonth.fundProfitAmount +
+                previousMonth.bondProfitAmount,
+            },
+          };
+        } else {
+          console.error('Invalid data received from the server');
+          this.chartData = null;
+          this.cardData = null;
+        }
+      } catch (error) {
+        console.error('Error fetching property data:', error);
+        this.chartData = null;
+        this.cardData = null;
+      }
+    },
+    calculateChartLevels(data) {
+      const totalAssets =
+        data.savingsAmount +
+        data.stockInvestAmount +
+        data.fundInvestAmount +
+        data.bondInvestAmount +
+        data.totalAccountBalance;
+
+      const calculateLevel = (value) => {
+        if (value === 0) return 0;
+        const level = Math.round((value / totalAssets) * 5) + 1;
+        return Math.min(Math.max(level, 1), 6);
+      };
+
+      return {
+        savings: calculateLevel(data.savingsAmount),
+        stock: calculateLevel(data.stockInvestAmount),
+        fund: calculateLevel(data.fundInvestAmount),
+        bond: calculateLevel(data.bondInvestAmount),
+        cash: calculateLevel(data.totalAccountBalance),
+      };
+    },
+  },
+  watch: {
+    selectedMonth() {
+      this.fetchPropertyData();
+    },
+    selectedYear() {
+      this.fetchPropertyData();
+    },
+  },
+  mounted() {
+    console.log('Component mounted');
+    this.fetchPropertyData();
   },
 };
 </script>
