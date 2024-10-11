@@ -92,14 +92,15 @@ h1 {
   color: var(--gr30);
   font-size: 22px;
   font-weight: 550;
-  line-height: 150%;
+  line-height: 100%;
 }
 
 .description {
-  color: var(--gr40);
+  color: var(--gr50);
   font-size: 15px;
   line-height: 150%;
   margin-bottom: 30px;
+  font-weight: 400;
 }
 
 .modal-buttons {
