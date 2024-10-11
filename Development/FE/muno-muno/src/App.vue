@@ -30,6 +30,7 @@ export default {
         '/incomesetting',
         '/limitsetting',
         '/community/notification',
+        '/community/create',
       ],
     };
   },
