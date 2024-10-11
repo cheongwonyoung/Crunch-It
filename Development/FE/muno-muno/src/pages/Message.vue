@@ -20,6 +20,7 @@
           :time="message.time"
           :name="message.sender"
           :avatar="require('@/assets/profile.svg')"
+          :image="message.image"
         />
       </div>
     </div>
@@ -34,6 +35,8 @@ import HeaderB from '@/components/HeaderB.vue';
 import MessageUser from '@/components/MessageUser.vue';
 import MessageBot from '@/components/MessageOther.vue';
 import MessageInput from '@/components/MessageInput.vue';
+import { useUserStore } from '@/stores/userStore';
+import { mapState } from 'pinia';
 
 function decodeJwt(token) {
   if (!token) return null;
@@ -55,6 +58,9 @@ export default {
     MessageUser,
     MessageBot,
     MessageInput,
+  },
+  computed: {
+    ...mapState(useUserStore, ['userInfo']),
   },
   data() {
     return {
@@ -80,7 +86,8 @@ export default {
             minute: '2-digit',
           }),
           roomId: this.currentRoomId,
-          image: null, // 텍스트 메시지에는 이미지가 없으므로 null
+          image: null, // 압축된 Base64 인코딩 이미지
+          profile_image: null, 
         };
         this.stompClient.send(
           `/topic/chat/${this.currentRoomId}`,
@@ -180,13 +187,16 @@ export default {
       this.$nextTick(() => {
         const container = this.$refs.messageContainer;
         container.scrollTop = container.scrollHeight;
+
       });
     },
   },
   mounted() {
+    const userStore = useUserStore();
     const token = localStorage.getItem('JwtToken');
     this.user = decodeJwt(token);
-    this.nickname = this.user.nickname;
+
+    console.log("!!! "+ userStore.userInfo.nickname)
     this.connect();
   },
   beforeUnmount() {

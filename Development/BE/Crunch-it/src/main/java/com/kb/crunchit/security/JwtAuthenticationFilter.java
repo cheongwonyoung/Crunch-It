@@ -41,7 +41,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                 response.setStatus(HttpStatus.OK.value());
                 return;
             }
-            if(requestURI.contains("/")){
+            if(requestURI.contains("/**")){
                 filterChain.doFilter(request, response);
                 return;
             }
