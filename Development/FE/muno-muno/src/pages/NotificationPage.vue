@@ -1,6 +1,6 @@
 <template>
   <div class="search">
-    <HeaderB title="알림" @back="goBack" />
+    <HeaderB title="알림" @back="onBack" />
   </div>
   <div class="notification-list">
     <NotificationItem
@@ -13,6 +13,7 @@
 
 <script>
 import { ref, onMounted } from 'vue';
+import { useRouter } from 'vue-router';
 import HeaderB from '@/components/HeaderB.vue';
 import NotificationItem from '@/components/NotificationItem.vue';
 
@@ -23,6 +24,8 @@ export default {
     NotificationItem,
   },
   setup() {
+    const router = useRouter();
+
     const notifications = ref([
       {
         notificationId: 1,
@@ -82,8 +85,14 @@ export default {
       };
     };
 
+    // 뒤로 가기 함수
+    const onBack = () => {
+      router.go(-1);
+    };
+
     return {
       notifications,
+      onBack,
     };
   },
 };
