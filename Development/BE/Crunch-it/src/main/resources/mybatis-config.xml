@@ -25,6 +25,9 @@
         <typeAlias alias="User" type="com.kb.crunchit.entity.User"/>
         <typeAlias alias="Notification" type="com.kb.crunchit.entity.Notification"/>
         <typeAlias alias="NotificationRequest" type="com.kb.crunchit.dto.request.NotificationRequestDTO"/>
+        <typeAlias alias="KisStockProfitRank" type="com.kb.crunchit.entity.KisStockProfitRank"/>
+        <typeAlias alias="KisStockAmountRank" type="com.kb.crunchit.entity.KisStockAmountRank"/>
+        <typeAlias alias="KisStockDividendRank" type="com.kb.crunchit.entity.KisStockDividendRank"/>
 
         <typeAlias alias="AssetStatistics" type="com.kb.crunchit.entity.AssetStatistics" />
         <typeAlias alias="InvestHistory" type="com.kb.crunchit.entity.InvestHistory" />

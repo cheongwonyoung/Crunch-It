@@ -2,6 +2,7 @@ package com.kb.crunchit.controller;
 
 import com.kb.crunchit.security.CustomUserDetails;
 import com.kb.crunchit.service.RecommendationTopService;
+import com.kb.crunchit.service.StockRecommendService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -19,6 +20,7 @@ import java.util.Map;
 @RequiredArgsConstructor
 public class TestController {
     private final RecommendationTopService recommendationTopService;
+    private final StockRecommendService stockRecommendService;
 
     @GetMapping("/test")
     public ResponseEntity<Map<String,Object>> test(Authentication auth){
@@ -40,4 +42,5 @@ public class TestController {
 ////        return ResponseEntity.ok().body(recommendationTopService.getAmountRanking(recommendationTopService.getKoreaToken()));
 //        return ResponseEntity.ok().body(recommendationTopService.getDividendRanking(recommendationTopService.getKoreaToken()));
 //    }
+
 }
