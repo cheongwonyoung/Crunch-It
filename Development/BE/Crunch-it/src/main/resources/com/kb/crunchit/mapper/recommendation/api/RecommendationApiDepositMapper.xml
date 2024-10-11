@@ -9,6 +9,10 @@
         <result property="joinMethod" column="join_way"/>
     </resultMap>
 
+    <select id="getAllDeposits" resultType="RecommendationApiDeposit">
+        SELECT * FROM recommendation_api_deposit;
+    </select>
+
     <select id="selectAllDeposits" resultMap="DepositResultMap">
         SELECT * FROM recommendation_api_deposit
     </select>

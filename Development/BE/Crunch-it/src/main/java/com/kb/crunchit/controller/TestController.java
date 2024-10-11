@@ -23,8 +23,7 @@ import java.util.Map;
 public class TestController {
     private final RecommendationTopService recommendationTopService;
     private final StockRecommendService stockRecommendService;
-    private final RecommendationApiFundService recommendationApiFundService;
-    private final RecommendationApiBondService recommendationApiBondService;
+
 
     @GetMapping("/test")
     public ResponseEntity<Map<String,Object>> test(Authentication auth){
@@ -46,17 +45,5 @@ public class TestController {
 ////        return ResponseEntity.ok().body(recommendationTopService.getAmountRanking(recommendationTopService.getKoreaToken()));
 //        return ResponseEntity.ok().body(recommendationTopService.getDividendRanking(recommendationTopService.getKoreaToken()));
 //    }
-
-    @GetMapping(value = "/fund", produces = "application/json")
-    public ResponseEntity<?> fund(){
-        return ResponseEntity.ok().body(recommendationApiFundService.getAllFunds());
-    }
-
-    @GetMapping(value = "/bond", produces = "application/json")
-    public ResponseEntity<?> bond(){
-        return ResponseEntity.ok().body(recommendationApiBondService.getAllBonds());
-    }
-
-
 
 }
