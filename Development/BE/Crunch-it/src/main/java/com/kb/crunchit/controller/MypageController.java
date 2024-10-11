@@ -94,6 +94,30 @@ public class MypageController {
             return new ResponseEntity<>(resultMap,HttpStatus.BAD_REQUEST);
         }
         return ResponseEntity.ok(resultMap);
-
     }
+    @DeleteMapping("/deleteProfile")
+    ResponseEntity<Map<String,Object>> deleteProfile( Authentication auth){
+        CustomUserDetails customUserDetails = (CustomUserDetails) auth.getPrincipal();
+        String email = customUserDetails.getUsername();
+        Map<String,Object> resultMap = new HashMap<>();
+        try{
+            String userProfile = mypageService.getUserProfile(email);
+            if(userProfile != null){
+                String keyName = s3Service.extractKeyName(userProfile);
+                if(keyName!=null) s3Service.deleteFile(keyName);
+            }
+            User user = User.builder()
+                    .email(email)
+                    .profileUrl(null)
+                    .build();
+
+            mypageService.updateUserProfile(user);
+            resultMap.put("message", "프로필 삭제 완료되었습니다.");
+        }
+        catch(Exception e){
+            return new ResponseEntity<>(resultMap,HttpStatus.BAD_REQUEST);
+        }
+        return ResponseEntity.ok(resultMap);
+    }
+
 }
