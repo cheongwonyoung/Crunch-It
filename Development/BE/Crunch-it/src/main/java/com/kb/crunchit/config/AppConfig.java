@@ -26,7 +26,8 @@ import software.amazon.awssdk.auth.credentials.AwsBasicCredentials;
 import software.amazon.awssdk.auth.credentials.StaticCredentialsProvider;
 import software.amazon.awssdk.regions.Region;
 
-@EnableScheduling
+
+@EnableScheduling // 스케쥴링 허용
 @Configuration
 @ComponentScan(basePackages = {"com.kb.crunchit.util", "com.kb.crunchit.service","com.kb.crunchit.controller"})
 @MapperScan(basePackages = {"com.kb.crunchit.mapper"})

@@ -4,23 +4,35 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 
-
 <mapper namespace="com.kb.crunchit.mapper.UserMapper">
+
+    <!-- 모든 user 조회 -->
+    <select id="getAllUsers" resultType="User">
+        SELECT user_id, md_user_id
+        FROM user
+        WHERE md_user_id IS NOT NULL
+    </select>
+
+    <!-- mdUserId로 userId를 조회하는 쿼리 추가 -->
+    <select id="getUserIdByMdUserId" resultType="int">
+        SELECT user_id
+        FROM user
+        WHERE md_user_id = #{mdUserId}
+    </select>
+
     <select id="findByEmail" resultType="User" parameterType="string">
-        SELECT
-            user_id AS userId,
-            nickname AS nickname,
-            password AS password,
-            pin_number AS pinNumber,
-            birth AS birth,
-            gender AS gender,
-            phone_number AS phoneNumber,
-            email AS email,
-            md_user_id AS mdUserId,
-            profile_url AS profileUrl,
-            salary AS salary
-        FROM
-            user
+        SELECT user_id      AS userId,
+               nickname     AS nickname,
+               password     AS password,
+               pin_number   AS pinNumber,
+               birth        AS birth,
+               gender       AS gender,
+               phone_number AS phoneNumber,
+               email        AS email,
+               md_user_id   AS mdUserId,
+               profile_url  AS profileUrl,
+               salary       AS salary
+        FROM user
         WHERE email = #{email};
     </select>
 
@@ -29,6 +41,7 @@
         from user
         where nickname = #{nickname};
     </select>
+
     <select id="getUserProfile" resultType="string" parameterType="string">
         select profile_url
         from user
@@ -47,7 +60,9 @@
 
     <update id="updateUser" parameterType="User">
         update user
-        set nickname = #{nickname}, birth = #{birth}, phone_number = #{phoneNumber}
+        set nickname     = #{nickname},
+            birth        = #{birth},
+            phone_number = #{phoneNumber}
         where email = #{email}
     </update>
     <update id="updateUserProfile" parameterType="User">

@@ -32,4 +32,46 @@
         LIMIT 1
     </select>
 
+    <!-- 특정 사용자의 자산 통계 데이터가 존재하는지 확인 -->
+    <select id="exists" resultType="boolean">
+        SELECT COUNT(*) > 0
+        FROM user_asset_statistics
+        WHERE user_id = #{userId}
+    </select>
+
+    <!-- 사용자의 자산 통계 정보를 업데이트 -->
+    <!-- NOW() : YYYY-MM-DD HH:MM:SS 형식 -->
+    <update id="updateUserAssetStatistics" parameterType="AssetStatistics">
+        UPDATE user_asset_statistics
+        SET savings_amount        = #{savingsAmount},
+            stock_invest_amount   = #{stockInvestAmount},
+            stock_profit_amount   = #{stockProfitAmount},
+            fund_invest_amount    = #{fundInvestAmount},
+            fund_profit_amount    = #{fundProfitAmount},
+            bond_invest_amount    = #{bondInvestAmount},
+            bond_profit_amount    = #{bondProfitAmount},
+            total_account_balance = #{totalAccountBalance},
+            total_outcome         = #{totalOutcome},
+            update_date           = NOW()
+        WHERE user_id = #{userId}
+    </update>
+
+    <!-- 새로운 사용자 자산 통계 정보를 삽입 -->
+    <insert id="insertUserAssetStatistics" parameterType="AssetStatistics">
+        INSERT INTO user_asset_statistics (user_id, savings_amount, stock_invest_amount, stock_profit_amount,
+                                           fund_invest_amount, fund_profit_amount, bond_invest_amount,
+                                           bond_profit_amount,
+                                           total_account_balance, total_outcome, register_date, update_date)
+        VALUES (#{userId}, #{savingsAmount}, #{stockInvestAmount}, #{stockProfitAmount},
+                #{fundInvestAmount}, #{fundProfitAmount}, #{bondInvestAmount}, #{bondProfitAmount},
+                #{totalAccountBalance}, #{totalOutcome}, NOW(), NOW())
+    </insert>
+
+    <!-- 특정 사용자의 모든 자산 통계 정보를 조회 -->
+    <select id="getUserAssetStatistics" resultType="AssetStatistics">
+        SELECT *
+        FROM user_asset_statistics
+        WHERE user_id = #{userId}
+    </select>
+
 </mapper>

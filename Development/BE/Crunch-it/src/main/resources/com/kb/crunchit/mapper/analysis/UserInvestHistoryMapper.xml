@@ -1,0 +1,16 @@
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.kb.crunchit.mapper.analysis.UserInvestHistoryMapper">
+
+<!-- 매달 말일에 전 달 자산 정보, 수익 정보 테이블에 추가됨 -->
+    <insert id="insertUserInvestHistory" parameterType="InvestHistory">
+        INSERT INTO user_invest_history (
+            user_id, savings_amount, stock_invest_amount, stock_profit_amount,
+            fund_invest_amount, fund_profit_amount, bond_invest_amount, bond_profit_amount,
+            total_account_balance, total_outcome, register_date
+        ) VALUES (
+                     #{userId}, #{savingsAmount}, #{stockInvestAmount}, #{stockProfitAmount},
+                     #{fundInvestAmount}, #{fundProfitAmount}, #{bondInvestAmount}, #{bondProfitAmount},
+                     #{totalAccountBalance}, #{totalOutcome}, #{registerDate}
+                 )
+    </insert>
+</mapper>

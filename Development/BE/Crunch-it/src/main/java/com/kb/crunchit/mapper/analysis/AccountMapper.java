@@ -27,4 +27,10 @@ public interface AccountMapper {
 
     // 특정 user_id의 모든 계좌 ID를 가져옴
     List<Integer> getAllAccountIds(int userId); // 메인 DB의 사용자 ID, 해당 사용자의 계좌 ID 목록 return
+
+    // 예적금 통장 총 금액(정기예금, 적금)
+    long calculateSavingsAmount(int userId);
+
+    // 현금자산(보통예금, 증권)
+    long calculateTotalBalance(int userId);
 }

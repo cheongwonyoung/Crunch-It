@@ -15,7 +15,9 @@
     <!-- 주식 정보 업데이트 -->
     <update id="updateStock" parameterType="StockPriceInfo">
         UPDATE stock_price_info
-        SET base_dt = #{baseDt}, end_price = #{endPrice}, trade_quantity = #{tradeQuantity}
+        SET base_dt        = #{baseDt},
+            end_price      = #{endPrice},
+            trade_quantity = #{tradeQuantity}
         WHERE stock_code = #{stockCode}
     </update>
 
@@ -24,4 +26,14 @@
         INSERT INTO stock_price_info (base_dt, stock_code, stock_name, stock_market, end_price, trade_quantity)
         VALUES (#{baseDt}, #{stockCode}, #{stockName}, #{stockMarket}, #{endPrice}, #{tradeQuantity})
     </insert>
+
+    <!-- 특정 주식의 최근 종가를 조회, 전일 종가 조회 -->
+    <!-- 전일 종가는 주식 API 에서 받아온 stock_price_info 테이블의 end_price 사용, ORDER BY base_dt DESC LIMIT 1 -->
+    <select id="getLastEndPrice" resultType="Long">
+        SELECT COALESCE(end_price, 0) as end_price
+        FROM stock_price_info
+        WHERE stock_code = #{stockCode}
+        ORDER BY base_dt DESC
+            LIMIT 1
+    </select>
 </mapper>
