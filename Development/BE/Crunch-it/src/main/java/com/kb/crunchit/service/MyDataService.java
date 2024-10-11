@@ -2,7 +2,7 @@ package com.kb.crunchit.service;
 
 import com.kb.crunchit.dto.response.analysis.*;
 import com.kb.crunchit.entity.*;
-import com.kb.crunchit.mapper.UserAssetStatisticsMapper;
+import com.kb.crunchit.mapper.recommendation.top.UserAssetStatisticsMapper;
 import com.kb.crunchit.mapper.UserMapper;
 import com.kb.crunchit.mapper.analysis.*;
 import lombok.extern.slf4j.Slf4j;
