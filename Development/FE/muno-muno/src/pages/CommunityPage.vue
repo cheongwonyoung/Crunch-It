@@ -11,9 +11,10 @@
     <!-- 커뮤니티 카테고리 섹션 -->
     <div class="community-categories">
       <div
-        v-for="category in communityCategories"
+        v-for="(category, index) in communityCategories"
         :key="category.name"
         class="category-item"
+        @click="setCurrentRoom(index + 1, category.name)" 
       >
         <img :src="category.imgSrc" :alt="category.name" class="category-img" />
         <span class="category-name">{{ category.name }}</span>
@@ -83,6 +84,23 @@ export default {
       { name: '자유방', imgSrc: require('@/assets/free_room.svg') },
     ]);
 
+        // 선택된 방 ID와 이름을 저장할 변수
+    const currentRoomId = ref(null);
+    const currentRoomName = ref("");
+
+    // 선택한 방 ID와 이름을 설정하는 메서드
+    const setCurrentRoom = (id, name) =>{
+      console.log("Navigating to Message page with roomId:", id, "and roomName:", name); // id와 name이 올바른지 확인
+
+
+      // MessageP 페이지로 이동하며 currentRoomId와 currentRoomName을 전달
+      router.push({ 
+        name: 'Message', 
+        params: { roomId: id, roomName: encodeURIComponent(name) }
+      });
+  
+    }
+
     const selectedCategory = ref('전체');
     const posts = ref([]);
     const router = useRouter();
@@ -146,6 +164,9 @@ export default {
       goToWritePage,
       goToNotifications,
       headerIcons,
+      currentRoomId,    
+      currentRoomName,  
+      setCurrentRoom,    
     };
   },
 };
