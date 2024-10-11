@@ -10,7 +10,9 @@
         <label for="category">카테고리</label>
         <select v-model="category" id="category" required>
           <option disabled value="">카테고리를 선택하세요</option>
-          <option v-for="cat in categories" :key="cat" :value="cat">{{ cat }}</option>
+          <option v-for="cat in categories" :key="cat" :value="cat">
+            {{ cat }}
+          </option>
         </select>
       </div>
 
@@ -39,12 +41,14 @@ export default {
 
     const editTitle = ref('');
     const editContent = ref('');
-    const category = ref('');  // 카테고리 선택
+    const category = ref(''); // 카테고리 선택
 
     // 게시글 정보 가져오기
     const fetchPost = async () => {
       try {
-        const response = await apiClient.get(`http://localhost:8080/community/${postId}`);
+        const response = await apiClient.get(
+          `http://localhost:8080/community/${postId}`
+        );
         editTitle.value = response.data.title;
         editContent.value = response.data.content;
         category.value = response.data.category; // 카테고리 초기화
@@ -56,11 +60,14 @@ export default {
     // 게시글 수정하기
     const submitEdit = async () => {
       try {
-        await apiClient.put(`http://localhost:8080/community/${postId}/modify`, {
-          title: editTitle.value,
-          category: category.value, // 카테고리 포함
-          content: editContent.value
-        });
+        await apiClient.put(
+          `http://localhost:8080/community/${postId}/modify`,
+          {
+            title: editTitle.value,
+            category: category.value, // 카테고리 포함
+            content: editContent.value,
+          }
+        );
         alert('게시글이 수정되었습니다.');
         router.push(`/community/${postId}`);
       } catch (error) {
@@ -75,9 +82,9 @@ export default {
     return {
       editTitle,
       editContent,
-      category,  // 추가
-      categories,  // 카테고리 리스트
-      submitEdit
+      category, // 추가
+      categories, // 카테고리 리스트
+      submitEdit,
     };
   },
 };
@@ -104,7 +111,6 @@ label {
   display: block;
   font-size: 14px;
   margin-bottom: 5px;
-
 }
 
 input,
