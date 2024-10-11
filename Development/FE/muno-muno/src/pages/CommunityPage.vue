@@ -157,8 +157,9 @@ export default {
   position: absolute;
   top: 112px;
   width: 375px;
-  height: 812px;
+  height: auto;
   box-sizing: border-box;
+  padding-bottom: 86px;
 }
 
 .chat-header {
