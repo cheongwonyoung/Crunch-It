@@ -1,105 +1,107 @@
 <template>
-  <div class="container mx-auto p-4">
-    <h1 class="text-xl font-semibold mb-4">알림</h1>
-    <div v-for="notification in notifications" :key="notification.notificationId" class="flex items-start mb-4 border-b pb-4">
-      <div class="flex-shrink-0">
-        <div class="w-10 h-10 bg-blue-200 rounded-full flex items-center justify-center">
-          <span class="text-lg">💬</span>
-        </div>
-      </div>
-      <div class="ml-4">
-<!--        <p class="font-semibold">{{ notification.title }}</p>-->
-        <p class="text-sm text-gray-600">{{ notification.message }}</p>
-        <p class="text-sm text-gray-500">{{ formatTime(notification.createdAt) }}</p>
-      </div>
-    </div>
+  <div class="search">
+    <HeaderB title="알림" @back="goBack" />
+  </div>
+  <div class="notification-list">
+    <NotificationItem
+      v-for="notification in notifications"
+      :key="notification.notificationId"
+      :notification="notification"
+    />
   </div>
 </template>
 
 <script>
 import { ref, onMounted } from 'vue';
-import apiClient from "@/axios";
+import HeaderB from '@/components/HeaderB.vue';
+import NotificationItem from '@/components/NotificationItem.vue';
 
 export default {
   name: 'NotificationP',
+  components: {
+    HeaderB,
+    NotificationItem,
+  },
   setup() {
-    const notifications = ref([]);
+    const notifications = ref([
+      {
+        notificationId: 1,
+        nickname: '이득분 무너',
+        title: '요즘은 어떤 주식이 좋은가요?',
+        subMessage: '안하는게 제일 좋네요...',
+        createdAt: [2024, 10, 11, 9, 41],
+        type: '댓글',
+      },
+      {
+        notificationId: 2,
+        nickname: '이득분 무너',
+        title: '요즘은 어떤 주식이 좋은가요?',
+        subMessage: '10월달에는 좋았군요... 요즘은 경기가 안좋아서...',
+        createdAt: [2024, 10, 11, 9, 38],
+        type: '좋아요',
+      },
+      {
+        notificationId: 3,
+        nickname: '이득분 무너',
+        title: '요즘은 어떤 주식이 좋은가요?',
+        subMessage: '어떤 걸 사도 지금이 이득입니다 ㅋㅋㅋㅋ',
+        createdAt: [2024, 10, 3, 12, 0],
+        type: '댓글',
+      },
+    ]);
 
-    // 기존 알림 데이터를 가져오는 함수 (Authorization 헤더 추가)
-    const fetchNotifications = async () => {
-      try {
-        const token = localStorage.getItem('JwtToken'); // 로컬스토리지에서 JWT 토큰 가져오기
-        if (!token) {
-          console.error('토큰이 없습니다. 로그인해주세요.');
-          return;
-        }
+    onMounted(() => {
+      subscribeToSSE();
+    });
 
-        const response = await apiClient.get('/notifications', {
-          headers: {
-            Authorization: `${token}` // JWT 토큰을 Authorization 헤더에 포함
-          }
-        });
-        notifications.value = response.data;
-        console.log(response.data);
-      } catch (error) {
-        console.error('알림 데이터를 불러오는 데 실패했습니다.', error);
-      }
-    };
-
-    // 실시간 알림을 구독하는 함수
     const subscribeToSSE = () => {
-      const token = localStorage.getItem('JwtToken'); // JWT 토큰을 로컬스토리지에서 가져옴
+      const token = localStorage.getItem('JwtToken');
       if (!token) {
         console.error('토큰이 없습니다. 로그인해주세요.');
         return;
       }
 
-      const payload = JSON.parse(atob(token.split('.')[1])); // JWT 디코딩
-      console.log('Decoded Token Payload:', payload);
+      const eventSource = new EventSource(
+        `http://localhost:8080/notifications/subscribe?token=${token}`
+      );
 
-      const eventSource = new EventSource(`http://localhost:8080/notifications/subscribe?token=${token}`);
-
-      eventSource.onmessage = function(event) {
-        console.log('New Notification:', event.data);
-        notifications.value.push(JSON.parse(event.data)); // 새로운 알림이 오면 notifications 배열에 추가
+      eventSource.onmessage = function (event) {
+        const newNotification = JSON.parse(event.data);
+        notifications.value.push({
+          notificationId: newNotification.id,
+          nickname: newNotification.nickname,
+          title: newNotification.title,
+          subMessage: newNotification.subMessage,
+          createdAt: newNotification.createdAt,
+          type: newNotification.type,
+        });
       };
 
-      eventSource.onerror = function(error) {
-        if (eventSource.readyState === EventSource.CLOSED) {
-          console.log('SSE connection closed by server.');
-        } else {
-          console.error('SSE connection error', error);
-          console.log('EventSource readyState:', eventSource.readyState);
-          console.log('EventSource URL:', eventSource.url);
-        }
+      eventSource.onerror = function () {
         eventSource.close();
       };
     };
 
-    // createdAt 배열 데이터를 yyyy.MM.dd HH:mm 형식으로 변환하는 함수
-    const formatTime = (timeArray) => {
-      if (Array.isArray(timeArray)) {
-        const [year, month, day, hour, minute] = timeArray; // 배열에서 값 추출
-        return `${year}.${String(month).padStart(2, '0')}.${String(day).padStart(2, '0')} ${String(hour).padStart(2, '0')}:${String(minute).padStart(2, '0')}`;
-      }
-      return ''; // 배열이 아닌 경우 빈 문자열 반환
-    };
-
-    onMounted(() => {
-      fetchNotifications(); // 처음에 알림 데이터 가져오기
-      subscribeToSSE(); // SSE 구독 시작
-    });
-
     return {
       notifications,
-      formatTime,
     };
   },
 };
 </script>
 
 <style scoped>
-.container {
+.notification-list {
+  position: absolute;
+  top: 108px;
+  left: 0;
+  width: 375px;
+  height: 704px;
   max-width: 600px;
+  padding: 0 20px;
+  box-sizing: border-box;
+  overflow-y: auto;
+}
+.notification-item-wrapper {
+  border-bottom: 0.5px solid var(--gr70);
 }
 </style>
