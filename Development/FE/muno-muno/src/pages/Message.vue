@@ -19,7 +19,7 @@
           :message="message.content"
           :time="message.time"
           :name="message.sender"
-          :avatar="require('@/assets/profile.svg')"
+          :avatar="message.profile"
           :image="message.image"
         />
       </div>
@@ -35,8 +35,8 @@ import HeaderB from '@/components/HeaderB.vue';
 import MessageUser from '@/components/MessageUser.vue';
 import MessageBot from '@/components/MessageOther.vue';
 import MessageInput from '@/components/MessageInput.vue';
-import { useUserStore } from '@/stores/userStore';
-import { mapState } from 'pinia';
+import { useUserStore } from "@/stores/userStore";
+import { mapState } from "pinia";
 
 function decodeJwt(token) {
   if (!token) return null;
@@ -59,8 +59,8 @@ export default {
     MessageBot,
     MessageInput,
   },
-  computed: {
-    ...mapState(useUserStore, ['userInfo']),
+  computed : {
+    ...mapState(useUserStore, ["userInfo"]),
   },
   data() {
     return {
@@ -70,6 +70,7 @@ export default {
       currentRoomName: '거지방',
       user: null,
       nickname: '',
+      profile: this.profile
     };
   },
   methods: {
@@ -86,9 +87,10 @@ export default {
             minute: '2-digit',
           }),
           roomId: this.currentRoomId,
-          image: null, // 압축된 Base64 인코딩 이미지
-          profile_image: null, 
+          image: null, // 텍스트 메시지에는 이미지가 없으므로 null
+          profile: this.profile,
         };
+        console.log("여기야 !!" +message.profile)
         this.stompClient.send(
           `/topic/chat/${this.currentRoomId}`,
           {},
@@ -97,6 +99,7 @@ export default {
         this.messages.push(message);
         this.scrollToBottom();
       }
+      
     },
     handleSendImage(file) {
       const MAX_WIDTH = 800; // 최대 너비
@@ -131,7 +134,7 @@ export default {
           ctx.drawImage(img, 0, 0, width, height);
 
           // Base64 인코딩된 이미지 생성
-          const base64Image = canvas.toDataURL("image/jpeg", QUALITY);
+          const base64Image = canvas.toDataURL("image/jpeg", QUALITY) + `#${Date.now()}`;
 
           // WebSocket을 통해 이미지 전송
           const message = {
@@ -143,8 +146,8 @@ export default {
             }),
             roomId: this.currentRoomId,
             image: base64Image, // 압축된 Base64 인코딩 이미지
+            profile: this.profile,
           };
-
           this.stompClient.send(
             `/topic/chat/${this.currentRoomId}`,
             {},
@@ -187,16 +190,16 @@ export default {
       this.$nextTick(() => {
         const container = this.$refs.messageContainer;
         container.scrollTop = container.scrollHeight;
-
       });
     },
   },
   mounted() {
-    const userStore = useUserStore();
     const token = localStorage.getItem('JwtToken');
     this.user = decodeJwt(token);
-
-    console.log("!!! "+ userStore.userInfo.nickname)
+    this.nickname = this.userInfo.nickname;
+    this.profile = this.userInfo.profileUrl;
+    console.log(this.userInfo.nickname)
+    console.log(this.userInfo.profileUrl)
     this.connect();
   },
   beforeUnmount() {

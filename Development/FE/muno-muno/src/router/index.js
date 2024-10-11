@@ -19,7 +19,6 @@ import MyData from "@/pages/MyData.vue";
 import IncomeSetting from "@/pages/IncomeSetting.vue";
 import LimitSetting from "@/pages/LimitSetting.vue";
 import FindPasswordP from "@/pages/FindPassword.vue";
-import ChatP from "@/pages/ChatPage.vue";
 // import apiClient from "@/axios";
 
 const routes = [
@@ -42,7 +41,6 @@ const routes = [
     { path: "/community/create", name: "WritePost", component: WritePostP, props: true },
     { path: "/community/modify/:id", name: "EditPost", component: EditPostP, props: true },
     { path: "/community/notification", name: "Notification", component: NotificationP, props: true },
-    { path: "/chat", name: "Chat", component: ChatP },
 ];
 
 const router = createRouter({

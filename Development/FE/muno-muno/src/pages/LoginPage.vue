@@ -66,7 +66,9 @@
                     const res = await apiClient.get("/mypage/userInfo");
                     const nickname = res.data.data.nickname;
                     const profileUrl = res.data.data.profile_url;
+                    
                     this.setUserInfo({ nickname: nickname, profileUrl: profileUrl });
+
                 } catch (error) {
                     console.log(error);
                 }
