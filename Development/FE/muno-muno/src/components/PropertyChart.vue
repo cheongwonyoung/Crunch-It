@@ -68,7 +68,7 @@
           cx="70"
           cy="70"
           r="60"
-          fill="var(--gr70)"
+          fill="var(--gr60)"
           fill-opacity="0.3"
           mask="url(#previousLevelMask)"
         />
