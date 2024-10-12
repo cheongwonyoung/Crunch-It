@@ -32,5 +32,9 @@
         SELECT COUNT(*) FROM recommendation_api_saving
         WHERE fin_prdt_cd = #{productCode}
     </select>
+    <select id="getAllSavings" resultType="RecommendationApiSaving">
+        SELECT *
+        FROM recommendation_api_saving
+    </select>
 
 </mapper>

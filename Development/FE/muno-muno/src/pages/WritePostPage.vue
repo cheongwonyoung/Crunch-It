@@ -1,29 +1,53 @@
 <template>
   <div class="write-post-page">
-    <h1 class="page-title">글쓰기</h1>
+    <HeaderB title="게시글 작성" @back="onBack" />
+
     <form @submit.prevent="submitPost">
-      <div class="form-group">
-        <label for="title">제목</label>
-        <input type="text" v-model="title" id="title" required />
+      <div class="form-group category-wrapper">
+        <label for="category" class="category-label">카테고리</label>
+        <div class="select-wrapper">
+          <select
+            v-model="category"
+            id="category"
+            required
+            class="category-select"
+          >
+            <option disabled value="">카테고리를 선택하세요</option>
+            <option v-for="cat in categories" :key="cat" :value="cat">
+              {{ cat }}
+            </option>
+          </select>
+          <img
+            src="@/assets/chevronDown.svg"
+            alt="Dropdown Icon"
+            class="dropdown-icon"
+          />
+        </div>
       </div>
 
       <div class="form-group">
-        <label for="category">카테고리</label>
-        <select v-model="category" id="category" required>
-          <option disabled value="">카테고리를 선택하세요</option>
-          <option v-for="cat in categories" :key="cat" :value="cat">{{ cat }}</option>
-        </select>
+        <input
+          type="text"
+          v-model="title"
+          id="title"
+          placeholder="제목을 입력해주세요"
+          required
+          class="input-field"
+        />
       </div>
 
       <div class="form-group">
-        <label for="content">내용</label>
-        <textarea v-model="content" id="content" rows="8" required></textarea>
+        <textarea
+          v-model="content"
+          id="content"
+          rows="8"
+          placeholder="내용을 입력해주세요"
+          required
+          class="input-field"
+        ></textarea>
       </div>
 
-      <div class="form-actions">
-        <button type="submit" class="submit-button">확인</button>
-        <button type="button" class="cancel-button" @click="cancelPost">취소</button>
-      </div>
+      <ButtonA @onClick="submitPost">등록하기</ButtonA>
     </form>
   </div>
 </template>
@@ -32,36 +56,38 @@
 import { ref } from 'vue';
 import apiClient from '@/axios';
 import { useRouter } from 'vue-router';
+import HeaderB from '@/components/HeaderB.vue';
+import ButtonA from '@/components/ButtonA.vue';
 
 export default {
   name: 'WritePostP',
+  components: {
+    HeaderB,
+    ButtonA,
+  },
   setup() {
     const title = ref('');
-    const category = ref('');
+    const category = ref('전체');
     const content = ref('');
     const router = useRouter();
 
-    const categories = ['지출', '예적금', '펀드', '주식', '채권'];
+    const categories = ['전체', '지출', '예적금', '펀드', '주식', '채권'];
 
-    const token=localStorage.getItem('JwtToken');
-    let userId=null;
-    //let nickname='';
+    const token = localStorage.getItem('JwtToken');
+    let userId = null;
 
-    //decode
-    //decode
     if (token) {
       try {
         const base64Url = token.split('.')[1];
         const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
         const jsonPayload = decodeURIComponent(
-            atob(base64)
-                .split('')
-                .map(c => `%${('00' + c.charCodeAt(0).toString(16)).slice(-2)}`)
-                .join('')
+          atob(base64)
+            .split('')
+            .map((c) => `%${('00' + c.charCodeAt(0).toString(16)).slice(-2)}`)
+            .join('')
         );
         const decodedToken = JSON.parse(jsonPayload);
 
-        // user_id가 숫자인지 확인하고, 문자열일 경우 정수로 변환
         if (!isNaN(decodedToken.user_id)) {
           userId = parseInt(decodedToken.user_id, 10);
         } else {
@@ -69,9 +95,6 @@ export default {
         }
 
         userId = decodedToken?.user_id || decodedToken?.userId;
-        //nickname=decodedToken?.nickname;
-        //console.log("decoded Token", decodedToken);
-
       } catch (error) {
         console.error('Error decoding token manually:', error);
       }
@@ -89,17 +112,18 @@ export default {
       console.log(postData);
 
       try {
-        await apiClient.post('http://localhost:8080/community/create', postData);
+        await apiClient.post(
+          'http://localhost:8080/community/create',
+          postData
+        );
         router.push('/community');
       } catch (error) {
         console.error('게시글 작성 중 오류 발생:', error);
       }
     };
 
-    const cancelPost = () => {
-      if (confirm('작성한 내용을 취소하시겠습니까?')) {
-        router.push('/community');
-      }
+    const onBack = () => {
+      router.back();
     };
 
     return {
@@ -108,7 +132,7 @@ export default {
       content,
       categories,
       submitPost,
-      cancelPost
+      onBack,
     };
   },
 };
@@ -116,86 +140,80 @@ export default {
 
 <style scoped>
 .write-post-page {
+  position: absolute;
+  top: 108px;
+  left: 0;
+  width: 100%;
   max-width: 600px;
-  margin: 0 auto;
-  padding: 20px;
-  background-color: #f9f9f9;
-  border-radius: 8px;
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-  font-family: Arial, sans-serif;
-}
-
-.page-title {
-  text-align: center;
-  font-size: 24px;
-  margin-bottom: 20px;
-  color: #333;
+  padding: 0 20px;
+  box-sizing: border-box;
+  overflow-y: auto;
 }
 
 .form-group {
-  margin-bottom: 20px;
+  margin-top: 12px;
 }
 
-label {
-  display: block;
-  margin-bottom: 8px;
-  font-weight: bold;
-  color: #555;
+.category-label {
+  margin: 0 10px 0 2px;
+  color: var(--gr40);
+  font-size: 20px;
+  font-weight: 400;
+  line-height: 100%;
 }
 
-input[type="text"],
-select,
-textarea {
-  width: 100%;
-  padding: 12px;
-  border: 1px solid #ccc;
-  border-radius: 4px;
-  font-size: 16px;
-  color: #333;
-  box-sizing: border-box; /* 모든 요소의 크기를 일관되게 유지 */
-}
-
-textarea {
-  resize: vertical;
-}
-
-input:focus,
-select:focus,
-textarea:focus {
-  outline: none;
-  border-color: #007BFF;
-}
-
-.form-actions {
+.category-wrapper {
   display: flex;
-  justify-content: center;
-  gap: 20px;
-  margin-top: 20px;
+  align-items: center;
+  margin-top: 12px;
 }
 
-button {
-  padding: 10px 40px;
+.select-wrapper {
+  display: flex;
+  align-items: center;
+}
+
+.category-select {
+  -webkit-appearance: none;
+  color: var(--gr20);
+  font-size: 20px;
+  font-weight: 600;
+  line-height: 100%;
   border: none;
-  border-radius: 4px;
+  width: auto;
+  max-width: 60px;
+}
+
+.input-field {
+  width: 335px;
+  height: 56px;
+  flex-shrink: 0;
+  border-radius: 12px;
+  border: 0.5px solid var(--gr60);
+  background: var(--gr100);
+  margin: 0;
+  padding: 20px;
+  color: var(--gr30);
   font-size: 16px;
-  cursor: pointer;
 }
 
-.submit-button {
-  background-color: #007BFF;
-  color: white;
+textarea.input-field {
+  width: 335px;
+  height: 306px;
+  box-sizing: border-box;
+  padding: 20px;
+  color: var(--gr30);
+  font-size: 16px;
 }
 
-.submit-button:hover {
-  background-color: #0056b3;
+.input-field::placeholder,
+textarea.input-field::placeholder {
+  color: var(--gr60);
 }
 
-.cancel-button {
-  background-color: #D6DAE0;
-  color: black;
-}
-
-.cancel-button:hover {
-  background-color: #bdc0c6;
+.input-field:focus,
+textarea.input-field:focus {
+  color: var(--gr20);
+  font-size: 16px;
 }
 </style>
