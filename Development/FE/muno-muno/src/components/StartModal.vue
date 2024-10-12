@@ -1,7 +1,7 @@
 <template>
   <div class="start-modal" v-if="isVisible">
-    <div class="modal-overlay" @click="closeModal"></div>
-    <div class="modal-content">
+    <div class="start-modal-overlay" @click="closeModal"></div>
+    <div class="start-modal-content">
       <img src="@/assets/profile.svg" alt="Illustration" class="modal-image" />
       <div class="content">
         <h1>쉽고 재미있는 자산 관리!</h1>
@@ -57,7 +57,7 @@ export default {
   z-index: 9999;
 }
 
-.modal-overlay {
+.start-modal-overlay {
   position: absolute;
   top: 0;
   left: 0;
@@ -65,17 +65,18 @@ export default {
   height: 100%;
   background: rgba(0, 0, 0, 0.5);
 }
-.modal-content {
-  position: relative;
-  background: var(--gr100);
-  border-radius: 12px;
-  padding: 0;
+
+.start-modal-content {
+  padding: 28px 28px 24px;
   width: 334px;
-  max-width: none;
+  height: auto;
+  box-sizing: border-box;
+  border-radius: 12px;
+  max-width: 500px;
+  background: var(--gr100);
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
   text-align: center;
-  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
   z-index: 10000;
-  margin: 20px;
 }
 
 .modal-image {
@@ -85,20 +86,20 @@ export default {
 }
 
 .content {
-  padding: 0 24px 28px;
+  padding: 0;
 }
 
 h1 {
   color: var(--gr30);
   font-size: 22px;
   font-weight: 550;
-  line-height: 100%;
+  line-height: 1.5;
 }
 
 .description {
   color: var(--gr50);
   font-size: 15px;
-  line-height: 150%;
+  line-height: 1.5;
   margin-bottom: 30px;
   font-weight: 400;
 }
@@ -119,7 +120,6 @@ h1 {
   height: 48px;
   font-size: 16px;
   font-weight: 500;
-  line-height: 1.2;
 }
 
 .secondary-button {
