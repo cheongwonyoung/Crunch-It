@@ -47,7 +47,7 @@
         ></textarea>
       </div>
 
-      <ButtonA @onClick="submitPost">등록하기</ButtonA>
+      <ButtonA type="submit">등록하기</ButtonA>
     </form>
   </div>
 </template>
@@ -112,10 +112,7 @@ export default {
       console.log(postData);
 
       try {
-        await apiClient.post(
-          'http://localhost:8080/community/create',
-          postData
-        );
+        await apiClient.post('/community/create', postData);
         router.push('/community');
       } catch (error) {
         console.error('게시글 작성 중 오류 발생:', error);
