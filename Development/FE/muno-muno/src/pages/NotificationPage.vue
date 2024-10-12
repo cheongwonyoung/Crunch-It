@@ -16,6 +16,7 @@ import { ref, onMounted } from 'vue';
 import HeaderB from '@/components/HeaderB.vue';
 import NotificationItem from '@/components/NotificationItem.vue';
 import apiClient from "@/axios";
+import {useRouter} from "vue-router";
 
 export default {
   name: 'NotificationP',
@@ -25,16 +26,22 @@ export default {
   },
   setup() {
     const notifications = ref([]);
+    const router=useRouter();
 
-
-    onMounted(() => {
+    const goBack= ()=>{
+      router.push('/community');
+    }
+    onMounted(()=>{
+      console.log("Component mounted");
+      fetchNotifications();
       subscribeToSSE();
-    });
+    })
 
     // 기존 알림 데이터를 가져오는 함수 (Authorization 헤더 추가)
     const fetchNotifications = async () => {
       try {
         const token = localStorage.getItem('JwtToken'); // 로컬스토리지에서 JWT 토큰 가져오기
+        console.log(token);
         if (!token) {
           console.error('토큰이 없습니다. 로그인해주세요.');
           return;
@@ -42,11 +49,11 @@ export default {
 
         const response = await apiClient.get('/notifications', {
           headers: {
-            Authorization: `${token}` // JWT 토큰을 Authorization 헤더에 포함
+            Authorization: `Bearer ${token}` // JWT 토큰을 Authorization 헤더에 포함
           }
         });
         notifications.value = response.data;
-        console.log(response.data);
+        //console.log(response.data);
       } catch (error) {
         console.error('알림 데이터를 불러오는 데 실패했습니다.', error);
       }
@@ -65,41 +72,30 @@ export default {
 
       eventSource.onmessage = function (event) {
         // const newNotification = JSON.parse(event.data);
-        console.log("new notification ",event.data);
+        //console.log("new notification ",event.data);
 
         notifications.value.push(
-        //     {
-        //   notificationId: newNotification.id,
-        //   nickname: newNotification.nickname,
-        //   title: newNotification.title,
-        //   subMessage: newNotification.subMessage,
-        //   createdAt: newNotification.createdAt,
-        //   type: newNotification.type,
-        // }
-        JSON.parse(event.data));
+            JSON.parse(event.data));
       };
 
-      eventSource.onerror = function () {
+      eventSource.onerror = function (error) {
+        console.error('SSE 연결 오류:', error);
         eventSource.close();
       };
     };
 
     // createdAt 배열 데이터를 yyyy.MM.dd HH:mm 형식으로 변환하는 함수
-    const formatTime = (timeArray) => {
-      if (Array.isArray(timeArray)) {
-        const [year, month, day, hour, minute] = timeArray; // 배열에서 값 추출
-        return `${year}.${String(month).padStart(2, '0')}.${String(day).padStart(2, '0')} ${String(hour).padStart(2, '0')}:${String(minute).padStart(2, '0')}`;
-      }
-      return ''; // 배열이 아닌 경우 빈 문자열 반환
-    };
-
-    onMounted(()=>{
-      fetchNotifications();
-      subscribeToSSE();
-    })
+    // const formatTime = (timeArray) => {
+    //   if (Array.isArray(timeArray)) {
+    //     const [year, month, day, hour, minute] = timeArray; // 배열에서 값 추출
+    //     return `${year}.${String(month).padStart(2, '0')}.${String(day).padStart(2, '0')} ${String(hour).padStart(2, '0')}:${String(minute).padStart(2, '0')}`;
+    //   }
+    //   return ''; // 배열이 아닌 경우 빈 문자열 반환
+    // };
 
     return {
       notifications,
+      goBack
     };
   },
 };
