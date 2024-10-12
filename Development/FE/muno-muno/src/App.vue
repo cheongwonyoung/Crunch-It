@@ -37,7 +37,9 @@ export default {
   },
   computed: {
     showTabBar() {
+      if (/^\/community\/\d+$/.test(this.$route.path)) return false;
       if (this.$route.path.includes('/community/modify')) return false;
+      if (this.$route.path.includes('/message/')) return false;
       return !this.hideRoutes.includes(this.$route.path);
     },
   },

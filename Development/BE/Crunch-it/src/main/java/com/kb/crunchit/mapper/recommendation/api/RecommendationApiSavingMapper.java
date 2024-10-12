@@ -1,8 +1,11 @@
 package com.kb.crunchit.mapper.recommendation.api;
 
+import com.kb.crunchit.entity.RecommendationApiSaving;
 import com.kb.crunchit.entity.SavingInfo;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
+
+import java.util.List;
 
 @Mapper
 public interface RecommendationApiSavingMapper {
@@ -15,4 +18,6 @@ public interface RecommendationApiSavingMapper {
 
     // 적금 기본 데이터 존재 여부 확인 (기본적으로 상품 코드만 확인)
     int existsSaving(@Param("productCode") String productCode);
+
+    List<RecommendationApiSaving> getAllSavings();
 }

@@ -1,1 +1,0 @@
-response dto 용 패키지

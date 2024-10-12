@@ -1,7 +1,7 @@
 <template>
   <div class="message-wrapper">
     <div class="message-profile">
-      <img class="message-other-logo" :src="avatar" alt="other" />
+      <img class="message-other-logo" :src="avatar || defaultAvatar" alt="other" />
       <div class="message-text-label">{{ name }}</div>
     </div>
 
@@ -39,11 +39,16 @@ export default {
     },
     avatar: {
       type: String,
-      default: () => require('@/assets/profile.svg'),
+      default: null,
     },
     image: {
       type: String,
       default: null, // 이미지가 없을 수도 있으므로 기본값 설정
+    },
+  },
+    computed: {
+    defaultAvatar() {
+      return require('@/assets/profile.svg'); // 기본 프로필 이미지
     },
   },
 };

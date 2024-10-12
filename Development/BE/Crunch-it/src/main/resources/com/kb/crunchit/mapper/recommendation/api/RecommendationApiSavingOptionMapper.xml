@@ -38,4 +38,16 @@
           AND save_trm = #{saveTerm}
     </select>
 
+    <select id="getSixMonthDepositOption" resultType="RecommendationApiSavingOption" parameterType="string">
+        SELECT *
+        FROM recommendation_api_saving_option
+        WHERE save_trm = 6 AND fin_prdt_cd = #{savingId}
+    </select>
+
+    <select id="getYearDepositOption" resultType="RecommendationApiSavingOption" parameterType="string">
+        SELECT *
+        FROM recommendation_api_saving_option
+        WHERE save_trm = 12 AND fin_prdt_cd = #{savingId}
+    </select>
+
 </mapper>
