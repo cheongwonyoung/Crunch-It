@@ -12,6 +12,9 @@
       <p v-if="product?.sixMonthOption?.length > 0">
         적립 유형: {{ product.sixMonthOption[0]?.rsrvTypeNm || 'N/A' }}
       </p>
+      <p v-if="product?.yearOption?.length > 0">
+        적립 유형: {{ product.yearOption[0]?.rsrvTypeNm || 'N/A' }}
+      </p>
       <p v-if="product?.sixMonthOption?.length > 0">
         6개월 저축 금리: {{ product.sixMonthOption[0]?.intrRate || 'N/A' }}%
         (우대 {{ product.sixMonthOption[0]?.intrRate2 || 'N/A' }}%)

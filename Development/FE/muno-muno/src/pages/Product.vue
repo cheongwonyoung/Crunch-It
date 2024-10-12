@@ -95,7 +95,7 @@ export default {
       selectedBannerProduct: null,
       showBannerModal: false,
       loading: false, // 로딩 상태 추가
-      categories: ['예금', '적금', '펀드', '주식', '채권'],
+      categories: ['예금', '적금', '펀드', '채권', '주식'],
       products: [], // 선택된 카테고리의 상품들
     };
   },
@@ -126,9 +126,59 @@ export default {
           switch (category) {
             case '예금':
               this.products = response?.data?.depositList || [];
+              // 1순위: '국민은행', 2순위: 12개월 옵션의 intrRate2 값 내림차순, 12개월 옵션이 없으면 6개월 옵션 기준
+              this.products.sort((a, b) => {
+                // '국민은행' 우선
+                if (a.korCoNm === '국민은행' && b.korCoNm !== '국민은행')
+                  return -1;
+                if (b.korCoNm === '국민은행' && a.korCoNm !== '국민은행')
+                  return 1;
+
+                // 12개월 옵션의 intrRate2 내림차순 정렬, 없을 경우 6개월 옵션의 intrRate2 사용
+                const aIntrRate2 =
+                  a.yearOption?.['12']?.intrRate2 !== undefined
+                    ? a.yearOption['12'].intrRate2
+                    : a.sixMonthOption?.intrRate2 !== undefined
+                    ? a.sixMonthOption.intrRate2
+                    : -Infinity;
+                const bIntrRate2 =
+                  b.yearOption?.['12']?.intrRate2 !== undefined
+                    ? b.yearOption['12'].intrRate2
+                    : b.sixMonthOption?.intrRate2 !== undefined
+                    ? b.sixMonthOption.intrRate2
+                    : -Infinity;
+
+                return bIntrRate2 - aIntrRate2;
+              });
               break;
             case '적금':
               this.products = response?.data?.savingList || [];
+
+              // 적금 정렬: 1순위 - '국민은행', 2순위 - 12개월 옵션 intrRate2 오름차순, 없으면 6개월 기준으로 오름차순 정렬
+              this.products.sort((a, b) => {
+                // 1. '국민은행' 우선 배치
+                if (a.korCoNm === '국민은행' && b.korCoNm !== '국민은행')
+                  return -1;
+                if (b.korCoNm === '국민은행' && a.korCoNm !== '국민은행')
+                  return 1;
+
+                // 2. 12개월 옵션 intrRate2 기준 오름차순 정렬
+                const aIntrRate2 =
+                  a.yearOption?.['12']?.intrRate2 !== undefined
+                    ? a.yearOption['12'].intrRate2
+                    : a.sixMonthOption?.intrRate2 !== undefined
+                    ? a.sixMonthOption.intrRate2
+                    : Infinity;
+
+                const bIntrRate2 =
+                  b.yearOption?.['12']?.intrRate2 !== undefined
+                    ? b.yearOption['12'].intrRate2
+                    : b.sixMonthOption?.intrRate2 !== undefined
+                    ? b.sixMonthOption.intrRate2
+                    : Infinity;
+
+                return aIntrRate2 - bIntrRate2; // 오름차순 정렬
+              });
               break;
             case '펀드':
               this.products = response?.data || [];
@@ -254,11 +304,13 @@ export default {
   line-height: 150%;
   margin-bottom: 14px;
   position: relative;
+  font-family: 'Pretendard', sans-serif;
 }
 
 .category-buttons {
   padding-left: 20px;
   display: flex;
+  font-family: 'Pretendard', sans-serif;
 }
 
 .base-underline {
