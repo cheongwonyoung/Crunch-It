@@ -155,7 +155,7 @@ export default {
 }
 
 .category-label {
-  margin-right: 10px;
+  margin: 0 10px 0 2px;
   color: var(--gr40);
   font-size: 20px;
   font-weight: 400;
@@ -165,6 +165,7 @@ export default {
 .category-wrapper {
   display: flex;
   align-items: center;
+  margin-top: 12px;
 }
 
 .select-wrapper {

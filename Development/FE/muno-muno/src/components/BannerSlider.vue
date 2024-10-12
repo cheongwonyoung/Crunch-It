@@ -5,7 +5,9 @@
       ref="slider"
       :style="{
         transform: `translateX(${-currentSlide * 345}px)`,
-        transition: isAnimating ? 'transform 0.5s ease-in-out' : 'none',
+        transition: isAnimating
+          ? 'transform 0.5s cubic-bezier(0.42, 0, 0.58, 1)'
+          : 'none',
       }"
       @transitionend="onTransitionEnd"
     >
@@ -23,8 +25,6 @@
         <div class="octopus-image">
           <img :src="getOctopusImage(banner.category)" alt="문어상품 이미지" />
         </div>
-
-        <div class="banner-indicator">{{ getIndicator(index) }}</div>
       </div>
     </div>
   </div>
@@ -39,34 +39,22 @@ export default {
       isAnimating: true,
       autoSlideInterval: null,
       isUserInteracting: false,
-      // 초기 UI 확인 차 임의 데이터. 추후 삭제 바람.
       banners: [
         {
-          bank: 'KB국민',
-          subtitle: '문어들의 선택',
-          title: '쏠편한 입출금통장',
-          category: '예금',
-          joinMethods: '영업점, 인터넷, 스마트폰',
-          interestType: '단리',
-          sixMonthRate: '1%',
-          twelveMonthRate: '1.3%',
+          subtitle: '주식 고수 문어 선정',
+          title: '수익률 No.1 주식',
+          category: '주식',
         },
         {
-          bank: '신한',
-          subtitle: '문어들의 사랑받는 펀드',
-          title: '신한 글로벌펀드',
+          subtitle: '문어들이 사랑하는 펀드',
+          title: '수익률 No.1 펀드',
           category: '펀드',
           fundProduct: '글로벌 주식형 펀드',
         },
         {
-          bank: '우리은행',
-          subtitle: '문어들의 채권',
-          title: '우리은행 채권',
+          subtitle: '문어들의 안전자산',
+          title: '수익률 No.1 채권',
           category: '채권',
-          bondRating: 'AAA',
-          couponRate: '2.0%',
-          maturityDate: '2026-12-31',
-          interestPaymentDate: '매년 12월 31일',
         },
       ],
     };
@@ -103,7 +91,7 @@ export default {
         if (!this.isUserInteracting) {
           this.nextSlide();
         }
-      }, 4000);
+      }, 3500); // 3.5초 간격으로 슬라이드 전환
     },
     stopAutoSlide() {
       clearInterval(this.autoSlideInterval);
@@ -126,10 +114,6 @@ export default {
         this.currentSlide = 1;
         this.isAnimating = false;
       }
-    },
-    getIndicator(index) {
-      if (index === 0 || index === this.banners.length + 1) return '';
-      return `${index}/${this.banners.length}`;
     },
     onUserSlideStart() {
       this.isUserInteracting = true;
@@ -158,7 +142,7 @@ export default {
 
 .banner-slider {
   display: flex;
-  transition: transform 0.5s ease-in-out;
+  transition: transform 3s cubic-bezier(0.6, -0.28, 0.74, 0.05);
 }
 
 .banner {
@@ -196,15 +180,6 @@ export default {
   margin: 0;
 }
 
-.banner-indicator {
-  color: var(--gr80);
-  font-size: 12px;
-  font-weight: 600;
-  position: absolute;
-  top: 10px;
-  right: 20px;
-}
-
 .octopus-image {
   width: 117px;
   height: 87px;
@@ -220,5 +195,6 @@ export default {
   width: 100%;
   height: 100%;
   object-fit: cover;
+  clip-path: inset(2px 0 0 0);
 }
 </style>

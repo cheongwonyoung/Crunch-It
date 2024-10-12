@@ -18,9 +18,10 @@
     <!-- 커뮤니티 카테고리 섹션 -->
     <div class="community-categories">
       <div
-        v-for="category in communityCategories"
+        v-for="(category, index) in communityCategories"
         :key="category.name"
         class="category-item"
+        @click="setCurrentRoom(index + 1, category.name)"
       >
         <img :src="category.imgSrc" :alt="category.name" class="category-img" />
         <span class="category-name">{{ category.name }}</span>
@@ -38,16 +39,6 @@
         @category-selected="selectCategory"
       />
     </div>
-<!--    <div class="category-tabs">-->
-<!--      <button-->
-<!--          v-for="category in categories"-->
-<!--          :key="category.name"-->
-<!--          :class="{ active: selectedCategory === category.name }"-->
-<!--          @click="selectCategory(category.name)"-->
-<!--      >-->
-<!--        {{ category.name }}-->
-<!--      </button>-->
-<!--    </div>-->
 
     <!-- 서버로부터 데이터를 받아와 게시글 표시 -->
     <div class="post-list">
@@ -58,27 +49,6 @@
         :onClick="goToDetail"
       />
     </div>
-
-<!--    <div class="post-list">-->
-<!--      <div-->
-<!--          v-for="post in filteredPosts"-->
-<!--          :key="post.boardId"-->
-<!--          :v-if="post && post.boardId"-->
-<!--          class="post-item"-->
-<!--          @click="goToDetail(post.boardId)"-->
-<!--      >-->
-<!--        <div class="post-header">-->
-<!--          <span class="category">{{ post.category }}</span>-->
-<!--          <span class="user">{{ post.writerId }}</span>-->
-<!--        </div>-->
-
-<!--        <h3 class="post-title">{{ post.title }}</h3>-->
-<!--        <p class="post-content">{{ post.content }}</p>-->
-<!--        <div class="post-footer">-->
-<!--          <span class="date">{{ post.modifyDate ? formatDate(post.modifyDate) : formatDate(post.registerDate) }}</span>-->
-<!--        </div>-->
-<!--      </div>-->
-<!--    </div>-->
 
     <!-- 이미지 버튼 -->
     <img
@@ -122,6 +92,23 @@ export default {
       { name: '자유방', imgSrc: require('@/assets/free_room.svg') },
     ]);
 
+        // 선택된 방 ID와 이름을 저장할 변수
+    const currentRoomId = ref(null);
+    const currentRoomName = ref("");
+
+    // 선택한 방 ID와 이름을 설정하는 메서드
+    const setCurrentRoom = (id, name) =>{
+      console.log("Navigating to Message page with roomId:", id, "and roomName:", name); // id와 name이 올바른지 확인
+
+
+      // MessageP 페이지로 이동하며 currentRoomId와 currentRoomName을 전달
+      router.push({
+        name: 'Message',
+        params: { roomId: id, roomName: encodeURIComponent(name) }
+      });
+
+    }
+
     const selectedCategory = ref('전체');
     const posts = ref([]);
     const router = useRouter();
@@ -144,23 +131,16 @@ export default {
     };
 
     const filteredPosts = computed(() => {
-      if (selectedCategory.value === '전체') {
-        return posts.value;
-      }
-      return posts.value.filter((post) => post.category === selectedCategory.value);
+      return posts.value.filter((post) => {
+        if (!post || !post.boardId) {
+          return false;
+        }
+        if (selectedCategory.value === '전체') {
+          return true;
+        }
+        return post.category === selectedCategory.value;
+      });
     });
-
-    // const filteredPosts = computed(() => {
-    //   return posts.value.filter((post) => {
-    //     if (!post || !post.boardId) {
-    //       return false;
-    //     }
-    //     if (selectedCategory.value === '전체') {
-    //       return true;
-    //     }
-    //     return post.category === selectedCategory.value;
-    //   });
-    // });
 
     const selectCategory = (category) => {
       selectedCategory.value = category;
@@ -175,14 +155,7 @@ export default {
     };
 
     const goToNotifications = () => {
-      router.push({ name: 'Notification' }); // NotificationPage로 이동
-    };
-
-    // 날짜 포맷 함수
-    const formatDate = (dateArray) => {
-      if (!dateArray || dateArray.length < 3) return '날짜 없음'; // 날짜 배열이 올바른지 확인
-      const [year, month, day] = dateArray;
-      return `${year}. ${String(month).padStart(2, '0')}. ${String(day).padStart(2, '0')}`; // "2024. 10. 03" 형식으로 변환
+      router.push({ name: 'Notification' });
     };
 
     onMounted(() => {
@@ -197,11 +170,13 @@ export default {
       selectCategory,
       goToDetail,
       goToWritePage,
-      goToNotifications, // 알림 페이지로 이동 함수 반환
-      formatDate,
-      headerIcons
+      goToNotifications,
+      headerIcons,
+      currentRoomId,
+      currentRoomName,
+      setCurrentRoom,
     };
-  }
+  },
 };
 </script>
 
@@ -209,7 +184,7 @@ export default {
 .community-page {
   padding: 0 20px;
   position: absolute;
-  top: 112px;
+  top: 120px;
   width: 375px;
   height: auto;
   box-sizing: border-box;
@@ -272,15 +247,14 @@ export default {
 
 .floating-button {
   position: fixed;
-  bottom: 106px;
-  right: 20px;
+  bottom: 98px;
+  right: 10px;
   border-radius: 50%;
   display: flex;
   align-items: center;
   justify-content: center;
   cursor: pointer;
   z-index: 1100;
-  transition: transform 0.3s ease;
 }
 
 .floating-button:hover {

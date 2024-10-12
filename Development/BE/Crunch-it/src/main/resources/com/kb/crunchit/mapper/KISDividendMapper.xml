@@ -24,4 +24,10 @@
         INSERT INTO kis_stock_dividend_rank (data_rank , isin_name , per_sto_divi_amt)
         VALUES (#{dataRank}, #{isinName}, #{perStoDiviAmt})
     </insert>
+
+    <!-- 주식 배당률 순위 조회 -->
+    <select id="getAllStokDividendRank" resultType="KisStockDividendRank">
+        SELECT *
+        FROM kis_stock_dividend_rank
+    </select>
 </mapper>

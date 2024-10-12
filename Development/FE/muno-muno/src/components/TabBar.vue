@@ -63,10 +63,6 @@
       />
       <span>커뮤니티</span>
     </router-link>
-    <router-link to="/message" class="tab-item">
-      <img src="@/assets/community.svg" alt="채팅" />
-      <span>채팅</span>
-    </router-link>
     <img class="bar" src="@/assets/bar.svg" alt="Home Indicator Bar" />
   </nav>
 </template>
@@ -90,7 +86,7 @@ export default {
   background-color: var(--gr100);
   border-top: 1px solid var(--gr70);
   box-shadow: 0px -1px 5px rgba(0, 0, 0, 0.1);
-  z-index: 1000;
+  z-index: 1;
 }
 
 .tab-item {

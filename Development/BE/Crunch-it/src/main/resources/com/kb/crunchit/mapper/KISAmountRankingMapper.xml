@@ -24,4 +24,10 @@
         INSERT INTO kis_stock_amount_rank (data_rank , hts_kor_isnm , mrkt_whol_avls_rlim)
         VALUES (#{dataRank}, #{stockName}, #{marketCapRatio})
     </insert>
+
+    <!-- 주식 시가총액 순위 조회 -->
+    <select id="getAllStokAmountRank" resultType="KisStockAmountRank">
+        SELECT *
+        FROM kis_stock_amount_rank
+    </select>
 </mapper>

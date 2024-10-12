@@ -24,4 +24,10 @@
         INSERT INTO kis_stock_profit_rank (data_rank , isinCdNm , thtr_ntin)
         VALUES (#{dataRank}, #{isinCdNm}, #{theaterNetIncome})
     </insert>
+
+    <!-- 주식 수익 순위 조회 -->
+    <select id="getAllStokProfitRank" resultType="KisStockProfitRank">
+        SELECT *
+        FROM kis_stock_profit_rank
+    </select>
 </mapper>

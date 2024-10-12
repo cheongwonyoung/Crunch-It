@@ -32,7 +32,7 @@ const routes = [
     { path: "/mypage", name: "MyPage", component: MyPage },
     { path: "/mypageedit", name: "MyPageEdit", component: MyPageEdit },
     { path: "/search", name: "Search", component: Search },
-    { path: "/message", name: "Message", component: Message },
+    { path: "/message/:roomId/:roomName", name: "Message", component: Message, props:true },
     { path: "/mydata", name: "MyData", component: MyData },
     { path: "/incomesetting", name: "IncomeSetting", component: IncomeSetting },
     { path: "/limitsetting", name: "LimitSetting", component: LimitSetting },

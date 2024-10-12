@@ -1,6 +1,7 @@
 package com.kb.crunchit.mapper.recommendation.api;
 
 import com.kb.crunchit.entity.DepositOptionInfo;
+import com.kb.crunchit.entity.RecommendationApiDepositOption;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
@@ -19,5 +20,8 @@ public interface RecommendationApiDepositOptionMapper {
             @Param("rateTypeName") String rateTypeName,
             @Param("saveTerm") int saveTerm
     );
+
+    RecommendationApiDepositOption getSixMonthDepositOption(String depositId);
+    RecommendationApiDepositOption getYearDepositOption(String depositId);
 
 }
