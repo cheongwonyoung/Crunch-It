@@ -3,11 +3,20 @@
     <header class="header">
       <!--      <h1 class="title">{{ post.title }}</h1>-->
       <!-- Back Icon -->
-      <img src="@/assets/arrowLeft.svg" alt="back-icon" @click="goBack" class="back-icon"/>
+      <img
+        src="@/assets/arrowLeft.svg"
+        alt="back-icon"
+        @click="goBack"
+        class="back-icon"
+      />
 
       <!-- 설정 아이콘 및 드롭다운 메뉴 -->
       <div class="settings-menu">
-        <img src="@/assets/dots-vertical.svg" alt="dots-vertical"  @click="toggleSettingsMenu"/>
+        <img
+          src="@/assets/dots-vertical.svg"
+          alt="dots-vertical"
+          @click="toggleSettingsMenu"
+        />
         <div v-if="showSettingsMenu" class="dropdown-menu">
           <ul>
             <li @click="goToEditPage">수정</li>
@@ -20,14 +29,17 @@
       <span class="category">{{ post.category }}</span>
       <h1 class="title">{{ post.title }}</h1>
       <div class="user-info">
-        <img class="user-avatar" src="https://via.placeholder.com/40" alt="avatar" />
+        <img
+          class="user-avatar"
+          src="https://via.placeholder.com/40"
+          alt="avatar"
+        />
         <div class="user-meta">
           <span class="user">{{ post.writerId }}</span>
           <span class="date">{{ formattedDate }}</span>
         </div>
       </div>
     </div>
-
 
     <!--    <div class="post-content">-->
     <!--      <p>{{ post.content }}</p>-->
@@ -42,57 +54,63 @@
 
     <div class="post-actions">
       <div class="likes-comments">
-        <img src="@/assets/heart-rounded.svg" alt="like" @click="likePost" class="action-icon" />
+        <img
+          src="@/assets/heart-rounded.svg"
+          alt="like"
+          @click="likePost"
+          class="action-icon"
+        />
         <!-- Fix the class binding for likedByUser -->
-        <span :class="{ liked: likedByUser }" class="likes-count">공감 {{ post.likes }}</span>
-        <img src="@/assets/message-square.svg" alt="comments" class="action-icon" />
+        <span :class="{ liked: likedByUser }" class="likes-count"
+          >공감 {{ post.likes }}</span
+        >
+        <img
+          src="@/assets/message-square.svg"
+          alt="comments"
+          class="action-icon"
+        />
         <span class="comment-count">댓글 {{ post.commentsCount }}</span>
       </div>
     </div>
 
-
     <!-- 댓글 리스트 및 수정/삭제 기능 추가 -->
-    <CommentList :comments="comments" :replies="replies"
-                 @update-comment-reply-count="updateCommentReplyCount"
-                 @update-comment="handleUpdateComment"
-                 @delete-comment="handleDeleteComment"
-                 @submit-reply="submitReply"
-                 @update-reply="handleUpdateReply"
-                 @delete-reply="handleDeleteReply"/>
+    <CommentList
+      :comments="comments"
+      :replies="replies"
+      @update-comment-reply-count="updateCommentReplyCount"
+      @update-comment="handleUpdateComment"
+      @delete-comment="handleDeleteComment"
+      @submit-reply="submitReply"
+      @update-reply="handleUpdateReply"
+      @delete-reply="handleDeleteReply"
+    />
 
     <!-- 댓글 입력 -->
-<!--    <div class="comment-input">-->
-<!--      <textarea-->
-<!--          v-model="newComment"-->
-<!--          placeholder="댓글을 입력하세요..."-->
-<!--          rows="3"-->
-<!--      ></textarea>-->
-<!--      <button @click="submitComment" class="submit-btn">댓글 등록</button>-->
-<!--    </div>-->
+    <!--    <div class="comment-input">-->
+    <!--      <textarea-->
+    <!--          v-model="newComment"-->
+    <!--          placeholder="댓글을 입력하세요..."-->
+    <!--          rows="3"-->
+    <!--      ></textarea>-->
+    <!--      <button @click="submitComment" class="submit-btn">댓글 등록</button>-->
+    <!--    </div>-->
     <div class="comment-input">
-  <textarea
-      v-model="newComment"
-      placeholder="댓글을 입력하세요..."
-      rows="1"
-      class="comment-textarea"
-  ></textarea>
+      <textarea
+        v-model="newComment"
+        placeholder="댓글을 입력하세요..."
+        rows="1"
+        class="comment-textarea"
+      ></textarea>
       <button @click="submitComment" class="submit-btn">
-        <img
-            class="icon-send"
-            src="@/assets/send.svg"
-            alt="전송"
-        />
+        <img class="icon-send" src="@/assets/send.svg" alt="전송" />
       </button>
     </div>
 
     <!--        <CommentInput-->
-<!--            :newComment="newComment"-->
-<!--            @submitComment="submitComment"/>-->
+    <!--            :newComment="newComment"-->
+    <!--            @submitComment="submitComment"/>-->
 
-
-
-
-<!--    <router-link to="/community" class="back-link">목록</router-link>-->
+    <!--    <router-link to="/community" class="back-link">목록</router-link>-->
   </div>
 </template>
 
@@ -101,21 +119,20 @@ import { ref, computed, onMounted } from 'vue';
 import apiClient from '../axios';
 //import axios from 'axios';
 import { useRoute, useRouter } from 'vue-router';
-import CommentList from "@/components/CommentList.vue";
+import CommentList from '@/components/CommentList.vue';
 // import CommentInput from "@/components/CommentInput.vue";
-
 
 export default {
   name: 'PostDetailP',
-  components: {CommentList},
+  components: { CommentList },
   setup() {
     const route = useRoute();
     const router = useRouter();
     const postId = route.params.id;
-    const API_URL = `http://localhost:8080/community/${postId}`; // API 경로 상수화
-    const REPLY_API_URL = `http://localhost:8080/apiClient/replies`; // 답글 API 경로 상수화
-    const COMMENT_API_URL = `http://localhost:8080/apiClient/comments`; // 댓글 API 경로 상수화
-    const LIKE_API_URL = `http://localhost:8080/apiClient/likes`; // 답글 API 경로 상수화
+    const API_URL = `/community/${postId}`; // API 경로 상수화
+    const REPLY_API_URL = `/apiClient/replies`; // 답글 API 경로 상수화
+    const COMMENT_API_URL = `/apiClient/comments`; // 댓글 API 경로 상수화
+    const LIKE_API_URL = `/apiClient/likes`; // 답글 API 경로 상수화
 
     const post = ref({
       title: '',
@@ -125,10 +142,10 @@ export default {
       registerDate: '',
       modifyDate: '',
       likes: 0,
-      commentsCount:0,
+      commentsCount: 0,
     });
 
-    const comments = ref([]);  //댓글 리스트
+    const comments = ref([]); //댓글 리스트
     const replies = ref([]); // 모든 답글 데이터를 저장
     const newComment = ref(''); //댓글 입력 필드 상태
     const showSettingsMenu = ref(false);
@@ -140,9 +157,9 @@ export default {
       post.value.commentsCount = commentCount + replyCount; // Sum of comments and replies
     };
 
-    const token=localStorage.getItem('JwtToken');
-    let userId=null;
-    let nickname='';
+    const token = localStorage.getItem('JwtToken');
+    let userId = null;
+    let nickname = '';
 
     //decode
     if (token) {
@@ -150,10 +167,10 @@ export default {
         const base64Url = token.split('.')[1];
         const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
         const jsonPayload = decodeURIComponent(
-            atob(base64)
-                .split('')
-                .map(c => `%${('00' + c.charCodeAt(0).toString(16)).slice(-2)}`)
-                .join('')
+          atob(base64)
+            .split('')
+            .map((c) => `%${('00' + c.charCodeAt(0).toString(16)).slice(-2)}`)
+            .join('')
         );
         const decodedToken = JSON.parse(jsonPayload);
 
@@ -165,9 +182,8 @@ export default {
         }
 
         // userId = decodedToken?.user_id || decodedToken?.userId;
-        nickname=decodedToken?.nickname;
-        console.log("decoded Token", decodedToken);
-
+        nickname = decodedToken?.nickname;
+        console.log('decoded Token', decodedToken);
       } catch (error) {
         console.error('Error decoding token manually:', error);
       }
@@ -178,11 +194,16 @@ export default {
     const formatDate = (dateArray) => {
       if (!dateArray || dateArray.length < 3) return 'No date';
       const [year, month, day] = dateArray;
-      return `${year}-${String(month).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
+      return `${year}-${String(month).padStart(2, '0')}-${String(day).padStart(
+        2,
+        '0'
+      )}`;
     };
 
     const formattedDate = computed(() =>
-        post.value.modifyDate ? formatDate(post.value.modifyDate) : formatDate(post.value.registerDate)
+      post.value.modifyDate
+        ? formatDate(post.value.modifyDate)
+        : formatDate(post.value.registerDate)
     );
 
     const fetchData = async (url, callback) => {
@@ -196,7 +217,10 @@ export default {
 
     const fetchPostAndComments = () => {
       fetchData(API_URL, (data) => (post.value = data));
-      fetchData(`${COMMENT_API_URL}/board/${postId}`, (data) => (comments.value = data));
+      fetchData(
+        `${COMMENT_API_URL}/board/${postId}`,
+        (data) => (comments.value = data)
+      );
       fetchData(`${REPLY_API_URL}`, (data) => (replies.value = data)); // 모든 답글 데이터를 가져옴
     };
 
@@ -205,11 +229,11 @@ export default {
     };
 
     const goToEditPage = () => {
-      router.push({name: 'EditPost', params: {id: postId}});
+      router.push({ name: 'EditPost', params: { id: postId } });
     };
 
     const deletePost = async () => {
-      if (confirm("정말 삭제하시겠습니까?")) {
+      if (confirm('정말 삭제하시겠습니까?')) {
         try {
           await apiClient.delete(`${API_URL}/delete`);
           alert('게시글이 삭제되었습니다.');
@@ -218,7 +242,7 @@ export default {
           console.error('Error deleting post:', error);
         }
       } else {
-        showSettingsMenu.value=false;
+        showSettingsMenu.value = false;
       }
     };
 
@@ -231,21 +255,25 @@ export default {
           writerId: userId,
           boardId: postId,
         };
-        console.log("comment",payload);
+        console.log('comment', payload);
 
         await apiClient.post(`${COMMENT_API_URL}/create/${postId}`, payload);
 
         newComment.value = '';
         fetchPostAndComments();
       } catch (error) {
-        console.error('Error submitting comment:', error.response ? error.response.data : error.message);
+        console.error(
+          'Error submitting comment:',
+          error.response ? error.response.data : error.message
+        );
       }
     };
 
-
-    const handleUpdateComment = async ({commentId, content}) => {
+    const handleUpdateComment = async ({ commentId, content }) => {
       try {
-        await apiClient.put(`${COMMENT_API_URL}/modify/${commentId}`, {content});
+        await apiClient.put(`${COMMENT_API_URL}/modify/${commentId}`, {
+          content,
+        });
         fetchPostAndComments();
       } catch (error) {
         console.error('Error updating comment:', error);
@@ -253,7 +281,7 @@ export default {
     };
 
     const handleDeleteComment = async (commentId) => {
-      if (confirm("정말 이 댓글을 삭제하시겠습니까?")) {
+      if (confirm('정말 이 댓글을 삭제하시겠습니까?')) {
         try {
           await apiClient.delete(`${COMMENT_API_URL}/delete/${commentId}`);
           fetchPostAndComments();
@@ -268,7 +296,7 @@ export default {
         const response = await apiClient.post(`${REPLY_API_URL}/${commentId}`, {
           writerId: userId, // 로그인된 사용자 ID로 수정해야
           content: content,
-          commentId:commentId
+          commentId: commentId,
         });
         replies.value.push(response.data); // 새로 등록한 답글을 즉시 화면에 반영
         fetchPostAndComments();
@@ -305,20 +333,19 @@ export default {
           userId,
         };
 
-        if(likedByUser.value){
-          await apiClient.post(`${LIKE_API_URL}`,payload);
-          likedByUser.value=false;
-          post.value.likes-=1;
+        if (likedByUser.value) {
+          await apiClient.post(`${LIKE_API_URL}`, payload);
+          likedByUser.value = false;
+          post.value.likes -= 1;
         } else {
-          const response=await apiClient.post(`${LIKE_API_URL}`, payload);
-          likedByUser.value=response.data;
-          post.value.likes+=1;
+          const response = await apiClient.post(`${LIKE_API_URL}`, payload);
+          likedByUser.value = response.data;
+          post.value.likes += 1;
         }
       } catch (error) {
         console.error('Error liking the post:', error);
       }
     };
-
 
     onMounted(fetchPostAndComments);
 
@@ -414,14 +441,14 @@ export default {
 .category {
   font-size: 14px;
   font-weight: 500;
-  color: #383E47;
+  color: #383e47;
   margin-bottom: 5px;
 }
 
 .title {
   font-size: 20px;
   font-weight: 600;
-  color: #292D33;
+  color: #292d33;
   line-height: 1.5;
   margin: 8px 0;
 }
@@ -444,7 +471,7 @@ export default {
 
 .user {
   font-size: 14px;
-  color: #383E47;
+  color: #383e47;
   margin-right: 8px;
   margin-bottom: 2px; /* Add a small space between the user and date */
 }
@@ -458,7 +485,6 @@ export default {
   font-size: 16px;
   line-height: 1.6;
   color: #333;
-  //margin-bottom: 20px;
   margin-top: 10px; /* Add some space above and below the post content */
   padding: 10px 0; /* Add padding to make the borders stand out */
   border-top: 1px solid #ddd; /* Light gray line above the content */
@@ -478,7 +504,7 @@ export default {
 
 .back-link {
   display: inline-block;
-  color: #007BFF;
+  color: #007bff;
   font-size: 14px;
   text-decoration: none;
   margin-top: 20px;
@@ -493,9 +519,8 @@ export default {
   align-items: center;
   justify-content: space-between; /* Space between likes and comments */
   padding: 10px 0; /* Add padding to give some space */
-  border-bottom: 6px solid #F5F6F7; /* Divider line below the actions */
+  border-bottom: 6px solid #f5f6f7; /* Divider line below the actions */
   margin-bottom: 16px; /* Space below the post actions */
-
 }
 
 .likes-comments {
@@ -517,7 +542,7 @@ export default {
 
 .likes-count {
   margin-right: 10px; /* Increased margin between heart icon and "공감" text */
-  color:#383E47;
+  color: #383e47;
 }
 
 .comment-count {
@@ -525,7 +550,7 @@ export default {
   font-size: 14px;
   font-weight: 400;
   line-height: 14px;
-  color:#383E47;
+  color: #383e47;
 }
 
 .liked:hover,
@@ -587,6 +612,4 @@ export default {
   width: 24px;
   height: 24px;
 }
-
-
 </style>
