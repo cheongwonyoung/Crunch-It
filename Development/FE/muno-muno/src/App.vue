@@ -36,6 +36,7 @@ export default {
   },
   computed: {
     showTabBar() {
+      if (/^\/community\/\d+$/.test(this.$route.path)) return false;
       return !this.hideRoutes.includes(this.$route.path);
     },
   },
