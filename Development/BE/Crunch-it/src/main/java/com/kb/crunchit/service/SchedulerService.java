@@ -15,11 +15,12 @@ public class SchedulerService {
     private final StockInfoService stockInfoService;
     private final MyDataService myDataService;
 
+    //    @Scheduled(cron = "0 19 13 * * *", zone = "Asia/Seoul")
     // 매일 오전 12시에 업데이트
     @Scheduled(cron = "0 0 0 * * *", zone = "Asia/Seoul")
     public void dailyUpdate() {
         log.info("이번달 자산정보 업데이트 시작 : {}", LocalDateTime.now());
-        stockInfoService.fetchAndUpdateStockData(); // 주식 API 호출하여 DB 업데이트
+        stockInfoService.fetchAndUpdateStockData(); // 주식 API 호출하여 DB 업데이트, 잘 받아옴
         myDataService.scheduledDataUpdate(); // 모든 사용자의 마이데이터 및 이번달 자산 정보 업데이트
         log.info("이번달 자산정보 업데이트 끝 : {}", LocalDateTime.now());
     }
@@ -32,5 +33,4 @@ public class SchedulerService {
         myDataService.monthlyDataTransfer(); // 모든 사용자의 월별 데이터를 이전
         log.info("월별 데이터 이전 끝 : {}", LocalDateTime.now());
     }
-
 }

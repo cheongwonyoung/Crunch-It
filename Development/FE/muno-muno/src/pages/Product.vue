@@ -26,27 +26,30 @@
         해당 상품이 없습니다
       </div>
       <div v-else>
-        <ProductItem
+        <component
           v-for="product in products"
+          :is="getProductItemComponent()"
           :key="product.id"
           :product="product"
-          @click="openModal(product)"
+          @select="openModal(product)"
         />
       </div>
     </div>
 
-    <!-- ProductModal -->
-    <ProductModal
-      v-if="selectedProduct"
-      :show="showModal"
+    <!-- 상품 모달 -->
+    <component
+      v-if="showModal && selectedProduct"
+      :is="getModalComponent()"
       :product="selectedProduct"
+      :show="showModal"
       @close="closeModal"
     />
 
-    <BannerModal
+    <!-- 배너 모달 -->
+    <ModalBanner
       v-if="showBannerModal && selectedBannerProduct"
-      :show="showBannerModal"
       :product="selectedBannerProduct"
+      :show="showBannerModal"
       @close="closeBannerModal"
     />
   </div>
@@ -54,152 +57,163 @@
 
 <script>
 import HeaderQ from '@/components/HeaderQ.vue';
-import ProductItem from '@/components/ProductItem.vue';
 import BannerSlider from '@/components/BannerSlider.vue';
 import Category from '@/components/Category.vue';
-import ProductModal from '@/components/Modal.vue';
-import BannerModal from '@/components/ModalBanner.vue';
+import ProductBondItem from '@/components/ProductBondItem.vue';
+import ProductDepositItem from '@/components/ProductDepositItem.vue';
+import ProductFundItem from '@/components/ProductFundItem.vue';
+import ProductSavingItem from '@/components/ProductSavingItem.vue';
+import ModalBond from '@/components/ModalBond.vue';
+import ModalDeposit from '@/components/ModalDeposit.vue';
+import ModalFund from '@/components/ModalFund.vue';
+import ModalSaving from '@/components/ModalSaving.vue';
+import ModalBanner from '@/components/ModalBanner.vue';
 import apiClient from '@/axios';
 
 export default {
   name: 'ProductP',
   components: {
     HeaderQ,
-    ProductItem,
     BannerSlider,
     Category,
-    ProductModal,
-    BannerModal,
+    ProductBondItem,
+    ProductDepositItem,
+    ProductFundItem,
+    ProductSavingItem,
+    ModalBond,
+    ModalDeposit,
+    ModalFund,
+    ModalSaving,
+    ModalBanner,
   },
   data() {
     return {
       selectedCategory: '예금',
       showModal: false,
-      showBannerModal: false,
       selectedProduct: null,
       selectedBannerProduct: null,
+      showBannerModal: false,
       categories: ['예금', '적금', '펀드', '주식', '채권'],
-      products: [],
-      allProducts: {
-        예금: [
-          {
-            id: 1,
-            bank: 'KB국민',
-            title: '국민 입출금 통장',
-            joinMethods: '영업점, 인터넷, 스마트폰',
-            interestType: '단리',
-            sixMonthRate: '1%',
-            twelveMonthRate: '1.3%',
-            category: '예금',
-          },
-          {
-            id: 2,
-            bank: 'KB국민',
-            title: 'KB스타퀴즈왕적금',
-            joinMethods: '인터넷, 스마트폰',
-            interestType: '복리',
-            sixMonthRate: '1.5%',
-            twelveMonthRate: '1.8%',
-            category: '예금',
-          },
-          {
-            id: 3,
-            bank: 'KB국민',
-            title: 'KB Star 정기예금',
-            joinMethods: '인터넷, 스마트폰',
-            interestType: '복리',
-            sixMonthRate: '2.5%',
-            twelveMonthRate: '1.8%',
-            category: '예금',
-          },
-          {
-            id: 4,
-            bank: 'KB국민',
-            title: 'KB국민UP정기예금',
-            joinMethods: '인터넷, 스마트폰',
-            interestType: '복리',
-            sixMonthRate: '2.90%%',
-            twelveMonthRate: '1.8%',
-            category: '예금',
-          },
-          {
-            id: 5,
-            bank: 'KB국민',
-            title: '국민수퍼정기예금(개인)',
-            joinMethods: '인터넷, 스마트폰',
-            interestType: '복리',
-            sixMonthRate: '2.5%',
-            twelveMonthRate: '1.8%',
-            category: '예금',
-          },
-        ],
-        펀드: [
-          {
-            id: 3,
-            bank: '신한',
-            title: '신한 글로벌펀드',
-            fundProduct: '글로벌 주식형 펀드',
-            category: '펀드',
-          },
-        ],
-        채권: [
-          {
-            id: 4,
-            bank: '우리',
-            title: '우리채권',
-            bondRating: 'AAA',
-            couponRate: '2.0%',
-            maturityDate: '2026-12-31',
-            interestPaymentDate: '매년 12월 31일',
-            category: '채권',
-          },
-        ],
-        주식: [
-          {
-            id: 5,
-            bank: '삼성',
-            title: '삼성전자',
-            marketCapWeight: '15%',
-            category: '주식',
-          },
-        ],
-      },
+      products: [], // 선택된 카테고리의 상품들
     };
   },
   methods: {
+    async fetchCategoryProducts(category) {
+      let apiUrl = '';
+      switch (category) {
+        case '예금':
+          apiUrl = 'http://localhost:8080/recommend/deposit';
+          break;
+        case '적금':
+          apiUrl = 'http://localhost:8080/recommend/saving';
+          break;
+        case '펀드':
+          apiUrl = 'http://localhost:8080/recommend/fund';
+          break;
+        case '채권':
+          apiUrl = 'http://localhost:8080/recommend/bond';
+          break;
+        default:
+          apiUrl = '';
+      }
+
+      if (apiUrl) {
+        try {
+          const response = await apiClient.get(apiUrl);
+          switch (category) {
+            case '예금':
+              this.products = response?.data?.depositList || [];
+              break;
+            case '적금':
+              this.products = response?.data?.savingList || [];
+              break;
+            case '펀드':
+              this.products = response?.data || [];
+              break;
+            case '채권':
+              this.products = response?.data || [];
+              break;
+          }
+          if (this.products.length === 0) {
+            console.warn('해당 카테고리에 상품이 없습니다.');
+          }
+        } catch (error) {
+          console.error('API 요청 실패:', error);
+          this.products = []; // 요청 실패 시 빈 배열로 설정
+        }
+      }
+    },
     selectCategory(category) {
       this.selectedCategory = category;
-      this.updateProducts();
+      this.fetchCategoryProducts(category); // 카테고리 선택 시 해당 API 호출
     },
-    updateProducts() {
-      this.products = this.allProducts[this.selectedCategory] || [];
+    getProductItemComponent() {
+      switch (this.selectedCategory) {
+        case '예금':
+          return 'ProductDepositItem';
+        case '적금':
+          return 'ProductSavingItem';
+        case '펀드':
+          return 'ProductFundItem';
+        case '채권':
+          return 'ProductBondItem';
+        default:
+          return 'ProductDepositItem';
+      }
     },
-    handleSearch() {
-      console.log('Search clicked');
+    getModalComponent() {
+      switch (this.selectedCategory) {
+        case '예금':
+          return 'ModalDeposit';
+        case '적금':
+          return 'ModalSaving';
+        case '펀드':
+          return 'ModalFund';
+        case '채권':
+          return 'ModalBond';
+        default:
+          return 'ModalDeposit';
+      }
     },
     openModal(product) {
-      this.selectedProduct = product;
-      this.showModal = true;
+      if (product) {
+        this.selectedProduct = product;
+        this.showModal = true;
+      } else {
+        console.warn('선택된 상품이 없습니다.');
+      }
     },
     closeModal() {
       this.showModal = false;
       this.selectedProduct = null;
     },
-    // (Modal Banner)
-    async openModalFromBanner(bannerData) {
-      const apiUrl = this.getApiUrlForBanner(bannerData.category);
+    async openModalFromBanner(banner) {
+      let apiUrl = '';
+      switch (banner.category) {
+        case '주식':
+          apiUrl = 'http://localhost:8080/recommendation/top-stocks';
+          break;
+        case '펀드':
+          apiUrl = 'http://localhost:8080/recommendation/top-funds';
+          break;
+        case '채권':
+          apiUrl = 'http://localhost:8080/recommendation/top-bonds';
+          break;
+        default:
+          return;
+      }
+
       try {
         const response = await apiClient.get(apiUrl);
-        console.log('API 응답 데이터:', response.data);
         if (response.data && response.data.length > 0) {
           this.selectedBannerProduct = response.data[0];
           this.showBannerModal = true;
         } else {
-          console.warn('API 응답에 상품이 없습니다.');
+          console.warn('배너 데이터가 없습니다.');
           this.selectedBannerProduct = null;
         }
       } catch (error) {
-        console.error('API 호출 실패:', error);
+        console.error('배너 API 요청 실패:', error);
         this.selectedBannerProduct = null;
       }
     },
@@ -207,21 +221,9 @@ export default {
       this.showBannerModal = false;
       this.selectedBannerProduct = null;
     },
-    getApiUrlForBanner(category) {
-      switch (category) {
-        case '주식':
-          return 'http://localhost:8080/recommendation/top-stocks';
-        case '펀드':
-          return 'http://localhost:8080/recommendation/top-funds';
-        case '채권':
-          return 'http://localhost:8080/recommendation/top-bonds';
-        default:
-          return '';
-      }
-    },
   },
   mounted() {
-    this.updateProducts();
+    this.fetchCategoryProducts(this.selectedCategory); // 페이지 로드 시 기본 카테고리('예금') API 호출
   },
 };
 </script>

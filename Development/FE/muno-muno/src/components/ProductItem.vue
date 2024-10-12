@@ -28,7 +28,7 @@ export default {
 }
 
 .product-item {
-  width: 335px;
+  width: 300px;
   padding: 20px 18px;
   display: flex;
   flex-direction: column;

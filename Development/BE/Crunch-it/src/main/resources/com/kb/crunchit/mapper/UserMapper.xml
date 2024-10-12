@@ -7,8 +7,8 @@
 <mapper namespace="com.kb.crunchit.mapper.UserMapper">
 
     <!-- 모든 user 조회 -->
-    <select id="getAllUsers" resultType="User">
-        SELECT user_id, md_user_id
+    <select id="getAllUsers" resultType="Integer">
+        SELECT md_user_id
         FROM user
         WHERE md_user_id IS NOT NULL
     </select>

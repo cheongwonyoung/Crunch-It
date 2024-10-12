@@ -80,7 +80,7 @@ export default {
           },
         });
         const { currentMonth, previousMonth } = response.data;
-        console.log(response);
+        console.log(response.data);
 
         if (currentMonth && previousMonth) {
           this.chartData = {
@@ -129,8 +129,13 @@ export default {
 
       const calculateLevel = (value) => {
         if (value === 0) return 0;
-        const level = Math.round((value / totalAssets) * 5) + 1;
-        return Math.min(Math.max(level, 1), 6);
+        const percentage = (value / totalAssets) * 100;
+        if (percentage < 5) return 1;
+        if (percentage < 10) return 2;
+        if (percentage < 20) return 3;
+        if (percentage < 30) return 4;
+        if (percentage < 40) return 5;
+        return 6;
       };
 
       return {
