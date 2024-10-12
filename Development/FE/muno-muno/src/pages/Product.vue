@@ -6,7 +6,7 @@
       <h2>가장 인기있는 상품</h2>
     </div>
 
-    <BannerSlider @banner-click="openModal" />
+    <BannerSlider @banner-click="openModalFromBanner" />
 
     <div class="categories">
       <div class="category-buttons">
@@ -42,6 +42,13 @@
       :product="selectedProduct"
       @close="closeModal"
     />
+
+    <BannerModal
+      v-if="showBannerModal && selectedBannerProduct"
+      :show="showBannerModal"
+      :product="selectedBannerProduct"
+      @close="closeBannerModal"
+    />
   </div>
 </template>
 
@@ -51,6 +58,8 @@ import ProductItem from '@/components/ProductItem.vue';
 import BannerSlider from '@/components/BannerSlider.vue';
 import Category from '@/components/Category.vue';
 import ProductModal from '@/components/Modal.vue';
+import BannerModal from '@/components/ModalBanner.vue';
+import apiClient from '@/axios';
 
 export default {
   name: 'ProductP',
@@ -60,15 +69,17 @@ export default {
     BannerSlider,
     Category,
     ProductModal,
+    BannerModal,
   },
   data() {
     return {
       selectedCategory: '예금',
       showModal: false,
+      showBannerModal: false,
       selectedProduct: null,
+      selectedBannerProduct: null,
       categories: ['예금', '적금', '펀드', '주식', '채권'],
       products: [],
-      // 초기 UI 확인 차 임의 데이터. 추후 삭제 바람.
       allProducts: {
         예금: [
           {
@@ -174,6 +185,40 @@ export default {
       this.showModal = false;
       this.selectedProduct = null;
     },
+    // (Modal Banner)
+    async openModalFromBanner(bannerData) {
+      const apiUrl = this.getApiUrlForBanner(bannerData.category);
+      try {
+        const response = await apiClient.get(apiUrl);
+        console.log('API 응답 데이터:', response.data);
+        if (response.data && response.data.length > 0) {
+          this.selectedBannerProduct = response.data[0];
+          this.showBannerModal = true;
+        } else {
+          console.warn('API 응답에 상품이 없습니다.');
+          this.selectedBannerProduct = null;
+        }
+      } catch (error) {
+        console.error('API 호출 실패:', error);
+        this.selectedBannerProduct = null;
+      }
+    },
+    closeBannerModal() {
+      this.showBannerModal = false;
+      this.selectedBannerProduct = null;
+    },
+    getApiUrlForBanner(category) {
+      switch (category) {
+        case '주식':
+          return 'http://localhost:8080/recommendation/top-stocks';
+        case '펀드':
+          return 'http://localhost:8080/recommendation/top-funds';
+        case '채권':
+          return 'http://localhost:8080/recommendation/top-bonds';
+        default:
+          return '';
+      }
+    },
   },
   mounted() {
     this.updateProducts();
@@ -182,6 +227,10 @@ export default {
 </script>
 
 <style scoped>
+.product-recommendation {
+  overflow-x: hidden;
+}
+
 .popular-section {
   margin-top: 78px;
 }
