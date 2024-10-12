@@ -33,6 +33,8 @@ export default {
   },
   computed: {
     diff() {
+      console.log(this.amount);
+      console.log(this.previousAmount);
       return this.amount - this.previousAmount;
     },
     absDiff() {
