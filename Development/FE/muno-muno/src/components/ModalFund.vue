@@ -2,25 +2,17 @@
   <div class="modal-overlay" v-if="show" @click.self="close">
     <div class="modal-content">
       <div class="product-badge">
-        {{ product?.issuerName || '발행자 정보 없음' }}
+        {{ '국민은행' }}
       </div>
       <div class="product-title">
-        {{
-          product?.productName ? product.productName.slice(4) : '상품 이름 없음'
-        }}
+        {{ product?.fndNm ? product.fndNm.split('(')[0] : '상품명 없음' }}
       </div>
-      <p>등급: {{ product?.creditRating || 'AAA' }}</p>
-      <p>표면 금리: {{ product?.surfaceRate || '정보 없음' }}%</p>
-      <p>
-        만기일:
-        {{
-          product?.maturityDate
-            ? product.maturityDate.split(' ')[0]
-            : '만기일 없음'
-        }}
-      </p>
-      <p>이자 지급일: {{ product?.interestPaymentCycle || '지급일 없음' }}</p>
-      <button @click="close">닫기</button>
+      <p>상세명: {{ product?.fndNm || '상품 이름 없음' }}</p>
+      <p>펀드유형: {{ product?.fndTp || '정보 없음' }}</p>
+      <div class="modal-buttons">
+        <button @click="closeModal">닫기</button>
+        <button>상품 보러 가기</button>
+      </div>
     </div>
   </div>
 </template>
@@ -36,7 +28,7 @@ export default {
     },
   },
   methods: {
-    close() {
+    closeModal() {
       this.$emit('close');
     },
   },
@@ -54,24 +46,82 @@ export default {
   display: flex;
   justify-content: center;
   align-items: center;
+  z-index: 1000;
 }
 
 .modal-content {
-  background: white;
-  padding: 20px;
-  border-radius: 10px;
-  width: 300px;
+  padding: 28px 28px 24px 28px;
+  width: 334px;
+  height: auto;
+  box-sizing: border-box;
+  border-radius: 12px;
+  max-width: 500px;
+  background: var(--gr100);
+  box-shadow: 0px 0px 10px 0px rgba(0, 0, 0, 0.1);
+  text-align: center;
 }
 
 .product-badge {
-  background-color: #007aff;
-  color: white;
-  padding: 5px;
-  border-radius: 5px;
+  padding: 4px 8px;
+  border-radius: 10px;
+  color: var(--p10);
+  font-size: 10px;
+  font-weight: 600;
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+  background: var(--p70);
+  margin-bottom: 8px;
 }
 
 .product-title {
-  margin-top: 10px;
-  font-weight: bold;
+  margin: 0 0 12px 0;
+  color: var(--gr30);
+  text-align: center;
+  font-size: 22px;
+  font-weight: 550;
+  line-height: 100%;
+}
+
+.modal-content p {
+  margin: 6px 0;
+  color: var(--gr50);
+  text-align: center;
+  font-size: 14px;
+  font-weight: 350;
+  line-height: 100%;
+}
+
+.modal-buttons {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  margin-top: 26px;
+}
+
+.modal-buttons button {
+  margin: 0;
+  border-radius: 10px;
+  border: none;
+  cursor: pointer;
+  width: 134px;
+  height: 48px;
+  flex-shrink: 0;
+}
+
+.modal-buttons button:first-child {
+  font-size: 16px;
+  background: var(--gr70);
+  color: var(--gr50);
+  font-weight: 500;
+  line-height: 100%;
+}
+
+.modal-buttons button:last-child {
+  font-size: 16px;
+  background: var(--p10);
+  color: var(--gr100);
+  font-weight: 500;
+  line-height: 100%;
 }
 </style>

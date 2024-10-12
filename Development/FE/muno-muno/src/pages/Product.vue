@@ -22,7 +22,8 @@
     </div>
 
     <div class="product-list">
-      <div v-if="products.length === 0" class="no-products">
+      <div v-if="loading" class="loading">로딩 중...</div>
+      <div v-else-if="products.length === 0" class="no-products">
         해당 상품이 없습니다
       </div>
       <div v-else>
@@ -93,6 +94,7 @@ export default {
       selectedProduct: null,
       selectedBannerProduct: null,
       showBannerModal: false,
+      loading: false, // 로딩 상태 추가
       categories: ['예금', '적금', '펀드', '주식', '채권'],
       products: [], // 선택된 카테고리의 상품들
     };
@@ -118,6 +120,7 @@ export default {
       }
 
       if (apiUrl) {
+        this.loading = true; // API 요청 전 로딩 시작
         try {
           const response = await apiClient.get(apiUrl);
           switch (category) {
@@ -134,12 +137,11 @@ export default {
               this.products = response?.data || [];
               break;
           }
-          if (this.products.length === 0) {
-            console.warn('해당 카테고리에 상품이 없습니다.');
-          }
         } catch (error) {
           console.error('API 요청 실패:', error);
           this.products = []; // 요청 실패 시 빈 배열로 설정
+        } finally {
+          this.loading = false; // 로딩 종료
         }
       }
     },
@@ -267,6 +269,12 @@ export default {
 }
 
 .product-list {
+  font-size: 16px;
+  color: var(--gr60);
+  text-align: center;
+}
+
+.loading {
   font-size: 16px;
   color: var(--gr60);
   text-align: center;
