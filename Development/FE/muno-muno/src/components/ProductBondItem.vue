@@ -1,19 +1,25 @@
 <template>
-  <div class="product-container">
-    <div class="product-item">
-      <div class="product-badge">{{ product.bank }}</div>
-      <h2 class="product-title">{{ product.title }}</h2>
+  <div class="product-item" @click="selectProduct">
+    <div class="product-badge">{{ product.issuerName }}</div>
+    <div class="product-title">
+      {{ product.productName?.slice(4) || 'No product name' }}
     </div>
   </div>
 </template>
 
 <script>
 export default {
-  name: 'ProductItem',
+  name: 'BondItem',
   props: {
     product: {
       type: Object,
       required: true,
+    },
+  },
+  emits: ['select'], // 이벤트를 명시적으로 정의
+  methods: {
+    selectProduct() {
+      this.$emit('select', this.product);
     },
   },
 };
