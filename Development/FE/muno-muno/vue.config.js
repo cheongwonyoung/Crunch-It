@@ -4,4 +4,12 @@ module.exports = defineConfig({
   devServer: {
     port: 3000, // 원하는 포트 번호로 설정합니다.
   },
+  pwa: {
+    name: 'muno-muno',
+    themeColor: '#4DBA87',
+    msTileColor: '#000000',
+    appleMobileWebAppCapable: 'yes',
+    appleMobileWebAppStatusBarStyle: 'black',
+    workboxPluginMode: 'GenerateSW',
+  },
 });

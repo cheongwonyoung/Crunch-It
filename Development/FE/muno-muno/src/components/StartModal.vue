@@ -54,7 +54,7 @@ export default {
   justify-content: center;
   align-items: center;
   background: rgba(0, 0, 0, 0.7);
-  z-index: 9999;
+  z-index: 2000;
 }
 
 .start-modal-overlay {
