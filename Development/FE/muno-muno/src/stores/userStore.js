@@ -17,4 +17,13 @@ export const useUserStore = defineStore("userStore", {
             this.userInfo.profileUrl = null;
         },
     },
+    persist: {
+        enabled: true,
+        strategies: [
+          {
+            key: 'user',
+            storage: localStorage, // 또는 sessionStorage
+          },
+        ],
+    },
 });

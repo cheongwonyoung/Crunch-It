@@ -3,6 +3,13 @@
     <!-- HeaderX 컴포넌트를 사용 -->
     <HeaderX title="커뮤니티" :icons="headerIcons" />
 
+      <!-- 알림 아이콘 추가 -->
+<!--      <div class="icons">-->
+<!--        <button @click="goToNotifications" class="notification-icon">-->
+<!--          <img src="@/assets/notification.svg" alt="Notification Icon" class="icon-svg" />-->
+<!--        </button>-->
+<!--      </div>-->
+
     <!-- 채팅 메시지 섹션 -->
     <div class="chat-header">
       <span>💬 문어봐도돼요?</span>
@@ -11,14 +18,16 @@
     <!-- 커뮤니티 카테고리 섹션 -->
     <div class="community-categories">
       <div
-        v-for="category in communityCategories"
+        v-for="(category, index) in communityCategories"
         :key="category.name"
         class="category-item"
+        @click="setCurrentRoom(index + 1, category.name)"
       >
         <img :src="category.imgSrc" :alt="category.name" class="category-img" />
         <span class="category-name">{{ category.name }}</span>
       </div>
-    </div>
+      </div>
+
 
     <!-- CategoryP 컴포넌트를 사용한 카테고리 렌더링 -->
     <div class="category-tabs">
@@ -83,6 +92,23 @@ export default {
       { name: '자유방', imgSrc: require('@/assets/free_room.svg') },
     ]);
 
+        // 선택된 방 ID와 이름을 저장할 변수
+    const currentRoomId = ref(null);
+    const currentRoomName = ref("");
+
+    // 선택한 방 ID와 이름을 설정하는 메서드
+    const setCurrentRoom = (id, name) =>{
+      console.log("Navigating to Message page with roomId:", id, "and roomName:", name); // id와 name이 올바른지 확인
+
+
+      // MessageP 페이지로 이동하며 currentRoomId와 currentRoomName을 전달
+      router.push({
+        name: 'Message',
+        params: { roomId: id, roomName: encodeURIComponent(name) }
+      });
+
+    }
+
     const selectedCategory = ref('전체');
     const posts = ref([]);
     const router = useRouter();
@@ -146,6 +172,9 @@ export default {
       goToWritePage,
       goToNotifications,
       headerIcons,
+      currentRoomId,
+      currentRoomName,
+      setCurrentRoom,
     };
   },
 };
