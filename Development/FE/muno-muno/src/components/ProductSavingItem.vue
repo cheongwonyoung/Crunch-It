@@ -1,19 +1,22 @@
 <template>
-  <div class="product-container">
-    <div class="product-item">
-      <div class="product-badge">{{ product.bank }}</div>
-      <h2 class="product-title">{{ product.title }}</h2>
-    </div>
+  <div class="product-item" @click="selectProduct">
+    <div class="product-badge">{{ product.korCoNm }}</div>
+    <div class="product-title">{{ product.finPrdtNm }}</div>
   </div>
 </template>
 
 <script>
 export default {
-  name: 'ProductItem',
+  name: 'SavingItem',
   props: {
     product: {
       type: Object,
       required: true,
+    },
+  },
+  methods: {
+    selectProduct() {
+      this.$emit('select', this.product);
     },
   },
 };

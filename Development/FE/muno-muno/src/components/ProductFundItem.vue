@@ -1,19 +1,26 @@
 <template>
-  <div class="product-container">
-    <div class="product-item">
-      <div class="product-badge">{{ product.bank }}</div>
-      <h2 class="product-title">{{ product.title }}</h2>
+  <div class="product-item" @click="selectProduct">
+    <div class="product-badge">국민은행</div>
+    <!-- product.fndNm이 null인 경우를 대비한 처리 -->
+    <div class="product-title">
+      {{ product?.fndNm ? product.fndNm.split('(')[0] : '상품명 없음' }}
     </div>
   </div>
 </template>
 
 <script>
 export default {
-  name: 'ProductItem',
+  name: 'FundItem',
   props: {
     product: {
       type: Object,
       required: true,
+    },
+  },
+  emits: ['select'], // emits 옵션 명시적으로 추가
+  methods: {
+    selectProduct() {
+      this.$emit('select', this.product); // select 이벤트 방출
     },
   },
 };
