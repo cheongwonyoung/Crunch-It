@@ -1,11 +1,9 @@
-package com.kb.crunchit.controller;
+package com.kb.crunchit.controller.test;
 
 import com.kb.crunchit.security.CustomUserDetails;
 import com.kb.crunchit.service.RecommendationTopService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.config.annotation.SecurityBuilder;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;

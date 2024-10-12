@@ -54,18 +54,20 @@ public class MyDataService { // WebClient 를 사용해 마이데이터 서버�
 
     // 모든 사용자의 마이데이터 및 이번달 자산 정보 업데이트
     public void scheduledDataUpdate() {
-        List<User> allUsers = userMapper.getAllUsers();
-        for (User user : allUsers) {
-            updateUserData(user.getMdUserId());
+        List<Integer> allUsers = userMapper.getAllUsers();
+        log.info("업데이트 할 사용자들 : {}", allUsers.toString());
+        for (int mdUserId : allUsers) {
+            log.info("사용자 {} 업데이트 사작: ", mdUserId);
+            updateUserData(mdUserId);
         }
         log.info("모든 사용자의 데이터가 업데이트되었습니다: {}", LocalDateTime.now());
     }
 
     // 모든 사용자의 월별 데이터를 이전
     public void monthlyDataTransfer() {
-        List<User> allUsers = userMapper.getAllUsers(); // 모든 사용자 정보 가져옴
-        for (User user : allUsers) {
-            transferMonthlyData(user.getMdUserId()); // 사용자의 마이데이터를 기준으로
+        List<Integer> allUsers = userMapper.getAllUsers(); // 모든 사용자 정보 가져옴
+        for (int mdUserId : allUsers) {
+            transferMonthlyData(mdUserId); // 사용자의 마이데이터를 기준으로
         }
         log.info("모든 사용자의 월별 데이터가 이전되었습니다: {}", LocalDateTime.now());
     }
@@ -248,14 +250,18 @@ public class MyDataService { // WebClient 를 사용해 마이데이터 서버�
         long totalAccountBalance = accountMapper.calculateTotalBalance(userId); // 현금자산
         long totalOutcome = transactionMapper.calculateTotalOutcome(userId); // 총 지출
 
+        log.info("통계 업데이트 사용자: {}", userId);
         // 계산된 값들로 AssetStatistics 객체 생성 및 반환
         AssetStatistics statistics = new AssetStatistics();
         statistics.setUserId(userId);
         statistics.setSavingsAmount(savingsAmount);
+        log.info("savingsAmount: {}", statistics.getSavingsAmount());
         statistics.setStockInvestAmount(stockInvestAmount);
+        log.info("설정된 주신 투자 금액: {}", statistics.getStockInvestAmount());
         statistics.setStockProfitAmount(stockProfitAmount);
         log.info("설정된 주식 총 수익: {}", statistics.getStockProfitAmount());
         statistics.setFundInvestAmount(fundInvestAmount);
+        log.info("설정된 펀드 투자 금액: {}", statistics.getFundInvestAmount());
         statistics.setFundProfitAmount(fundProfitAmount);
         log.info("설정된 펀드 총 수익: {}", statistics.getFundProfitAmount());
         statistics.setBondInvestAmount(bondInvestAmount);
@@ -271,9 +277,12 @@ public class MyDataService { // WebClient 를 사용해 마이데이터 서버�
         // 사용자의 모든 금융 자산을 계산함
         AssetStatistics statistics = calculateAssetStatistics(userId);
         if (userAssetStatisticsMapper.exists(userId)) { // 특정 사용자의 자산 통계 데이터가 존재하면
+            log.info("사용자 {} 자산 통계 업데이트 완료", userId);
             userAssetStatisticsMapper.updateUserAssetStatistics(statistics); // 업데이트
+            log.info("이번달 자산 통계 테이블 업데이트 완료");
         } else { // 존재하지 않으면
             userAssetStatisticsMapper.insertUserAssetStatistics(statistics); // 추가
+            log.info("이번달 자산 통계 테이블 추가 완료");
         }
     }
 

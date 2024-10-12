@@ -1,4 +1,4 @@
-package com.kb.crunchit.controller;
+package com.kb.crunchit.controller.test;
 
 import com.kb.crunchit.service.StockInfoService;
 import lombok.RequiredArgsConstructor;

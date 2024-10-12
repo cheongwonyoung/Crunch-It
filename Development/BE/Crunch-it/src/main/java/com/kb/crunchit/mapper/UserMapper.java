@@ -22,7 +22,7 @@ public interface UserMapper {
     void updateUserOnBoarding(User user);
 
     // 모든 유저 조회
-    List<User> getAllUsers();
+    List<Integer> getAllUsers();
 
     // mdUserId로 userId를 조회하는 메서드 추가
     int getUserIdByMdUserId(int mdUserId);
