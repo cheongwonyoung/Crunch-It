@@ -4,3 +4,8 @@ npm install sockjs-client webstomp-client
 cd muno-muno
 이수 전용: cd Development/FE/muno-muno
 npm run serve
+
+
+// 배포 (현재 테스트 중)
+npm i vite-plugin-pwa
+npm i register-service-worker
