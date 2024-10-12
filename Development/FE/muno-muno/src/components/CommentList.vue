@@ -1,6 +1,6 @@
 <template>
   <div class="comment-list">
-    <h4>댓글 {{ comments.length }}개</h4>
+<!--    <h4>댓글 {{ totalCommentsAndReplies }}개</h4>-->
     <ul v-if="comments.length > 0" class="comment-list-items">
       <li v-for="(comment, index) in comments" :key="comment.commentId" class="comment-item">
 
@@ -23,7 +23,7 @@
               <span class="writer">{{ comment.writerId }}</span>
 
               <div class="settings-menu">
-                <i class="fas fa-ellipsis-v" @click="toggleCommentSettingsMenu(index)"></i>
+                <img src="@/assets/dots-vertical.svg" alt="dots-vertical" @click="toggleCommentSettingsMenu(index)" class="dots-icon" />
                 <div v-if="showCommentSettingsMenuIndex === index" class="dropdown-menu">
                   <ul>
                     <li @click="enableEdit(index, comment.content)">수정</li>
@@ -70,7 +70,7 @@
                   <span class="writer">{{ reply.writerId }}</span>
 
                   <div class="settings-menu">
-                    <i class="fas fa-ellipsis-v" @click="toggleReplySettingsMenu(reply.replyId)"></i>
+                    <img src="@/assets/dots-vertical.svg" alt="dots-vertical" @click="toggleReplySettingsMenu(reply.replyId)" class="dots-icon" />
                     <div v-if="showReplySettingsMenuIndex === reply.replyId" class="dropdown-menu">
                       <ul>
                         <li @click="enableReplyEdit(reply.replyId, reply.content)">수정</li>
@@ -108,6 +108,21 @@ export default {
       required: true
     }
   },
+  mounted() {
+    // Emit the correct comment and reply count when the component is mounted
+    this.emitCommentAndReplyCount();
+  },
+  watch: {
+    comments() {
+      // Emit updated counts whenever comments change
+      this.emitCommentAndReplyCount();
+    },
+    replies() {
+      // Emit updated counts whenever replies change
+      this.emitCommentAndReplyCount();
+    }
+  },
+
   data() {
     return {
       editIndex: null, // 수정 중인 댓글 인덱스
@@ -121,6 +136,13 @@ export default {
     };
   },
   methods: {
+    emitCommentAndReplyCount() {
+      const commentCount = this.comments.length;
+      const replyCount = this.comments.reduce((total, comment) => {
+        return total + this.getRepliesByCommentId(comment.commentId).length;
+      }, 0);
+      this.$emit('update-comment-reply-count', { commentCount, replyCount });
+    },
     formatDate(dateArray) {
       if (!dateArray || dateArray.length < 3) return '날짜 없음';
       const [year, month, day] = dateArray;
@@ -227,7 +249,6 @@ export default {
 .comment-list {
   margin-top: 20px;
   padding: 0 16px;
-  //background-color: #f9f9f9;
 }
 
 .comment-list-items {
@@ -240,128 +261,66 @@ export default {
   padding: 12px 0;
 }
 
-.comment-wrapper {
-  padding: 10px;
-  background-color: #f5f5f5;
-  border-radius: 8px;
-}
-
-.comment-header {
-  display: flex;
-  justify-content: space-between;
-  font-size: 14px;
-  color: #333;
-  font-weight: bold;
-}
-
-.comment-content p {
-  margin: 5px 0;
-  font-size: 14px;
-  color: #333;
-}
-
-.comment-actions {
-  margin-top: 10px;
-  display: flex;
-  gap: 10px;
-}
-
-.comment-actions .reply-button {
-  font-size: 12px;
-  background-color: #f5f5f5;
-  color: #555;
-  border: none;
-  cursor: pointer;
-  padding: 5px;
-}
-
-.comment-actions .reply-button:hover {
-  background-color: #e0e0e0;
-}
-
-.likes {
-  color: #888;
-  font-size: 12px;
-  display: flex;
-  align-items: center;
-}
-.comment-content .date {
-  display: block;
-  font-size: 12px; /* 작은 글씨로 날짜 표시 */
-  color: #999;
-  margin-top: 5px;
-}
-
-/* 답글 리스트 스타일 */
-.reply-list {
-  margin-top: 10px;
-  padding-left: 10px;
-  //border-left: 2px solid #ddd;
-  list-style:none;
-}
-
-.reply-item {
-  margin-top: 5px;
-  list-style-type: none;
-  position: relative;
-}
-
+.comment-wrapper,
 .reply-wrapper {
-  background-color: #f5f5f5;
-  padding: 10px;
+  padding: 10px 0;
   border-radius: 8px;
 }
 
+.comment-header,
 .reply-header {
   display: flex;
   justify-content: space-between;
-  font-size: 12px;
-  color: #555;
-  font-weight: bold;
+  align-items: center;
+  font-size: 14px;
+  color: #333;
+  margin-bottom: 6px;
 }
 
-.reply-content {
-  margin-top: 5px;
-  font-size: 13px;
-  color: #666;
+.writer {
+  font-weight: 600; /* Bold for the writer name */
+  font-family: 'Pretendard', sans-serif;
+  font-size: 14px;
+  color: #292D33;
 }
 
+.comment-content p,
+.reply-content p {
+  margin: 5px 0;
+  font-family: 'Pretendard', sans-serif;
+  font-size: 14px;
+  color: #383E47;
+  line-height: 1.6;
+}
+
+.comment-content .date,
 .reply-content .date {
-  display: block;
-  font-size: 11px;
-  color: #999;
-  margin-top: 3px;
+  font-size: 12px;
+  color: #909090;
+  margin-top: 4px;
 }
 
-
+.comment-actions,
 .reply-actions {
+  margin-top: 8px;
   display: flex;
-  gap: 10px;
-  margin-top: 5px;
+  gap: 8px;
 }
 
+.comment-actions .reply-button,
 .reply-actions .reply-button {
   font-size: 12px;
-  background-color: #f5f5f5;
-  color: #555;
+  color: #007bff;
   border: none;
+  background: none;
   cursor: pointer;
-  padding: 5px;
 }
 
+.comment-actions .reply-button:hover,
 .reply-actions .reply-button:hover {
-  background-color: #e0e0e0;
-}
-/* 답글 앞에 기호 추가 */
-.reply-item:before {
-  content: '└'; /* 답글 앞에 기호 추가 */
-  position: absolute;
-  left: -15px; /* 기호 위치 조정 */
-  top: 0;
-  color: #ccc; /* 기호 색상 */
+  text-decoration: underline;
 }
 
-/* 답글 입력 영역 스타일 */
 .reply-input-wrapper {
   margin-top: 10px;
   padding: 10px;
@@ -369,12 +328,10 @@ export default {
   border: 1px solid #ddd;
   border-radius: 5px;
   font-size: 14px;
-  display: flex;
-  flex-direction: column;
 }
 
 .reply-input textarea {
-  width: 80%;
+  width: 100%;
   padding: 10px;
   border: none;
   resize: none;
@@ -385,12 +342,6 @@ export default {
   border-radius: 5px;
   margin-bottom: 10px;
   box-shadow: inset 0 1px 3px rgba(0,0,0,0.1);
-}
-
-.reply-footer {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
 }
 
 .submit-reply-btn {
@@ -405,24 +356,6 @@ export default {
 
 .submit-reply-btn:hover {
   background-color: #0056b3;
-}
-
-.reply-input-wrapper .options {
-  display: flex;
-  justify-content: space-between;
-  margin-top: 10px;
-  font-size: 12px;
-  color: #888;
-}
-
-.reply-input-wrapper .options span {
-  margin-right: 10px;
-}
-
-.reply-input-wrapper .options i {
-  font-size: 14px;
-  color: #888;
-  margin-right: 5px;
 }
 
 /* 설정 메뉴 아이콘 */
@@ -465,50 +398,37 @@ export default {
 .dropdown-menu li:hover {
   background-color: #f0f0f0;
 }
-/* 수정 모드 스타일 */
-.edit-comment {
+
+.reply-item:before {
+  content: none;
+  display: none;
+}
+
+
+.reply-item::before,
+.reply-item::after {
+  content: none;
+  display: none;
+}
+
+.reply-item {
+  padding-left: 0 ;
+  border-left: none;
+  list-style-type: none ; /* Ensure no bullets or symbols */
+}
+
+/* Additional styling for the replies if needed */
+.reply-list {
+  margin-left: 0; /* Remove any indentation */
   margin-top: 10px;
 }
 
-.edit-comment textarea {
-  width: 90%;
-  padding: 10px;
-  border-radius: 8px;
-  border: 1px solid #ddd;
-  resize: none;
+/* Reply content styles */
+.reply-content p {
+  font-family: 'Pretendard', sans-serif;
   font-size: 14px;
-  margin-bottom: 10px;
+  color: #383E47;
+  line-height: 1.6;
 }
-
-.edit-actions {
-  display: flex;
-  gap: 10px;
-}
-
-.submit-edit-btn, .cancel-edit-btn {
-  padding: 5px 10px;
-  font-size: 12px;
-  border-radius: 5px;
-  border: 1px solid #ddd;
-  cursor: pointer;
-}
-
-.submit-edit-btn {
-  background-color: #007bff;
-  color: white;
-}
-
-.cancel-edit-btn {
-  background-color: #f5f5f5;
-}
-
-.submit-edit-btn:hover {
-  background-color: #0056b3;
-}
-
-.cancel-edit-btn:hover {
-  background-color: #e0e0e0;
-}
-
 
 </style>

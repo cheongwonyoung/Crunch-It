@@ -3,6 +3,13 @@
     <!-- HeaderX 컴포넌트를 사용 -->
     <HeaderX title="커뮤니티" :icons="headerIcons" />
 
+      <!-- 알림 아이콘 추가 -->
+<!--      <div class="icons">-->
+<!--        <button @click="goToNotifications" class="notification-icon">-->
+<!--          <img src="@/assets/notification.svg" alt="Notification Icon" class="icon-svg" />-->
+<!--        </button>-->
+<!--      </div>-->
+
     <!-- 채팅 메시지 섹션 -->
     <div class="chat-header">
       <span>💬 문어봐도돼요?</span>
@@ -14,12 +21,13 @@
         v-for="(category, index) in communityCategories"
         :key="category.name"
         class="category-item"
-        @click="setCurrentRoom(index + 1, category.name)" 
+        @click="setCurrentRoom(index + 1, category.name)"
       >
         <img :src="category.imgSrc" :alt="category.name" class="category-img" />
         <span class="category-name">{{ category.name }}</span>
       </div>
-    </div>
+      </div>
+
 
     <!-- CategoryP 컴포넌트를 사용한 카테고리 렌더링 -->
     <div class="category-tabs">
@@ -94,11 +102,11 @@ export default {
 
 
       // MessageP 페이지로 이동하며 currentRoomId와 currentRoomName을 전달
-      router.push({ 
-        name: 'Message', 
+      router.push({
+        name: 'Message',
         params: { roomId: id, roomName: encodeURIComponent(name) }
       });
-  
+
     }
 
     const selectedCategory = ref('전체');
@@ -164,9 +172,9 @@ export default {
       goToWritePage,
       goToNotifications,
       headerIcons,
-      currentRoomId,    
-      currentRoomName,  
-      setCurrentRoom,    
+      currentRoomId,
+      currentRoomName,
+      setCurrentRoom,
     };
   },
 };
