@@ -48,7 +48,7 @@ const router = createRouter({
     routes,
 });
 
-const navigationRoutes = ["Login", "SignUp"];
+const navigationRoutes = ["Login", "SignUp", "FindPassword"];
 const navigationOnBoardingRoutes = ["MyData", "IncomeSetting", "LimitSetting"];
 
 router.beforeEach(async (to, from, next) => {
