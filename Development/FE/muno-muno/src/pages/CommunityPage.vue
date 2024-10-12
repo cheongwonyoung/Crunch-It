@@ -3,12 +3,12 @@
     <!-- HeaderX 컴포넌트를 사용 -->
     <HeaderX title="커뮤니티" :icons="headerIcons" />
 
-      <!-- 알림 아이콘 추가 -->
-<!--      <div class="icons">-->
-<!--        <button @click="goToNotifications" class="notification-icon">-->
-<!--          <img src="@/assets/notification.svg" alt="Notification Icon" class="icon-svg" />-->
-<!--        </button>-->
-<!--      </div>-->
+    <!-- 알림 아이콘 추가 -->
+    <!--      <div class="icons">-->
+    <!--        <button @click="goToNotifications" class="notification-icon">-->
+    <!--          <img src="@/assets/notification.svg" alt="Notification Icon" class="icon-svg" />-->
+    <!--        </button>-->
+    <!--      </div>-->
 
     <!-- 채팅 메시지 섹션 -->
     <div class="chat-header">
@@ -26,8 +26,7 @@
         <img :src="category.imgSrc" :alt="category.name" class="category-img" />
         <span class="category-name">{{ category.name }}</span>
       </div>
-      </div>
-
+    </div>
 
     <!-- CategoryP 컴포넌트를 사용한 카테고리 렌더링 -->
     <div class="category-tabs">
@@ -92,22 +91,25 @@ export default {
       { name: '자유방', imgSrc: require('@/assets/free_room.svg') },
     ]);
 
-        // 선택된 방 ID와 이름을 저장할 변수
+    // 선택된 방 ID와 이름을 저장할 변수
     const currentRoomId = ref(null);
-    const currentRoomName = ref("");
+    const currentRoomName = ref('');
 
     // 선택한 방 ID와 이름을 설정하는 메서드
-    const setCurrentRoom = (id, name) =>{
-      console.log("Navigating to Message page with roomId:", id, "and roomName:", name); // id와 name이 올바른지 확인
-
+    const setCurrentRoom = (id, name) => {
+      console.log(
+        'Navigating to Message page with roomId:',
+        id,
+        'and roomName:',
+        name
+      ); // id와 name이 올바른지 확인
 
       // MessageP 페이지로 이동하며 currentRoomId와 currentRoomName을 전달
       router.push({
         name: 'Message',
-        params: { roomId: id, roomName: encodeURIComponent(name) }
+        params: { roomId: id, roomName: encodeURIComponent(name) },
       });
-
-    }
+    };
 
     const selectedCategory = ref('전체');
     const posts = ref([]);
@@ -123,7 +125,7 @@ export default {
 
     const fetchPosts = async () => {
       try {
-        const response = await apiClient.get('http://localhost:8080/community');
+        const response = await apiClient.get('/community');
         posts.value = response.data;
       } catch (error) {
         console.error('서버로부터 데이터를 받아오는 중 오류 발생:', error);

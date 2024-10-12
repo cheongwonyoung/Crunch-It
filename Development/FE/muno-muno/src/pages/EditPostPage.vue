@@ -78,9 +78,7 @@ export default {
 
     const fetchPost = async () => {
       try {
-        const response = await apiClient.get(
-          `http://localhost:8080/community/${postId}`
-        );
+        const response = await apiClient.get(`/community/${postId}`);
         editTitle.value = response.data.title;
         editContent.value = response.data.content;
         category.value = response.data.category;
@@ -91,14 +89,11 @@ export default {
 
     const submitEdit = async () => {
       try {
-        await apiClient.put(
-          `http://localhost:8080/community/${postId}/modify`,
-          {
-            title: editTitle.value,
-            category: category.value,
-            content: editContent.value,
-          }
-        );
+        await apiClient.put(`/community/${postId}/modify`, {
+          title: editTitle.value,
+          category: category.value,
+          content: editContent.value,
+        });
         alert('게시글이 수정되었습니다.');
         router.push(`/community/${postId}`);
       } catch (error) {
