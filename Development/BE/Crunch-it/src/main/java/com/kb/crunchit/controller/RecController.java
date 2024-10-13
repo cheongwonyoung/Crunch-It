@@ -5,6 +5,7 @@ import com.kb.crunchit.entity.RecommendationApiSaving;
 import com.kb.crunchit.service.RecService;
 import com.kb.crunchit.service.RecommendationApiBondService;
 import com.kb.crunchit.service.RecommendationApiFundService;
+import com.kb.crunchit.service.StockRecommendService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -26,6 +27,22 @@ public class RecController {
     private final RecService recService;
     private final RecommendationApiFundService recommendationApiFundService;
     private final RecommendationApiBondService recommendationApiBondService;
+
+    private final StockRecommendService stockRecommendService;
+    @GetMapping(value = "/profitrank", produces = "application/json")
+    public ResponseEntity<?> profitrank(){
+        return ResponseEntity.ok().body(stockRecommendService.getKisStockProfitRankData());
+    }
+
+    @GetMapping(value = "/amountrank", produces = "application/json")
+    public ResponseEntity<?> amountrank(){
+        return ResponseEntity.ok().body(stockRecommendService.getKisStockAmountRankData());
+    }
+
+    @GetMapping(value = "/dividendrank", produces = "application/json")
+    public ResponseEntity<?> dividendrank(){
+        return ResponseEntity.ok().body(stockRecommendService.getKisStockDividendRankData());
+    }
 
     @GetMapping("/deposit")
     ResponseEntity<?> getAllRecommendationDeposit(){
@@ -65,30 +82,30 @@ public class RecController {
         return ResponseEntity.ok().body(recommendationApiBondService.getAllBonds());
     }
 
-//    @GetMapping("/all")
-//    public ResponseEntity<?> getAllRecommendations() {
-//        Map<String, Object> resultMap = new HashMap<>();
-//
-//        try {
-//            // 비동기 처리로 각 데이터를 병렬로 가져옴
-//            CompletableFuture<List<RecommendationApiDeposit>> depositFuture = CompletableFuture.supplyAsync(() -> recService.getAllRecommendationDeposit());
-//            CompletableFuture<List<RecommendationApiSaving>> savingFuture = CompletableFuture.supplyAsync(() -> recService.getAllRecommendationSaving());
-//            CompletableFuture<?> fundFuture = CompletableFuture.supplyAsync(() -> recommendationApiFundService.getAllFunds());
-//            CompletableFuture<?> bondFuture = CompletableFuture.supplyAsync(() -> recommendationApiBondService.getAllBonds());
-//
-//            // 모든 Future가 완료될 때까지 기다림
-//            CompletableFuture.allOf(depositFuture, savingFuture, fundFuture, bondFuture).join();
-//
-//            // 결과 맵에 각 데이터를 저장
-//            resultMap.put("depositList", depositFuture.get());
-//            resultMap.put("savingList", savingFuture.get());
-//            resultMap.put("fundList", fundFuture.get());
-//            resultMap.put("bondList", bondFuture.get());
-//        } catch (Exception e) {
-//            log.error("Error in fetching recommendations", e);
-//            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(resultMap);
-//        }
-//        return ResponseEntity.ok(resultMap);
-//    }
+    @GetMapping("/all")
+    public ResponseEntity<?> getAllRecommendations() {
+        Map<String, Object> resultMap = new HashMap<>();
+
+        try {
+            // 비동기 처리로 각 데이터를 병렬로 가져옴
+            CompletableFuture<List<RecommendationApiDeposit>> depositFuture = CompletableFuture.supplyAsync(() -> recService.getAllRecommendationDeposit());
+            CompletableFuture<List<RecommendationApiSaving>> savingFuture = CompletableFuture.supplyAsync(() -> recService.getAllRecommendationSaving());
+            CompletableFuture<?> fundFuture = CompletableFuture.supplyAsync(() -> recommendationApiFundService.getAllFunds());
+            CompletableFuture<?> bondFuture = CompletableFuture.supplyAsync(() -> recommendationApiBondService.getAllBonds());
+
+            // 모든 Future가 완료될 때까지 기다림
+            CompletableFuture.allOf(depositFuture, savingFuture, fundFuture, bondFuture).join();
+
+            // 결과 맵에 각 데이터를 저장
+            resultMap.put("depositList", depositFuture.get());
+            resultMap.put("savingList", savingFuture.get());
+            resultMap.put("fundList", fundFuture.get());
+            resultMap.put("bondList", bondFuture.get());
+        } catch (Exception e) {
+            log.error("Error in fetching recommendations", e);
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(resultMap);
+        }
+        return ResponseEntity.ok(resultMap);
+    }
 //
 }

@@ -12,24 +12,9 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.HashMap;
 import java.util.Map;
 // 추후에 삭제 예정
-@RestController
-@RequestMapping("/auth")
-@RequiredArgsConstructor
+//@RestController
+//@RequestMapping("/auth")
+//@RequiredArgsConstructor
 public class StockRankController {
-    private final StockRecommendService stockRecommendService;
 
-    @GetMapping(value = "/profitrank", produces = "application/json")
-    public ResponseEntity<?> profitrank(){
-        return ResponseEntity.ok().body(stockRecommendService.getKisStockProfitRankData());
-    }
-
-    @GetMapping(value = "/amountrank", produces = "application/json")
-    public ResponseEntity<?> amountrank(){
-        return ResponseEntity.ok().body(stockRecommendService.getKisStockAmountRankData());
-    }
-
-    @GetMapping(value = "/dividendrank", produces = "application/json")
-    public ResponseEntity<?> dividendrank(){
-        return ResponseEntity.ok().body(stockRecommendService.getKisStockDividendRankData());
-    }
 }

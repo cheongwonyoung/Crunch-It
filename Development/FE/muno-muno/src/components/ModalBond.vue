@@ -1,13 +1,23 @@
 <template>
-  <div class="modal-overlay" v-if="show" @click.self="close">
+  <div v-if="show" class="modal-overlay" @click.self="closeModal">
     <div class="modal-content">
+      <!-- 금융 상품 배지 -->
       <div class="product-badge">{{ product.issuerName }}</div>
+
+      <!-- 금융 상품 제목 -->
       <div class="product-title">{{ product.productName.slice(4) }}</div>
+
+      <!-- 금융 상품 정보 -->
       <p>등급: {{ product.creditRating || 'AAA' }}</p>
       <p>표면 금리: {{ product.surfaceRate }}%</p>
       <p>만기일: {{ product.maturityDate.split(' ')[0] }}</p>
       <p>이자 지급일: {{ product.interestPaymentCycle }}</p>
-      <button @click="close">닫기</button>
+
+      <!-- 모달 버튼 -->
+      <div class="modal-buttons">
+        <button @click="closeModal">닫기</button>
+        <button>상품 보러 가기</button>
+      </div>
     </div>
   </div>
 </template>
@@ -16,11 +26,17 @@
 export default {
   name: 'BondModal',
   props: {
-    show: Boolean,
-    product: Object,
+    show: {
+      type: Boolean,
+      required: true,
+    },
+    product: {
+      type: Object,
+      required: true,
+    },
   },
   methods: {
-    close() {
+    closeModal() {
       this.$emit('close');
     },
   },
@@ -66,7 +82,7 @@ export default {
   margin-bottom: 8px;
 }
 
-.modal-content h2 {
+.product-title {
   margin: 0 0 12px 0;
   color: var(--gr30);
   text-align: center;
