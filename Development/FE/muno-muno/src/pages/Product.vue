@@ -107,6 +107,7 @@
                 selectedProduct: null,
                 selectedBannerProduct: null,
                 showBannerModal: false,
+                showStockModal: false,
                 loading: false, // 로딩 상태 추가
                 categories: ["예금", "적금", "펀드", "채권", "주식"],
                 products: [], // 선택된 카테고리의 상품들
@@ -134,20 +135,35 @@
             };
         },
         methods: {
+            async fetchStockProducts() {
+                this.loading = true; // API 요청 전 로딩 시작
+                const profitRes = await apiClient.get("/recommend/profitrank");
+                const amountRes = await apiClient.get("/recommend/amountrank");
+                const dividendRes = await apiClient.get("/recommend/dividendrank");
+                try {
+                    this.stockProduct.profit = profitRes?.data.slice(0, 3) || [];
+                    this.stockProduct.amount = amountRes?.data.slice(0, 3) || [];
+                    this.stockProduct.dividend = dividendRes?.data.slice(0, 3) || [];
+                } catch (err) {
+                    console.log(err);
+                } finally {
+                    this.loading = false;
+                }
+            },
             async fetchCategoryProducts(category) {
                 let apiUrl = "";
                 switch (category) {
                     case "예금":
-                        apiUrl = "http://localhost:8080/recommend/deposit";
+                        apiUrl = "/recommend/deposit";
                         break;
                     case "적금":
-                        apiUrl = "http://localhost:8080/recommend/saving";
+                        apiUrl = "/recommend/saving";
                         break;
                     case "펀드":
-                        apiUrl = "http://localhost:8080/recommend/fund";
+                        apiUrl = "/recommend/fund";
                         break;
                     case "채권":
-                        apiUrl = "http://localhost:8080/recommend/bond";
+                        apiUrl = "/recommend/bond";
                         break;
                     default:
                         apiUrl = "";
@@ -227,7 +243,11 @@
             },
             selectCategory(category) {
                 this.selectedCategory = category;
-                this.fetchCategoryProducts(category); // 카테고리 선택 시 해당 API 호출
+                if (category === "주식") {
+                    this.fetchStockProducts();
+                } else {
+                    this.fetchCategoryProducts(category); // 카테고리 선택 시 해당 API 호출
+                }
             },
             getProductItemComponent() {
                 switch (this.selectedCategory) {
@@ -295,13 +315,13 @@
                 let apiUrl = "";
                 switch (banner.category) {
                     case "주식":
-                        apiUrl = "http://localhost:8080/recommendation/top-stocks";
+                        apiUrl = "/recommendation/top-stocks";
                         break;
                     case "펀드":
-                        apiUrl = "http://localhost:8080/recommendation/top-funds";
+                        apiUrl = "/recommendation/top-funds";
                         break;
                     case "채권":
-                        apiUrl = "http://localhost:8080/recommendation/top-bonds";
+                        apiUrl = "/recommendation/top-bonds";
                         break;
                     default:
                         return;
