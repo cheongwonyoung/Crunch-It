@@ -39,6 +39,8 @@ pip install tensorflow==2.3.1
 
 # Train the neural network (경로 주의)
 
+cd src/main/python/
+
 python rs_nn.py
 
 # Startup API Server to serve API Request
