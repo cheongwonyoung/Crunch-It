@@ -8,6 +8,7 @@
             reply_id AS replyId,
             comment_id AS commentId,
             writer_id AS writerId,
+            nickname,
             content,
             likes,
             register_date AS registerDate,
@@ -20,6 +21,7 @@
             reply_id AS replyId,
             comment_id AS commentId,
             writer_id AS writerId,
+            nickname,
             content,
             likes,
             register_date AS registerDate,
@@ -29,8 +31,8 @@
     </select>
 
     <insert id="insertReply" parameterType="ReplyRequest">
-        INSERT INTO reply(comment_id, writer_id, content, register_date )
-        VALUES (#{commentId},#{writerId},#{content}, NOW())
+        INSERT INTO reply(comment_id, writer_id, content, register_date ,nickname)
+        VALUES (#{commentId},#{writerId},#{content}, NOW(),#{nickname})
     </insert>
 
     <select id="getCommentWriterId" parameterType="int" resultType="int">

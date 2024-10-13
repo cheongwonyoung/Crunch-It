@@ -13,6 +13,7 @@ import lombok.Setter;
 public class BoardResponseDTO {   //게시물 조회
     private int boardId;
     private int writerId;
+    private String nickname;
     private String title;
     private String content;
     private String category;

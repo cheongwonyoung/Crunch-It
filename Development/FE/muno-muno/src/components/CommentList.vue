@@ -20,7 +20,7 @@
           <div v-else>
             <div class="comment-header">
 <!--              writerId가 아닌 닉네임이 뜨도록 해야함-->
-              <span class="writer">{{ comment.writerId }}</span>
+              <span class="writer">{{ comment.nickname }}</span>
 
               <div class="settings-menu">
                 <img src="@/assets/dots-vertical.svg" alt="dots-vertical" @click="toggleCommentSettingsMenu(index)" class="dots-icon" />
@@ -67,7 +67,7 @@
               </div>
               <div v-else class="reply-wrapper">
                 <div class="reply-header">
-                  <span class="writer">{{ reply.writerId }}</span>
+                  <span class="writer">{{ reply.nickname }}</span>
 
                   <div class="settings-menu">
                     <img src="@/assets/dots-vertical.svg" alt="dots-vertical" @click="toggleReplySettingsMenu(reply.replyId)" class="dots-icon" />

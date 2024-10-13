@@ -9,6 +9,7 @@
         SELECT
             board_id AS boardId,
             writer_id AS writerId,
+            nickname,
             title,
             content,
             category,
@@ -23,6 +24,7 @@
         SELECT
             board_id AS boardId,
             writer_id AS writerId,
+            nickname,
             title,
             content,
             category,
@@ -35,8 +37,8 @@
 
     <!--    게시글 생성-->
     <insert id="insertBoard" parameterType="BoardRequest">
-        INSERT INTO board(board_id, writer_id, title, content, category, register_date )
-        VALUES (#{boardId},#{writerId},#{title},#{content},#{category}, NOW())
+        INSERT INTO board(board_id, writer_id, title, content, category, register_date,nickname )
+        VALUES (#{boardId},#{writerId},#{title},#{content},#{category}, NOW(),#{nickname})
     </insert>
 
     <!--    게시글 수정-->

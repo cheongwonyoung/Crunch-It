@@ -34,11 +34,13 @@ public class CommentService {
         int boardWriterInt=commentMapper.getBoardWriter(boardId);
         String boardWriter=String.valueOf(boardWriterInt);
 
+
         //알림 생성
         NotificationRequestDTO notificationRequestDTO=new NotificationRequestDTO();
         notificationRequestDTO.setUserId(boardWriterInt);  //게시글 작성자
         notificationRequestDTO.setTitle("나의 게시판에 댓글 달림");
-        notificationRequestDTO.setMessage(commentRequestDTO.getWriterId()+"님이 게시글에 댓글을 남겼습니다.");
+        notificationRequestDTO.setMessage(commentRequestDTO.getNickname()+"님이 게시글에 댓글을 남겼습니다.");
+        notificationRequestDTO.setNickname(commentRequestDTO.getNickname());
         notificationService.insertNotification(notificationRequestDTO);
     }
 

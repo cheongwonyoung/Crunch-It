@@ -35,19 +35,12 @@
           alt="avatar"
         />
         <div class="user-meta">
-          <span class="user">{{ post.writerId }}</span>
+          <span class="user">{{ nickname }}</span>
           <span class="date">{{ formattedDate }}</span>
         </div>
       </div>
     </div>
 
-    <!--    <div class="post-content">-->
-    <!--      <p>{{ post.content }}</p>-->
-    <!--    </div>-->
-
-    <!--    <div class="post-likes" @click="likePost">-->
-    <!--      <span :class="likedByUser ? 'liked' : ''">❤️ {{ post.likes }}</span>-->
-    <!--    </div>-->
     <div class="post-content">
       <p>{{ post.content }}</p>
     </div>
@@ -140,6 +133,7 @@ export default {
       category: '',
       writerId: '',
       registerDate: '',
+      nickname:'',
       modifyDate: '',
       likes: 0,
       commentsCount: 0,
@@ -181,8 +175,10 @@ export default {
           console.error('Invalid user_id format:', decodedToken.user_id);
         }
 
-        // userId = decodedToken?.user_id || decodedToken?.userId;
+        userId = decodedToken?.user_id || decodedToken?.userId;
         nickname = decodedToken?.nickname;
+
+        post.value.nickname = nickname;
         console.log('decoded Token', decodedToken);
       } catch (error) {
         console.error('Error decoding token manually:', error);
@@ -210,6 +206,7 @@ export default {
       try {
         const response = await apiClient.get(url);
         callback(response.data);
+        console.log(response);
       } catch (error) {
         console.error('Error fetching data:', error);
       }
@@ -254,6 +251,7 @@ export default {
           content: newComment.value,
           writerId: userId,
           boardId: postId,
+          nickname: nickname,
         };
         console.log('comment', payload);
 
@@ -297,6 +295,7 @@ export default {
           writerId: userId, // 로그인된 사용자 ID로 수정해야
           content: content,
           commentId: commentId,
+          nickname:nickname,
         });
         replies.value.push(response.data); // 새로 등록한 답글을 즉시 화면에 반영
         fetchPostAndComments();

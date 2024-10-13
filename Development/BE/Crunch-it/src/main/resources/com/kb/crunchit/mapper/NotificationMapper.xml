@@ -13,7 +13,7 @@
 
 <!--    새로운 알림 추가하는 쿼리-->
     <insert id="insertNotification" parameterType="NotificationRequest">
-        INSERT INTO notification(user_id,title,message,created_at)
-        VALUES (#{userId},#{title},#{message},NOW())
+        INSERT INTO notification(user_id,title,message,nickname,created_at)
+        VALUES (#{userId},#{title},#{message},#{nickname},NOW())
     </insert>
 </mapper>
