@@ -131,6 +131,7 @@ export default {
     const replies = ref([]); // 모든 답글 데이터를 저장
     const newComment = ref(''); //댓글 입력 필드 상태
     const showSettingsMenu = ref(false);
+    const likedByUser = ref(false); // likedByUser 변수 정의
     const goBack = () => {
       router.push('/community');
     };
@@ -194,19 +195,38 @@ export default {
       try {
         const response = await apiClient.get(url);
         callback(response.data);
-        console.log(response.data);
+        // console.log("response.data",response.data);
       } catch (error) {
         console.error('Error fetching data:', error);
       }
     };
 
     const fetchPostAndComments = () => {
-      fetchData(API_URL, (data) => (post.value = data));
+      // 1. 게시물 데이터는 좋아요 데이터를 제외하고 불러옴
+      fetchData(API_URL, (data) => {
+        post.value.title = data.title;
+        post.value.content = data.content;
+        post.value.category = data.category;
+        post.value.writerId = data.writerId;
+        post.value.registerDate = data.registerDate;
+        post.value.nickname = data.nickname;
+        post.value.modifyDate = data.modifyDate;
+        // post.value.likes는 설정하지 않음
+      });
+
+      // 2. 좋아요 데이터를 오직 /apiClient/likes/{postId} API로만 불러옴
+      fetchData(`${LIKE_API_URL}/${postId}`, (data) => {
+        post.value.likes = data; // 받은 좋아요 데이터를 post.likes에 저장
+      });
+
+      //게시물의 댓글데이터 불러오고 comments 배열에 저장
       fetchData(
         `${COMMENT_API_URL}/board/${postId}`,
         (data) => (comments.value = data)
       );
-      fetchData(`${REPLY_API_URL}`, (data) => (replies.value = data)); // 모든 답글 데이터를 가져옴
+      //모든 답글 데이터 불러오고 replies배열에 저장
+      fetchData(`${REPLY_API_URL}`, (data) => (replies.value = data));
+
     };
 
     const toggleSettingsMenu = () => {
@@ -310,7 +330,6 @@ export default {
         }
       }
     };
-    const likedByUser = ref(false);
 
     const likePost = async () => {
       try {
@@ -321,14 +340,15 @@ export default {
         };
 
         if (likedByUser.value) {
-          await apiClient.post(`${LIKE_API_URL}`, payload);
           likedByUser.value = false;
           post.value.likes -= 1;
+          await apiClient.post(`${LIKE_API_URL}`, payload);
         } else {
-          const response = await apiClient.post(`${LIKE_API_URL}`, payload);
-          likedByUser.value = response.data;
+          likedByUser.value = true;
           post.value.likes += 1;
+          await apiClient.post(`${LIKE_API_URL}`, payload);
         }
+        console.log("Post data after likePost:", post.value);
       } catch (error) {
         console.error('Error liking the post:', error);
       }
