@@ -5,6 +5,7 @@ import com.kb.crunchit.entity.RecommendationApiSaving;
 import com.kb.crunchit.service.RecService;
 import com.kb.crunchit.service.RecommendationApiBondService;
 import com.kb.crunchit.service.RecommendationApiFundService;
+import com.kb.crunchit.service.StockRecommendService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -26,6 +27,22 @@ public class RecController {
     private final RecService recService;
     private final RecommendationApiFundService recommendationApiFundService;
     private final RecommendationApiBondService recommendationApiBondService;
+
+    private final StockRecommendService stockRecommendService;
+    @GetMapping(value = "/profitrank", produces = "application/json")
+    public ResponseEntity<?> profitrank(){
+        return ResponseEntity.ok().body(stockRecommendService.getKisStockProfitRankData());
+    }
+
+    @GetMapping(value = "/amountrank", produces = "application/json")
+    public ResponseEntity<?> amountrank(){
+        return ResponseEntity.ok().body(stockRecommendService.getKisStockAmountRankData());
+    }
+
+    @GetMapping(value = "/dividendrank", produces = "application/json")
+    public ResponseEntity<?> dividendrank(){
+        return ResponseEntity.ok().body(stockRecommendService.getKisStockDividendRankData());
+    }
 
     @GetMapping("/deposit")
     ResponseEntity<?> getAllRecommendationDeposit(){
