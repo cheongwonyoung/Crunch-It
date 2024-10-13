@@ -18,6 +18,7 @@ public class Board {
     public String content;
     public String category;
     public String nickname;
+    public String profileUrl;
 
     public LocalDateTime registerDate;
     public LocalDateTime modifyDate;

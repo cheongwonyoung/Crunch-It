@@ -16,6 +16,7 @@ public class BoardRequestDTO {
     private String title;
     private String content;
     private String category;
+    public String profileUrl;
 
 
     // DTO to Entity

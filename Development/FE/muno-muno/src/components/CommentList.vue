@@ -331,7 +331,7 @@ export default {
 }
 
 .reply-input textarea {
-  width: 100%;
+  width: 90%;
   padding: 10px;
   border: none;
   resize: none;
@@ -345,7 +345,7 @@ export default {
 }
 
 .submit-reply-btn {
-  background-color: #007bff;
+  background-color: #3E8AFF;
   color: white;
   border: none;
   border-radius: 5px;

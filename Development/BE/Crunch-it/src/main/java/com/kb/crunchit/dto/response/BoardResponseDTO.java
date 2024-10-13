@@ -17,6 +17,7 @@ public class BoardResponseDTO {   //게시물 조회
     private String title;
     private String content;
     private String category;
+    public String profileUrl;
     private LocalDateTime registerDate;
     private LocalDateTime modifyDate;
     private int likes;

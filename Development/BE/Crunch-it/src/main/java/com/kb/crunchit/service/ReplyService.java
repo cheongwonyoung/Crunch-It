@@ -60,7 +60,7 @@ public class ReplyService {
         int commentWriter=replyMapper.getCommentWriterId(commentId);
         NotificationRequestDTO notificationRequestDTO=new NotificationRequestDTO();
         notificationRequestDTO.setUserId(commentWriter);
-        notificationRequestDTO.setTitle("나의 댓글에 답글 달림");
+        notificationRequestDTO.setTitle("나의 댓글에 답글을 남겼습니다.");
         notificationRequestDTO.setNickname(replyRequestDTO.getNickname());
         notificationRequestDTO.setMessage(replyRequestDTO.getNickname()+"님이 답글을 남겼습니다.");
         notificationService.insertNotification(notificationRequestDTO);

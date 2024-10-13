@@ -29,13 +29,15 @@
       <span class="category">{{ post.category }}</span>
       <h1 class="title">{{ post.title }}</h1>
       <div class="user-info">
+
         <img
-          class="user-avatar"
-          src="https://via.placeholder.com/40"
-          alt="avatar"
+            class="user-avatar"
+            :src="post.profileUrl ? post.profileUrl : require('@/assets/profile.svg')"
+            alt="avatar"
         />
+
         <div class="user-meta">
-          <span class="user">{{ nickname }}</span>
+          <span class="user">{{ post.nickname }}</span>
           <span class="date">{{ formattedDate }}</span>
         </div>
       </div>
@@ -78,15 +80,6 @@
       @delete-reply="handleDeleteReply"
     />
 
-    <!-- 댓글 입력 -->
-    <!--    <div class="comment-input">-->
-    <!--      <textarea-->
-    <!--          v-model="newComment"-->
-    <!--          placeholder="댓글을 입력하세요..."-->
-    <!--          rows="3"-->
-    <!--      ></textarea>-->
-    <!--      <button @click="submitComment" class="submit-btn">댓글 등록</button>-->
-    <!--    </div>-->
     <div class="comment-input">
       <textarea
         v-model="newComment"
@@ -99,11 +92,6 @@
       </button>
     </div>
 
-    <!--        <CommentInput-->
-    <!--            :newComment="newComment"-->
-    <!--            @submitComment="submitComment"/>-->
-
-    <!--    <router-link to="/community" class="back-link">목록</router-link>-->
   </div>
 </template>
 
@@ -206,7 +194,7 @@ export default {
       try {
         const response = await apiClient.get(url);
         callback(response.data);
-        console.log(response);
+        console.log(response.data);
       } catch (error) {
         console.error('Error fetching data:', error);
       }
@@ -558,8 +546,10 @@ export default {
 }
 
 .liked {
-  color: red; /* Example for liked color, adjust as necessary */
+  color: red; /* 하트 아이콘을 빨간색으로 */
+  fill: red;  /* SVG나 이미지의 색을 빨간색으로 변경 */
 }
+
 
 .comment-input {
   position: fixed;
