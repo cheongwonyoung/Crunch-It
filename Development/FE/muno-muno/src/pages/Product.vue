@@ -107,9 +107,8 @@
                 selectedProduct: null,
                 selectedBannerProduct: null,
                 showBannerModal: false,
-                showStockModal: false,
                 loading: false, // 로딩 상태 추가
-                categories: ["예금", "적금", "펀드", "주식", "채권"],
+                categories: ["예금", "적금", "펀드", "채권", "주식"],
                 products: [], // 선택된 카테고리의 상품들
                 stockRankList: [
                     {
@@ -135,36 +134,20 @@
             };
         },
         methods: {
-            async fetchStockProducts() {
-                this.loading = true; // API 요청 전 로딩 시작
-                const profitRes = await apiClient.get("/recommend/profitrank");
-                const amountRes = await apiClient.get("/recommend/amountrank");
-                const dividendRes = await apiClient.get("/recommend/dividendrank");
-                try {
-                    this.stockProduct.profit = profitRes?.data.slice(0, 3) || [];
-                    this.stockProduct.amount = amountRes?.data.slice(0, 3) || [];
-                    this.stockProduct.dividend = dividendRes?.data.slice(0, 3) || [];
-                } catch (err) {
-                    console.log(err);
-                } finally {
-                    this.loading = false;
-                }
-            },
-
             async fetchCategoryProducts(category) {
                 let apiUrl = "";
                 switch (category) {
                     case "예금":
-                        apiUrl = "/recommend/deposit";
+                        apiUrl = "http://localhost:8080/recommend/deposit";
                         break;
                     case "적금":
-                        apiUrl = "recommend/saving";
+                        apiUrl = "http://localhost:8080/recommend/saving";
                         break;
                     case "펀드":
-                        apiUrl = "recommend/fund";
+                        apiUrl = "http://localhost:8080/recommend/fund";
                         break;
                     case "채권":
-                        apiUrl = "recommend/bond";
+                        apiUrl = "http://localhost:8080/recommend/bond";
                         break;
                     default:
                         apiUrl = "";
@@ -177,9 +160,55 @@
                         switch (category) {
                             case "예금":
                                 this.products = response?.data?.depositList || [];
+                                // 1순위: '국민은행', 2순위: 12개월 옵션의 intrRate2 값 내림차순, 12개월 옵션이 없으면 6개월 옵션 기준
+                                this.products.sort((a, b) => {
+                                    // '국민은행' 우선
+                                    if (a.korCoNm === "국민은행" && b.korCoNm !== "국민은행") return -1;
+                                    if (b.korCoNm === "국민은행" && a.korCoNm !== "국민은행") return 1;
+
+                                    // 12개월 옵션의 intrRate2 내림차순 정렬, 없을 경우 6개월 옵션의 intrRate2 사용
+                                    const aIntrRate2 =
+                                        a.yearOption?.["12"]?.intrRate2 !== undefined
+                                            ? a.yearOption["12"].intrRate2
+                                            : a.sixMonthOption?.intrRate2 !== undefined
+                                            ? a.sixMonthOption.intrRate2
+                                            : -Infinity;
+                                    const bIntrRate2 =
+                                        b.yearOption?.["12"]?.intrRate2 !== undefined
+                                            ? b.yearOption["12"].intrRate2
+                                            : b.sixMonthOption?.intrRate2 !== undefined
+                                            ? b.sixMonthOption.intrRate2
+                                            : -Infinity;
+
+                                    return bIntrRate2 - aIntrRate2;
+                                });
                                 break;
                             case "적금":
                                 this.products = response?.data?.savingList || [];
+
+                                // 적금 정렬: 1순위 - '국민은행', 2순위 - 12개월 옵션 intrRate2 오름차순, 없으면 6개월 기준으로 오름차순 정렬
+                                this.products.sort((a, b) => {
+                                    // 1. '국민은행' 우선 배치
+                                    if (a.korCoNm === "국민은행" && b.korCoNm !== "국민은행") return -1;
+                                    if (b.korCoNm === "국민은행" && a.korCoNm !== "국민은행") return 1;
+
+                                    // 2. 12개월 옵션 intrRate2 기준 오름차순 정렬
+                                    const aIntrRate2 =
+                                        a.yearOption?.["12"]?.intrRate2 !== undefined
+                                            ? a.yearOption["12"].intrRate2
+                                            : a.sixMonthOption?.intrRate2 !== undefined
+                                            ? a.sixMonthOption.intrRate2
+                                            : Infinity;
+
+                                    const bIntrRate2 =
+                                        b.yearOption?.["12"]?.intrRate2 !== undefined
+                                            ? b.yearOption["12"].intrRate2
+                                            : b.sixMonthOption?.intrRate2 !== undefined
+                                            ? b.sixMonthOption.intrRate2
+                                            : Infinity;
+
+                                    return aIntrRate2 - bIntrRate2; // 오름차순 정렬
+                                });
                                 break;
                             case "펀드":
                                 this.products = response?.data || [];
@@ -198,11 +227,7 @@
             },
             selectCategory(category) {
                 this.selectedCategory = category;
-                if (category === "주식") {
-                    this.fetchStockProducts();
-                } else {
-                    this.fetchCategoryProducts(category); // 카테고리 선택 시 해당 API 호출
-                }
+                this.fetchCategoryProducts(category); // 카테고리 선택 시 해당 API 호출
             },
             getProductItemComponent() {
                 switch (this.selectedCategory) {
@@ -245,7 +270,6 @@
                 this.selectedProduct = null;
             },
             openStockModal(index) {
-                console.log(index, ": 123123123123");
                 switch (index) {
                     case 0:
                         this.selectedStockList = this.stockProduct.profit;
@@ -271,13 +295,13 @@
                 let apiUrl = "";
                 switch (banner.category) {
                     case "주식":
-                        apiUrl = "recommendation/top-stocks";
+                        apiUrl = "http://localhost:8080/recommendation/top-stocks";
                         break;
                     case "펀드":
-                        apiUrl = "recommendation/top-funds";
+                        apiUrl = "http://localhost:8080/recommendation/top-funds";
                         break;
                     case "채권":
-                        apiUrl = "recommendation/top-bonds";
+                        apiUrl = "http://localhost:8080/recommendation/top-bonds";
                         break;
                     default:
                         return;
@@ -332,11 +356,13 @@
         line-height: 150%;
         margin-bottom: 14px;
         position: relative;
+        font-family: "Pretendard", sans-serif;
     }
 
     .category-buttons {
         padding-left: 20px;
         display: flex;
+        font-family: "Pretendard", sans-serif;
     }
 
     .base-underline {
@@ -356,22 +382,5 @@
         font-size: 16px;
         color: var(--gr60);
         text-align: center;
-    }
-
-    /* 아코디언 애니메이션 */
-    .accordion-enter-active,
-    .accordion-leave-active {
-        transition: all 0.3s ease;
-    }
-    .accordion-enter,
-    .accordion-leave-to {
-        max-height: 0;
-        opacity: 0;
-        overflow: hidden;
-    }
-    .accordion-enter-to,
-    .accordion-leave {
-        max-height: 200px; /* 아코디언 펼쳐지는 높이 */
-        opacity: 1;
     }
 </style>
