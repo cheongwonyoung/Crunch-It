@@ -32,6 +32,15 @@
           <h2>{{ product.fundName }}</h2>
           <p>펀드코드: {{ product.fundCode }}</p>
         </div>
+
+        <!-- 적금 상품 정보 표시 -->
+        <div v-else-if="product.savingCode" class="product-badge">
+          {{ product.savingBadge }}
+        </div>
+        <div v-if="product.savingCode">
+          <h2>{{ product.savingTitle }}</h2>
+          <!-- <p>사용자 유사도: {{ product.probability }}</p> -->
+        </div>
       </div>
 
       <div class="modal-buttons">
@@ -54,6 +63,9 @@ export default {
       type: Object, // 하나의 product 객체를 받음
       required: true,
     },
+  },
+  mounted() {
+    console.log('ModalBanner props:', this.show, this.product); // 모달에 전달된 값 확인
   },
   methods: {
     closeModal() {

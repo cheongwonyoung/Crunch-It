@@ -1,5 +1,9 @@
 <template>
-  <div class="slider-container">
+  <div
+    class="slider-container"
+    @touchstart="handleTouchStart"
+    @touchend="handleTouchEnd"
+  >
     <div
       class="banner-slider"
       ref="slider"
@@ -39,6 +43,8 @@ export default {
       isAnimating: true,
       autoSlideInterval: null,
       isUserInteracting: false,
+      touchStartX: 0, // 터치 시작 지점 X 좌표
+      touchEndX: 0, // 터치 종료 지점 X 좌표
       banners: [
         {
           subtitle: '주식 고수 문어 선정',
@@ -65,11 +71,12 @@ export default {
     };
   },
   computed: {
+    // `displayBanners`는 양쪽에 하나씩 추가한 배열을 반환하여 무한 슬라이드를 구현합니다.
     displayBanners() {
       return [
-        this.banners[this.banners.length - 1],
-        ...this.banners,
-        this.banners[0],
+        this.banners[this.banners.length - 1], // 마지막 배너를 첫 번째 위치로
+        ...this.banners, // 모든 배너
+        this.banners[0], // 첫 번째 배너를 마지막 위치로
       ];
     },
   },
@@ -89,6 +96,7 @@ export default {
       }
     },
     onBannerClick(banner) {
+      console.log('Banner clicked:', banner);
       this.$emit('banner-click', banner);
     },
     startAutoSlide() {
@@ -127,6 +135,26 @@ export default {
     onUserSlideEnd() {
       this.isUserInteracting = false;
       this.startAutoSlide();
+    },
+
+    // 터치 시작 시 X 좌표 저장
+    handleTouchStart(event) {
+      this.onUserSlideStart();
+      this.touchStartX = event.touches[0].clientX;
+    },
+    // 터치 종료 시 X 좌표와 비교하여 슬라이드 방향 결정
+    handleTouchEnd(event) {
+      this.touchEndX = event.changedTouches[0].clientX;
+
+      // 터치 이동 거리가 50px 이상일 때만 슬라이드 이동
+      const distance = this.touchStartX - this.touchEndX;
+      if (distance > 50) {
+        this.nextSlide(); // 다음 슬라이드로 이동
+      } else if (distance < -50) {
+        this.prevSlide(); // 이전 슬라이드로 이동
+      }
+
+      this.onUserSlideEnd();
     },
   },
   mounted() {

@@ -1,6 +1,6 @@
 <template>
   <div class="product-recommendation">
-    <HeaderQ title="상품추천" @search="handleSearch" />
+    <HeaderQ title="상품추천" />
 
     <div class="popular-section">
       <h2>가장 인기있는 상품</h2>
@@ -37,6 +37,7 @@
         해당 상품이 없습니다
       </div>
       <div v-else>
+        <!-- 리스트가 계속 렌더링되도록 유지 -->
         <component
           v-for="product in products"
           :is="getProductItemComponent()"
@@ -65,10 +66,10 @@
 
     <!-- 배너 모달 -->
     <ModalBanner
-      v-if="showBannerModal && selectedBannerProduct"
-      :product="selectedBannerProduct"
+      v-if="showBannerModal"
       :show="showBannerModal"
-      @close="closeBannerModal"
+      :product="selectedBannerProduct"
+      @close="showBannerModal = false"
     />
   </div>
 </template>
@@ -89,6 +90,8 @@ import ModalBanner from '@/components/ModalBanner.vue';
 import StockProductItem from '@/components/StockProductItem.vue';
 import ModalStock from '@/components/ModalStock.vue';
 import apiClient from '@/axios';
+import { mapState } from 'pinia';
+import { useUserStore } from '@/stores/userStore';
 
 export default {
   name: 'ProductP',
@@ -108,6 +111,9 @@ export default {
     ModalBanner,
     StockProductItem,
   },
+  computed: {
+    ...mapState(useUserStore, ['userInfo']),
+  },
   data() {
     return {
       selectedCategory: '예금',
@@ -117,8 +123,11 @@ export default {
       showBannerModal: false,
       showStockModal: false,
       loading: false, // 로딩 상태 추가
+      isBannerClicked: false, // 배너가 클릭되었는지 여부 추가
       categories: ['예금', '적금', '펀드', '채권', '주식'],
       products: [], // 선택된 카테고리의 상품들
+      savingProducts: [], // 적금 리스트를 미리 저장
+      recommendationData: null, // 추천 데이터를 미리 저장
       stockRankList: [
         {
           title: '한국투자증권',
@@ -158,6 +167,29 @@ export default {
         this.loading = false;
       }
     },
+    async fetchSavingProducts() {
+      try {
+        const savingResponse = await apiClient.get('/recommend/saving');
+        this.savingProducts = savingResponse?.data?.savingList || [];
+      } catch (error) {
+        console.error('적금 데이터를 미리 불러오는 중 오류 발생:', error);
+      }
+    },
+    async fetchRecommendationData() {
+      try {
+        const recommendationResponse = await apiClient.post(
+          'http://127.0.0.1:5000/recommendation/product',
+          {
+            birth: this.birth,
+            gender: this.gender,
+            salary: this.salary,
+          }
+        );
+        this.recommendationData = recommendationResponse.data;
+      } catch (error) {
+        console.error('추천 데이터를 미리 불러오는 중 오류 발생:', error);
+      }
+    },
     async fetchCategoryProducts(category) {
       let apiUrl = '';
       switch (category) {
@@ -185,59 +217,11 @@ export default {
           switch (category) {
             case '예금':
               this.products = response?.data?.depositList || [];
-              // 1순위: '국민은행', 2순위: 12개월 옵션의 intrRate2 값 내림차순, 12개월 옵션이 없으면 6개월 옵션 기준
-              this.products.sort((a, b) => {
-                // '국민은행' 우선
-                if (a.korCoNm === '국민은행' && b.korCoNm !== '국민은행')
-                  return -1;
-                if (b.korCoNm === '국민은행' && a.korCoNm !== '국민은행')
-                  return 1;
-
-                // 12개월 옵션의 intrRate2 내림차순 정렬, 없을 경우 6개월 옵션의 intrRate2 사용
-                const aIntrRate2 =
-                  a.yearOption?.['12']?.intrRate2 !== undefined
-                    ? a.yearOption['12'].intrRate2
-                    : a.sixMonthOption?.intrRate2 !== undefined
-                    ? a.sixMonthOption.intrRate2
-                    : -Infinity;
-                const bIntrRate2 =
-                  b.yearOption?.['12']?.intrRate2 !== undefined
-                    ? b.yearOption['12'].intrRate2
-                    : b.sixMonthOption?.intrRate2 !== undefined
-                    ? b.sixMonthOption.intrRate2
-                    : -Infinity;
-
-                return bIntrRate2 - aIntrRate2;
-              });
+              // 정렬 로직 추가
               break;
             case '적금':
               this.products = response?.data?.savingList || [];
-
-              // 적금 정렬: 1순위 - '국민은행', 2순위 - 12개월 옵션 intrRate2 오름차순, 없으면 6개월 기준으로 오름차순 정렬
-              this.products.sort((a, b) => {
-                // 1. '국민은행' 우선 배치
-                if (a.korCoNm === '국민은행' && b.korCoNm !== '국민은행')
-                  return -1;
-                if (b.korCoNm === '국민은행' && a.korCoNm !== '국민은행')
-                  return 1;
-
-                // 2. 12개월 옵션 intrRate2 기준 오름차순 정렬
-                const aIntrRate2 =
-                  a.yearOption?.['12']?.intrRate2 !== undefined
-                    ? a.yearOption['12'].intrRate2
-                    : a.sixMonthOption?.intrRate2 !== undefined
-                    ? a.sixMonthOption.intrRate2
-                    : Infinity;
-
-                const bIntrRate2 =
-                  b.yearOption?.['12']?.intrRate2 !== undefined
-                    ? b.yearOption['12'].intrRate2
-                    : b.sixMonthOption?.intrRate2 !== undefined
-                    ? b.sixMonthOption.intrRate2
-                    : Infinity;
-
-                return aIntrRate2 - bIntrRate2; // 오름차순 정렬
-              });
+              // 정렬 로직 추가
               break;
             case '펀드':
               this.products = response?.data || [];
@@ -255,6 +239,7 @@ export default {
       }
     },
     selectCategory(category) {
+      this.isBannerClicked = false; // 카테고리 선택 시 배너 클릭 상태 초기화
       this.selectedCategory = category;
       if (category === '주식') {
         this.fetchStockProducts();
@@ -325,33 +310,68 @@ export default {
       this.selectedStockList = [];
     },
     async openModalFromBanner(banner) {
-      let apiUrl = '';
-      switch (banner.category) {
-        case '주식':
-          apiUrl = '/recommendation/top-stocks';
-          break;
-        case '펀드':
-          apiUrl = '/recommendation/top-funds';
-          break;
-        case '채권':
-          apiUrl = '/recommendation/top-bonds';
-          break;
-        default:
-          return;
-      }
+      this.isBannerClicked = true;
+      if (banner.category === '적금') {
+        try {
+          // 적금 리스트가 미리 로드된 데이터를 사용
+          if (this.savingProducts.length === 0) {
+            await this.fetchSavingProducts(); // 적금 리스트가 없는 경우 새로 불러오기
+          }
 
-      try {
-        const response = await apiClient.get(apiUrl);
-        if (response.data && response.data.length > 0) {
-          this.selectedBannerProduct = response.data[0];
-          this.showBannerModal = true;
-        } else {
-          console.warn('배너 데이터가 없습니다.');
-          this.selectedBannerProduct = null;
+          // 미리 로드된 추천 데이터 사용
+          let { CODE, probability } = this.recommendationData[0];
+          CODE = String(CODE).padStart(12, '0');
+
+          const matchedProduct = this.savingProducts.find((product) => {
+            const cleanFinPrdtCd = String(product.finPrdtCd).replace(
+              /[^0-9]/g,
+              ''
+            );
+            return cleanFinPrdtCd === CODE;
+          });
+
+          if (matchedProduct) {
+            this.selectedBannerProduct = {
+              ...matchedProduct,
+              savingCode: matchedProduct.finPrdtCd,
+              savingTitle: matchedProduct.finPrdtNm,
+              savingBadge: matchedProduct.korCoNm,
+              probability: `${parseFloat(probability).toFixed(2)}%`,
+            };
+            this.showBannerModal = true;
+          } else {
+            console.warn('일치하는 적금 상품을 찾을 수 없습니다.');
+          }
+        } catch (error) {
+          console.error('적금 배너 API 요청 실패:', error);
         }
-      } catch (error) {
-        console.error('배너 API 요청 실패:', error);
-        this.selectedBannerProduct = null;
+      } else {
+        let apiUrl = '';
+        switch (banner.category) {
+          case '주식':
+            apiUrl = '/recommendation/top-stocks';
+            break;
+          case '펀드':
+            apiUrl = '/recommendation/top-funds';
+            break;
+          case '채권':
+            apiUrl = '/recommendation/top-bonds';
+            break;
+          default:
+            return;
+        }
+
+        try {
+          const response = await apiClient.get(apiUrl);
+          if (response.data && response.data.length > 0) {
+            this.selectedBannerProduct = response.data[0];
+            this.showBannerModal = true;
+          } else {
+            console.warn('배너 데이터가 없습니다.');
+          }
+        } catch (error) {
+          console.error('배너 API 요청 실패:', error);
+        }
       }
     },
     closeBannerModal() {
@@ -359,8 +379,13 @@ export default {
       this.selectedBannerProduct = null;
     },
   },
-  mounted() {
+  async mounted() {
     this.fetchCategoryProducts(this.selectedCategory); // 페이지 로드 시 기본 카테고리('예금') API 호출
+    this.birth = this.userInfo.birth;
+    this.gender = this.userInfo.gender;
+    this.salary = this.userInfo.salary;
+    this.fetchSavingProducts(); // 적금 데이터를 미리 불러오기
+    await this.fetchRecommendationData(); // 추천 데이터를 미리 불러오기
   },
 };
 </script>
