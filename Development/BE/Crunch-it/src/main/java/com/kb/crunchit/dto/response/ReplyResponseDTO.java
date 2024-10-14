@@ -10,6 +10,7 @@ public class ReplyResponseDTO {
     private int writerId;
     private int replyId;
     private int commentId;
+    private String nickname;
     private String content;
     private int likes;
     private LocalDateTime registerDate;

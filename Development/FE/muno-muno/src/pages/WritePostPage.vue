@@ -75,6 +75,7 @@ export default {
 
     const token = localStorage.getItem('JwtToken');
     let userId = null;
+    let nickname=null;
 
     if (token) {
       try {
@@ -94,7 +95,8 @@ export default {
           console.error('Invalid user_id format:', decodedToken.user_id);
         }
 
-        userId = decodedToken?.user_id || decodedToken?.userId;
+        //userId = decodedToken?.user_id || decodedToken?.userId;
+        nickname=decodedToken?.nickname;
       } catch (error) {
         console.error('Error decoding token manually:', error);
       }
@@ -108,6 +110,7 @@ export default {
         category: category.value,
         content: content.value,
         writerId: userId,
+        nickname:nickname
       };
       console.log(postData);
 

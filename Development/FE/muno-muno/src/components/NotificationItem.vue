@@ -3,12 +3,13 @@
     <!-- 알림 유형에 따라 아이콘 변경 -->
     <div class="icon-container">
       <img
-        :src="
-          notification.type === '댓글'
-            ? require('@/assets/c_notification.svg')
-            : require('@/assets/like.svg')
-        "
-        alt="알림 아이콘"
+          :src="
+          notification.title === '나의 댓글에 답글을 남겼습니다.'
+          || notification.title === '나의 게시판에 댓글을 남겼습니다.'
+          ? require('@/assets/c_notification.svg')
+          : require('@/assets/like.svg')
+"
+          alt="알림 아이콘"
         class="notification-icon"
       />
     </div>
@@ -16,8 +17,7 @@
     <div class="a">
       <p class="b">
         <span class="nickname">{{ notification.nickname }}</span>
-        님이 <span class="title">{{ notification.title }}</span> 글에
-        {{ notification.type }}을 남겼습니다.
+        님이 <span class="title">{{ notification.title }}</span>
       </p>
       <p class="subMessage">{{ notification.subMessage }}</p>
       <p class="formattedTime">{{ formattedTime }}</p>
