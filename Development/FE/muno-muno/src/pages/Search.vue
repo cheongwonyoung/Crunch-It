@@ -101,6 +101,7 @@ export default {
   methods: {
     goBack() {
       this.$router.go(-1);
+      // this.$router.push('/product');
     },
     async selectCategory(category) {
       this.loading = true; // 로딩 시작

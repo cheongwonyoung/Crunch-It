@@ -2,9 +2,21 @@
 <template>
   <div class="calendar-popup">
     <div class="calendar-header">
-      <button class="nav-button" @click="changeYear(-1)">&lt;</button>
+      <button
+        class="nav-button"
+        @click="changeYear(-1)"
+        :disabled="currentYear <= minYear"
+      >
+        &lt;
+      </button>
       <span class="year-display">{{ currentYear }}</span>
-      <button class="nav-button" @click="changeYear(1)">&gt;</button>
+      <button
+        class="nav-button"
+        @click="changeYear(1)"
+        :disabled="currentYear >= maxYear"
+      >
+        &gt;
+      </button>
     </div>
     <div class="month-grid">
       <button
@@ -14,10 +26,12 @@
         :class="{
           selected: month === selectedMonth && currentYear === selectedYear,
           hover: month === hoverMonth,
+          disabled: isDisabled(month),
         }"
         @click="selectMonth(month)"
         @mouseenter="hoverMonth = month"
         @mouseleave="hoverMonth = null"
+        :disabled="isDisabled(month)"
       >
         {{ month }}월
       </button>
@@ -34,17 +48,32 @@ export default {
     selectedYear: Number,
   },
   data() {
+    const now = new Date();
     return {
       currentYear: this.selectedYear,
       hoverMonth: null,
+      maxYear: now.getFullYear(),
+      maxMonth: now.getMonth() + 1,
+      minYear: 2000, // 또는 필요한 최소 연도 설정
     };
   },
   methods: {
     changeYear(delta) {
-      this.currentYear += delta;
+      const newYear = this.currentYear + delta;
+      if (newYear >= this.minYear && newYear <= this.maxYear) {
+        this.currentYear = newYear;
+      }
     },
     selectMonth(month) {
-      this.$emit('monthSelected', { year: this.currentYear, month });
+      if (!this.isDisabled(month)) {
+        this.$emit('monthSelected', { year: this.currentYear, month });
+      }
+    },
+    isDisabled(month) {
+      return (
+        (this.currentYear === this.maxYear && month > this.maxMonth) ||
+        this.currentYear > this.maxYear
+      );
     },
   },
 };
@@ -105,5 +134,15 @@ export default {
   background-color: var(--p10);
   color: white;
   border-color: var(--p10);
+}
+
+.month-button.disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.nav-button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
 }
 </style>

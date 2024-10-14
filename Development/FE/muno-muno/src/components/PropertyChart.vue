@@ -18,7 +18,6 @@
             <stop offset="80%" stop-color="var(--p20)" stop-opacity="0.5" />
             <stop offset="100%" stop-color="var(--p10)" stop-opacity="0.5" />
           </radialGradient>
-
           <mask id="previousLevelMask">
             <g v-for="(section, index) in previousSections" :key="index">
               <path
@@ -29,7 +28,6 @@
               />
             </g>
           </mask>
-
           <mask id="currentLevelMask">
             <g v-for="(section, index) in sections" :key="index">
               <path
@@ -41,7 +39,6 @@
             </g>
           </mask>
         </defs>
-
         <g v-for="levelIndex in 6" :key="`grid-${levelIndex}`">
           <circle
             cx="70"
@@ -51,9 +48,9 @@
             :stroke="levelIndex === maxLevel ? 'var(--gr50)' : 'var(--gr60)'"
             stroke-width="0.5"
             stroke-dasharray="1,1"
+            class="animated-circle"
           />
         </g>
-
         <g v-for="(section, index) in sections" :key="`lines-${index}`">
           <path
             :d="calculateLinePath(index)"
@@ -61,9 +58,9 @@
             stroke="var(--gr60)"
             stroke-width="0.5"
             stroke-dasharray="1,1"
+            class="animated-line"
           />
         </g>
-
         <circle
           cx="70"
           cy="70"
@@ -71,16 +68,16 @@
           fill="var(--gr60)"
           fill-opacity="0.3"
           mask="url(#previousLevelMask)"
+          class="animated-fill previous"
         />
-
         <circle
           cx="70"
           cy="70"
           r="60"
           fill="url(#skyBlueGradient)"
           mask="url(#currentLevelMask)"
+          class="animated-fill current"
         />
-
         <g v-for="(label, index) in labels" :key="`label-${index}`">
           <text
             :x="calculateLabelPosition(index).x"
@@ -156,17 +153,13 @@ export default {
       const endAngle = (sectionIndex + 1) * (360 / 5);
       const innerRadius = levelIndex * 10 * scale;
       const outerRadius = (levelIndex + 1) * 10 * scale;
-
       const startRadians = (startAngle - 90) * (Math.PI / 180);
       const endRadians = (endAngle - 90) * (Math.PI / 180);
-
       const startX = 70 + innerRadius * Math.cos(startRadians);
       const startY = 70 + innerRadius * Math.sin(startRadians);
       const endX = 70 + outerRadius * Math.cos(endRadians);
       const endY = 70 + outerRadius * Math.sin(endRadians);
-
       const largeArcFlag = endAngle - startAngle <= 180 ? 0 : 1;
-
       return `
         M ${startX} ${startY}
         A ${innerRadius} ${innerRadius} 0 ${largeArcFlag} 1 ${
@@ -190,11 +183,27 @@ export default {
     calculateLabelPosition(index) {
       let angle = (index * 72 - 54) * (Math.PI / 180);
       let radius = 76;
-
       return {
         x: 70 + radius * Math.cos(angle),
         y: 70 + radius * Math.sin(angle),
       };
+    },
+  },
+  watch: {
+    chartData: {
+      handler() {
+        this.$nextTick(() => {
+          const elements = this.$el.querySelectorAll(
+            '.animated-circle, .animated-line, .animated-fill'
+          );
+          elements.forEach((el) => {
+            el.style.animation = 'none';
+            el.offsetHeight; // trigger reflow
+            el.style.animation = null;
+          });
+        });
+      },
+      deep: true,
     },
   },
 };
@@ -206,7 +215,6 @@ export default {
   display: flex;
   justify-content: center;
 }
-
 .chart-box {
   width: 335px;
   height: 320px;
@@ -218,5 +226,57 @@ export default {
   display: flex;
   justify-content: center;
   align-items: center;
+}
+
+@keyframes drawCircle {
+  0% {
+    stroke-dasharray: 0, 377;
+    stroke-dashoffset: 377;
+  }
+  100% {
+    stroke-dasharray: 1, 1;
+    stroke-dashoffset: 0;
+  }
+}
+
+@keyframes drawLine {
+  0% {
+    stroke-dasharray: 0, 100;
+    stroke-dashoffset: 100;
+  }
+  100% {
+    stroke-dasharray: 1, 1;
+    stroke-dashoffset: 0;
+  }
+}
+
+@keyframes fillIn {
+  0% {
+    transform: scale(0) rotate(0deg);
+  }
+  100% {
+    transform: scale(1) rotate(360deg);
+  }
+}
+
+.animated-circle {
+  animation: drawCircle 1.5s ease-out forwards;
+}
+
+.animated-line {
+  animation: drawLine 1.5s ease-out forwards;
+}
+
+.animated-fill {
+  transform-origin: center;
+  animation: fillIn 1.5s ease-out forwards;
+}
+
+.animated-fill.previous {
+  animation-delay: 0.5s;
+}
+
+.animated-fill.current {
+  animation-delay: 0.7s;
 }
 </style>
