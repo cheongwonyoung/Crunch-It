@@ -88,13 +88,15 @@ export default {
 }
 
 .post-content {
-  align-self: stretch;
-  color: var(--gr40);
-  font-size: 14px;
-  font-weight: 400;
-  line-height: 150%;
-  letter-spacing: -0.28px;
-  margin: 6px 0 8px 0;
+  width: 100%;               /* 컨테이너의 너비 */
+  height: calc(1.5em * 3);    /* 3줄 높이 제한 */
+  line-height: 1.5em;         /* 한 줄의 높이를 지정 */
+  overflow: hidden;           /* 넘치는 텍스트 숨기기 */
+  text-overflow: ellipsis;    /* 넘치는 텍스트가 생기면 "..."로 표시 */
+  display: -webkit-box;       /* Flexbox 유사 레이아웃 */
+  -webkit-line-clamp: 3;      /* 3줄로 제한 */
+  -webkit-box-orient: vertical; /* 수직 방향 레이아웃 설정 */
+  white-space: normal;        /* 텍스트 줄바꿈 허용 */
 }
 
 .post-footer {

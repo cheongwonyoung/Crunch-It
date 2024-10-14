@@ -3,13 +3,6 @@
     <!-- HeaderX 컴포넌트를 사용 -->
     <HeaderX title="커뮤니티" :icons="headerIcons" />
 
-    <!-- 알림 아이콘 추가 -->
-    <!--      <div class="icons">-->
-    <!--        <button @click="goToNotifications" class="notification-icon">-->
-    <!--          <img src="@/assets/notification.svg" alt="Notification Icon" class="icon-svg" />-->
-    <!--        </button>-->
-    <!--      </div>-->
-
     <!-- 채팅 메시지 섹션 -->
     <div class="chat-header">
       <span>💬 문어봐도돼요?</span>
