@@ -1,6 +1,6 @@
 <template>
   <div class="product-recommendation">
-    <HeaderQ title="상품추천" @search="handleSearch" />
+    <HeaderQ title="상품추천" />
 
     <div class="popular-section">
       <h2>가장 인기있는 상품</h2>
