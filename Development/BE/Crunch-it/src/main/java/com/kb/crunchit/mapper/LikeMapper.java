@@ -14,5 +14,6 @@ public interface LikeMapper {
     Like findLikeByBoardIdAndUserId(@Param("boardId") int boardId, @Param("userId") int userId);
     void addLike(LikeRequestDTO likeRequestDTO);
     void removeLike(@Param("boardId") int boardId, @Param("userId") int userId);
+    String findNicknameByUserId(@Param("userId") int userId);
 
 }

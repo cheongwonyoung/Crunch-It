@@ -11,7 +11,7 @@
       />
 
       <!-- 설정 아이콘 및 드롭다운 메뉴 -->
-      <div class="settings-menu">
+      <div  v-if="userId === post.writerId" class="settings-menu">
         <img
           src="@/assets/dots-vertical.svg"
           alt="dots-vertical"
@@ -29,25 +29,20 @@
       <span class="category">{{ post.category }}</span>
       <h1 class="title">{{ post.title }}</h1>
       <div class="user-info">
+
         <img
-          class="user-avatar"
-          src="https://via.placeholder.com/40"
-          alt="avatar"
+            class="user-avatar"
+            :src="post.profileUrl ? post.profileUrl : require('@/assets/profile.svg')"
+            alt="avatar"
         />
+
         <div class="user-meta">
-          <span class="user">{{ post.writerId }}</span>
+          <span class="user">{{ post.nickname }}</span>
           <span class="date">{{ formattedDate }}</span>
         </div>
       </div>
     </div>
 
-    <!--    <div class="post-content">-->
-    <!--      <p>{{ post.content }}</p>-->
-    <!--    </div>-->
-
-    <!--    <div class="post-likes" @click="likePost">-->
-    <!--      <span :class="likedByUser ? 'liked' : ''">❤️ {{ post.likes }}</span>-->
-    <!--    </div>-->
     <div class="post-content">
       <p>{{ post.content }}</p>
     </div>
@@ -77,6 +72,7 @@
     <CommentList
       :comments="comments"
       :replies="replies"
+      :user-id="userId"
       @update-comment-reply-count="updateCommentReplyCount"
       @update-comment="handleUpdateComment"
       @delete-comment="handleDeleteComment"
@@ -85,15 +81,6 @@
       @delete-reply="handleDeleteReply"
     />
 
-    <!-- 댓글 입력 -->
-    <!--    <div class="comment-input">-->
-    <!--      <textarea-->
-    <!--          v-model="newComment"-->
-    <!--          placeholder="댓글을 입력하세요..."-->
-    <!--          rows="3"-->
-    <!--      ></textarea>-->
-    <!--      <button @click="submitComment" class="submit-btn">댓글 등록</button>-->
-    <!--    </div>-->
     <div class="comment-input">
       <textarea
         v-model="newComment"
@@ -106,21 +93,14 @@
       </button>
     </div>
 
-    <!--        <CommentInput-->
-    <!--            :newComment="newComment"-->
-    <!--            @submitComment="submitComment"/>-->
-
-    <!--    <router-link to="/community" class="back-link">목록</router-link>-->
   </div>
 </template>
 
 <script>
 import { ref, computed, onMounted } from 'vue';
 import apiClient from '../axios';
-//import axios from 'axios';
 import { useRoute, useRouter } from 'vue-router';
 import CommentList from '@/components/CommentList.vue';
-// import CommentInput from "@/components/CommentInput.vue";
 
 export default {
   name: 'PostDetailP',
@@ -140,6 +120,7 @@ export default {
       category: '',
       writerId: '',
       registerDate: '',
+      nickname:'',
       modifyDate: '',
       likes: 0,
       commentsCount: 0,
@@ -149,6 +130,7 @@ export default {
     const replies = ref([]); // 모든 답글 데이터를 저장
     const newComment = ref(''); //댓글 입력 필드 상태
     const showSettingsMenu = ref(false);
+
     const goBack = () => {
       router.push('/community');
     };
@@ -181,8 +163,10 @@ export default {
           console.error('Invalid user_id format:', decodedToken.user_id);
         }
 
-        // userId = decodedToken?.user_id || decodedToken?.userId;
+        userId = decodedToken?.user_id || decodedToken?.userId;
         nickname = decodedToken?.nickname;
+
+        post.value.nickname = nickname;
         console.log('decoded Token', decodedToken);
       } catch (error) {
         console.error('Error decoding token manually:', error);
@@ -210,18 +194,38 @@ export default {
       try {
         const response = await apiClient.get(url);
         callback(response.data);
+        // console.log("response.data",response.data);
       } catch (error) {
         console.error('Error fetching data:', error);
       }
     };
 
     const fetchPostAndComments = () => {
-      fetchData(API_URL, (data) => (post.value = data));
+      // 1. 게시물 데이터는 좋아요 데이터를 제외하고 불러옴
+      fetchData(API_URL, (data) => {
+        post.value.title = data.title;
+        post.value.content = data.content;
+        post.value.category = data.category;
+        post.value.writerId = data.writerId;
+        post.value.registerDate = data.registerDate;
+        post.value.nickname = data.nickname;
+        post.value.modifyDate = data.modifyDate;
+        // post.value.likes는 설정하지 않음
+      });
+
+      // 2. 좋아요 데이터를 오직 /apiClient/likes/{postId} API로만 불러옴
+      fetchData(`${LIKE_API_URL}/${postId}`, (data) => {
+        post.value.likes = data; // 받은 좋아요 데이터를 post.likes에 저장
+      });
+
+      //게시물의 댓글데이터 불러오고 comments 배열에 저장
       fetchData(
         `${COMMENT_API_URL}/board/${postId}`,
         (data) => (comments.value = data)
       );
-      fetchData(`${REPLY_API_URL}`, (data) => (replies.value = data)); // 모든 답글 데이터를 가져옴
+      //모든 답글 데이터 불러오고 replies배열에 저장
+      fetchData(`${REPLY_API_URL}`, (data) => (replies.value = data));
+
     };
 
     const toggleSettingsMenu = () => {
@@ -254,6 +258,7 @@ export default {
           content: newComment.value,
           writerId: userId,
           boardId: postId,
+          nickname: nickname,
         };
         console.log('comment', payload);
 
@@ -297,6 +302,7 @@ export default {
           writerId: userId, // 로그인된 사용자 ID로 수정해야
           content: content,
           commentId: commentId,
+          nickname:nickname,
         });
         replies.value.push(response.data); // 새로 등록한 답글을 즉시 화면에 반영
         fetchPostAndComments();
@@ -323,7 +329,7 @@ export default {
         }
       }
     };
-    const likedByUser = ref(false);
+    const likedByUser = ref(false); // likedByUser 변수 정의
 
     const likePost = async () => {
       try {
@@ -333,26 +339,46 @@ export default {
           userId,
         };
 
+        // 좋아요 상태에 따라 서버에 올바른 요청을 보냄
         if (likedByUser.value) {
-          await apiClient.post(`${LIKE_API_URL}`, payload);
-          likedByUser.value = false;
-          post.value.likes -= 1;
-        } else {
+          // 좋아요 취소 요청
           const response = await apiClient.post(`${LIKE_API_URL}`, payload);
-          likedByUser.value = response.data;
-          post.value.likes += 1;
+          if (response.status === 200) {
+            // 서버 응답 성공 시에만 상태 업데이트
+            likedByUser.value = false;
+            post.value.likes -= 1;
+            // 로컬 스토리지에서 좋아요 상태 제거
+            localStorage.removeItem(`liked_${postId}`);
+          }
+        } else {
+          // 좋아요 추가 요청
+          const response = await apiClient.post(`${LIKE_API_URL}`, payload);
+          if (response.status === 200) {
+            // 서버 응답 성공 시에만 상태 업데이트
+            likedByUser.value = true;
+            post.value.likes += 1;
+            // 로컬 스토리지에 좋아요 상태 저장
+            localStorage.setItem(`liked_${postId}`, 'true');
+          }
         }
       } catch (error) {
         console.error('Error liking the post:', error);
       }
     };
 
-    onMounted(fetchPostAndComments);
+// 페이지가 로드될 때 로컬 스토리지에서 좋아요 상태 불러오기
+    onMounted(() => {
+      const likedStatus = localStorage.getItem(`liked_${postId}`);
+      likedByUser.value = likedStatus === 'true'; // 로컬 스토리지에서 상태 설정
+      fetchPostAndComments(); // 게시글과 댓글 데이터 불러오기
+    });
+
 
     return {
       post,
       comments,
       replies, // replies 데이터를 추가로 반환
+      userId,
       newComment,
       showSettingsMenu,
       formattedDate,
@@ -559,8 +585,10 @@ export default {
 }
 
 .liked {
-  color: red; /* Example for liked color, adjust as necessary */
+  color: red; /* 하트 아이콘을 빨간색으로 */
+  fill: red;  /* SVG나 이미지의 색을 빨간색으로 변경 */
 }
+
 
 .comment-input {
   position: fixed;

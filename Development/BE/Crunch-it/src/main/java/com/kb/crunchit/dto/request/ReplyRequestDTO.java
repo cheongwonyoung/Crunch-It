@@ -8,6 +8,7 @@ import lombok.Setter;
 public class ReplyRequestDTO {
     private int writerId;
     private int replyId;
+    private String nickname;
     private int commentId;
     private String content;
 }
