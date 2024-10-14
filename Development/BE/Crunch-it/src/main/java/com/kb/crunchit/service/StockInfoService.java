@@ -44,11 +44,11 @@ public class StockInfoService { // API 호출을 보내고, 응답을 받아서 
 
     // 주식 API 호출하여 DB 업데이트
     public void fetchAndUpdateStockData() {
-        String yesterday = LocalDate.now().minusDays(1).toString().replace("-", "");
-//        String fixedDate = "20241011"; // 테스트용 고정 날짜
+//        String yesterday = LocalDate.now().minusDays(1).toString().replace("-", "");
+        String fixedDate = "20241008"; // 테스트용 고정 날짜
 
         for (int pageNo = 1; pageNo <= 3; pageNo++) {
-            StockInfoRequestDto requestDto = new StockInfoRequestDto(serviceKey, "1000", String.valueOf(pageNo), "json", yesterday);
+            StockInfoRequestDto requestDto = new StockInfoRequestDto(serviceKey, "1000", String.valueOf(pageNo), "json", fixedDate);
             fetchStockData(requestDto);
         }
         log.info("주식 API 정보 OK");
