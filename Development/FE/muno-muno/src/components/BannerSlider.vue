@@ -72,15 +72,15 @@ export default {
     getOctopusImage(category) {
       switch (category) {
         case '예금':
-          return require('@/assets/octopusProduct_1.svg');
+          return require('@/assets/octopusProduct_1.png');
         case '적금':
-          return require('@/assets/octopusProduct_2.svg');
+          return require('@/assets/octopusProduct_2.png');
         case '펀드':
-          return require('@/assets/octopusProduct_3.svg');
+          return require('@/assets/octopusProduct_3.png');
         case '주식':
-          return require('@/assets/octopusProduct_4.svg');
+          return require('@/assets/octopusProduct_4.png');
         case '채권':
-          return require('@/assets/octopusProduct_5.svg');
+          return require('@/assets/octopusProduct_5.png');
       }
     },
     onBannerClick(banner) {
