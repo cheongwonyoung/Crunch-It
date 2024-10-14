@@ -40,7 +40,7 @@ public class MyDataService { // WebClient 를 사용해 마이데이터 서버�
                          StockInfoMapper stockInfoMapper,
                          UserAssetStatisticsMapper userAssetStatisticsMapper,
                          UserInvestHistoryMapper userInvestHistoryMapper, UserMapper userMapper) {
-        this.webClient = webClientBuilder.baseUrl("http://localhost:8080").build(); // 마이데이터 서버 기본 URL
+        this.webClient = webClientBuilder.baseUrl("http://localhost:8081").build(); // 마이데이터 서버 기본 URL
         this.accountMapper = accountMapper;
         this.transactionMapper = transactionMapper;
         this.stockMapper = stockMapper;
@@ -62,6 +62,15 @@ public class MyDataService { // WebClient 를 사용해 마이데이터 서버�
         }
         log.info("모든 사용자의 데이터가 업데이트되었습니다: {}", LocalDateTime.now());
     }
+
+    // 로그인한 사용자의 마이데이터 및 이번달 자산 정보 업데이트
+    public void userScheduledDataUpdate(Integer userId) {
+        int mdUserId = userMapper.getMdUserIdByUserId(userId);
+        log.info("사용자 아이디 {}", mdUserId);
+        updateUserData(mdUserId);
+        log.info("사용자의 데이터가 업데이트되었습니다: {}", LocalDateTime.now());
+    }
+
 
     // 모든 사용자의 월별 데이터를 이전
     public void monthlyDataTransfer() {

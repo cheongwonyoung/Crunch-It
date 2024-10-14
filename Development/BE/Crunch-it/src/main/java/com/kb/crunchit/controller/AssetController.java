@@ -3,6 +3,7 @@ package com.kb.crunchit.controller;
 import com.kb.crunchit.dto.response.analysis.AssetResponseDto;
 import com.kb.crunchit.security.CustomUserDetails;
 import com.kb.crunchit.service.AssetService;
+import com.kb.crunchit.service.MyDataService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
@@ -20,6 +21,7 @@ import java.util.Map;
 public class AssetController { // 사용자 자산 FE 전달
 
     private final AssetService assetService;
+    private final MyDataService myDataService;
 
     @GetMapping("/statistics")
     public ResponseEntity<?> getAssetStatistics(Authentication auth, // 로그인 사용자 정보
@@ -27,6 +29,8 @@ public class AssetController { // 사용자 자산 FE 전달
                                                 @RequestParam(required = false) Integer month) { // 설정한 월
         CustomUserDetails user = (CustomUserDetails) auth.getPrincipal();
         Integer userId = user.getUserId(); // 로그인한 사용자의 userId 가져오기
+
+        myDataService.userScheduledDataUpdate(userId);
 
         Map<String, AssetResponseDto> result = new HashMap<>();
         result.put("currentMonth", assetService.getMonthStatistics(userId, year, month)); // 설정한 해당월

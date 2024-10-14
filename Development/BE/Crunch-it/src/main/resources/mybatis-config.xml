@@ -28,6 +28,7 @@
         <typeAlias alias="KisStockProfitRank" type="com.kb.crunchit.entity.KisStockProfitRank"/>
         <typeAlias alias="KisStockAmountRank" type="com.kb.crunchit.entity.KisStockAmountRank"/>
         <typeAlias alias="KisStockDividendRank" type="com.kb.crunchit.entity.KisStockDividendRank"/>
+        <typeAlias alias="Octopus" type="com.kb.crunchit.entity.Octopus"/>
 
         <typeAlias alias="AssetStatistics" type="com.kb.crunchit.entity.AssetStatistics" />
         <typeAlias alias="InvestHistory" type="com.kb.crunchit.entity.InvestHistory" />
