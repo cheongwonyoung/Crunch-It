@@ -160,7 +160,9 @@ export default {
       reader.readAsDataURL(file);
     },
     connect() {
-      const socket = new window.SockJS('http://localhost:8080/ws');
+      const socket = new window.SockJS(
+        'http://ec2-3-38-135-108.ap-northeast-2.compute.amazonaws.com:8080/ws'
+      );
       this.stompClient = window.Stomp.over(socket);
       this.stompClient.connect({}, this.onConnected, this.onError);
     },

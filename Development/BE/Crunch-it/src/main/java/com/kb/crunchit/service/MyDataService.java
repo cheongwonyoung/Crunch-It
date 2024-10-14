@@ -40,7 +40,7 @@ public class MyDataService { // WebClient 를 사용해 마이데이터 서버�
                          StockInfoMapper stockInfoMapper,
                          UserAssetStatisticsMapper userAssetStatisticsMapper,
                          UserInvestHistoryMapper userInvestHistoryMapper, UserMapper userMapper) {
-        this.webClient = webClientBuilder.baseUrl("http://localhost:8081").build(); // 마이데이터 서버 기본 URL
+        this.webClient = webClientBuilder.baseUrl("http://host.docker.internal:8081").build(); // 마이데이터 서버 기본 URL
         this.accountMapper = accountMapper;
         this.transactionMapper = transactionMapper;
         this.stockMapper = stockMapper;

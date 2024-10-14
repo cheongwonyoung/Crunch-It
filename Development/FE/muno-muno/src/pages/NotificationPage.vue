@@ -15,8 +15,8 @@
 import { ref, onMounted } from 'vue';
 import HeaderB from '@/components/HeaderB.vue';
 import NotificationItem from '@/components/NotificationItem.vue';
-import apiClient from "@/axios";
-import {useRouter} from "vue-router";
+import apiClient from '@/axios';
+import { useRouter } from 'vue-router';
 
 export default {
   name: 'NotificationP',
@@ -26,16 +26,16 @@ export default {
   },
   setup() {
     const notifications = ref([]);
-    const router=useRouter();
+    const router = useRouter();
 
-    const goBack= ()=>{
+    const goBack = () => {
       router.push('/community');
-    }
-    onMounted(()=>{
-      console.log("Component mounted");
+    };
+    onMounted(() => {
+      console.log('Component mounted');
       fetchNotifications();
       subscribeToSSE();
-    })
+    });
 
     // 기존 알림 데이터를 가져오는 함수 (Authorization 헤더 추가)
     const fetchNotifications = async () => {
@@ -49,8 +49,8 @@ export default {
 
         const response = await apiClient.get('/notifications', {
           headers: {
-            Authorization: `Bearer ${token}` // JWT 토큰을 Authorization 헤더에 포함
-          }
+            Authorization: `Bearer ${token}`, // JWT 토큰을 Authorization 헤더에 포함
+          },
         });
         notifications.value = response.data;
         //console.log(response.data);
@@ -67,15 +67,14 @@ export default {
       }
       //실시간 알림 구독
       const eventSource = new EventSource(
-        `http://localhost:8080/notifications/subscribe?token=${token}`
+        `http://ec2-3-38-135-108.ap-northeast-2.compute.amazonaws.com:8080/notifications/subscribe?token=${token}`
       );
 
       eventSource.onmessage = function (event) {
         // const newNotification = JSON.parse(event.data);
         //console.log("new notification ",event.data);
 
-        notifications.value.push(
-            JSON.parse(event.data));
+        notifications.value.push(JSON.parse(event.data));
       };
 
       eventSource.onerror = function (error) {
@@ -95,7 +94,7 @@ export default {
 
     return {
       notifications,
-      goBack
+      goBack,
     };
   },
 };
