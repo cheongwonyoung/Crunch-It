@@ -52,6 +52,11 @@ export default {
           fundProduct: '글로벌 주식형 펀드',
         },
         {
+          subtitle: 'AI 문어의 추천',
+          title: '나와 닮은 문어들의 적금',
+          category: '적금',
+        },
+        {
           subtitle: '문어들의 안전자산',
           title: '수익률 No.1 채권',
           category: '채권',
