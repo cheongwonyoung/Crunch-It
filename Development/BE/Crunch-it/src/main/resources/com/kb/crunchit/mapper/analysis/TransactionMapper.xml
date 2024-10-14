@@ -53,21 +53,16 @@
         FROM user_income_outcome_transaction
         WHERE user_id = #{userId}
     </select>
-    <select id="getMonthlyOutcome" resultType="java.lang.Integer" parameterType="map">
-        SELECT sum(amount)
-        FROM user_income_outcome_transaction
-        WHERE user_id = #{userId} AND
-              transaction_type = 1 AND
-              register_date between #{startDate} AND #{endDate}
-    </select>
 
-    <!-- 총 지출 -->
+    <!-- 이번 달 총 지출 -->
     <!-- user_income_outcome_transaction (입출금내역) 테이블에서 transaction_type 이 지출(1) 인 금액의 합 -->
     <select id="calculateTotalOutcome" resultType="long">
         SELECT COALESCE(SUM(amount), 0)
         FROM user_income_outcome_transaction
         WHERE user_id = #{userId}
-          AND transaction_type = 1
+            AND transaction_type = 1
+            AND YEAR(register_date) = YEAR(CURRENT_DATE())
+            AND MONTH(register_date) = MONTH(CURRENT_DATE())
     </select>
 
 </mapper>

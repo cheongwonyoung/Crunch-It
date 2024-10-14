@@ -22,7 +22,6 @@ public interface TransactionMapper {
 
     List<Integer> getAllTransactionIds(int userId); // 특정 user_id의 모든 거래내역 ID를 가져옴
 
-    Integer getMonthlyOutcome(@Param("userId") Integer userId, @Param("startDate") String startDate, @Param("endDate") String endDate);
-    // 총 지출
+    // 이번달 총 지출
     long calculateTotalOutcome(int userId);
 }

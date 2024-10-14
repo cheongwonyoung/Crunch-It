@@ -166,6 +166,7 @@ export default {
         .then((res) => {
           const amount = res.data.total_monthly_outcome;
           this.expenseAmount = amount ? amount : 0;
+          console.log(this.expenseAmount);
         })
         .catch((err) => {
           console.log(err);

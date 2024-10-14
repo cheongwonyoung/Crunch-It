@@ -1,13 +1,18 @@
 <!-- Property.vue -->
 <template>
   <div class="property-container">
-    <div class="sticky-header">
+    <div class="fixed-header">
       <div class="property-header">
         <span class="property-header-text">자산분석</span>
       </div>
     </div>
 
-    <div class="scrollable-content">
+    <div v-if="isLoading" class="loading-container">
+      <div class="loading-spinner"></div>
+      <p>분석 중...</p>
+    </div>
+
+    <div v-else class="scrollable-content">
       <div class="sub-bar-container">
         <PropertySubBar
           :selectedMonth="selectedMonth"
@@ -15,8 +20,9 @@
           :lastUpdated="lastUpdated"
           @toggleCalendar="toggleCalendar"
         />
+      </div>
+      <div class="calendar-wrapper" v-if="showCalendar">
         <PropertyCalendar
-          v-if="showCalendar"
           :selectedMonth="selectedMonth"
           :selectedYear="selectedYear"
           @monthSelected="updateMonth"
@@ -52,13 +58,19 @@ export default {
     PropertyCardContainer,
   },
   data() {
+    const today = new Date();
+    const year = today.getFullYear();
+    const month = String(today.getMonth() + 1).padStart(2, '0');
+    const day = String(today.getDate()).padStart(2, '0');
+
     return {
-      selectedMonth: new Date().getMonth() + 1,
-      selectedYear: new Date().getFullYear(),
-      lastUpdated: '2024.10.01',
+      selectedMonth: today.getMonth() + 1,
+      selectedYear: year,
+      lastUpdated: `${year}.${month}.${day}`,
       showCalendar: false,
       chartData: null,
       cardData: null,
+      isLoading: false,
     };
   },
   methods: {
@@ -72,6 +84,7 @@ export default {
       this.fetchPropertyData();
     },
     async fetchPropertyData() {
+      this.isLoading = true;
       try {
         const response = await apiClient.get('/property/statistics', {
           params: {
@@ -117,6 +130,8 @@ export default {
         console.error('Error fetching property data:', error);
         this.chartData = null;
         this.cardData = null;
+      } finally {
+        this.isLoading = false;
       }
     },
     calculateChartLevels(data) {
@@ -167,51 +182,57 @@ export default {
   height: 100vh;
   display: flex;
   flex-direction: column;
+  background-color: var(--gr100);
 }
 
-.sticky-header {
-  position: sticky;
-  top: 0;
+.fixed-header {
+  position: fixed;
+  top: 44px; /* StatusBar 높이 */
+  left: 0;
+  right: 0;
   z-index: 1000;
   background-color: var(--gr100);
 }
 
 .property-header {
-  width: 375px;
+  width: 100%;
   height: 64px;
-  flex-shrink: 0;
   display: flex;
   align-items: center;
-  background-color: var(--gr100);
-  box-sizing: border-box;
   padding-left: 20px;
+  background-color: var(--gr100);
 }
 
 .property-header-text {
   font-size: 22px;
-  font-style: normal;
   font-weight: 600;
   line-height: 100%;
   color: var(--gr10);
-}
-
-.sub-bar-container {
-  position: relative;
-  z-index: 1000;
 }
 
 .scrollable-content {
   flex: 1;
   overflow-y: auto;
   -webkit-overflow-scrolling: touch;
-  position: relative;
-
-  &::-webkit-scrollbar {
-    display: none;
-  }
-
-  -ms-overflow-style: none;
   scrollbar-width: none;
+  padding-top: 64px; /* 헤더(64px) 높이 */
+}
+
+.scrollable-content::-webkit-scrollbar {
+  display: none;
+}
+
+.sub-bar-container {
+  position: sticky;
+  background-color: var(--gr100);
+  z-index: 999;
+}
+
+.calendar-wrapper {
+  position: sticky;
+  top: 50px;
+  background-color: var(--gr100);
+  z-index: 998;
 }
 
 .analysis {
@@ -221,10 +242,38 @@ export default {
 
 .analysis-text {
   color: var(--gr30);
-  font-family: Pretendard;
+  font-family: Pretendard, sans-serif;
   font-size: 20px;
-  font-style: normal;
   font-weight: 600;
   line-height: 150%;
+}
+
+.loading-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  font-size: 18px;
+  color: var(--gr30);
+}
+
+.loading-spinner {
+  border: 4px solid var(--gr70);
+  border-top: 4px solid var(--p50);
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+  animation: spin 1s linear infinite;
+  margin-bottom: 20px;
+}
+
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
 }
 </style>

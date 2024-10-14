@@ -22,17 +22,8 @@ public class HomeService {
         return userOctopusMapper.getUserOctopus(userId);
     }
 
-    public Integer getMonthlyOutcome(Integer userId){
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-        Date today = new Date();
-
-        Calendar calendar = Calendar.getInstance();
-        calendar.setTime(today);
-        calendar.set(Calendar.DAY_OF_MONTH, 1);
-        Date startOfMonth = calendar.getTime();
-        String startDate = sdf.format(startOfMonth);
-        String endDate = sdf.format(today);
-        return transactionMapper.getMonthlyOutcome(userId, startDate, endDate);
+    public long getMonthlyOutcome(Integer userId){
+        return transactionMapper.calculateTotalOutcome(userId);
     }
 
 }
