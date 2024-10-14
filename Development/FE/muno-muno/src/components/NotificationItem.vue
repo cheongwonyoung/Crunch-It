@@ -34,9 +34,9 @@ export default {
       required: true,
     },
   },
-  mounted() {
-    console.log("NotificationItem mounted with notification:", this.notification);
-  },
+  // mounted() {
+  //   console.log("NotificationItem mounted with notification:", this.notification);
+  // },
   computed: {
     // createdAt 배열 데이터를 2분 전, 3시간 전 등의 형식으로 변환
     formattedTime() {

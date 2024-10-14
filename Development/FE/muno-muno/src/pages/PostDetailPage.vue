@@ -11,7 +11,7 @@
       />
 
       <!-- 설정 아이콘 및 드롭다운 메뉴 -->
-      <div class="settings-menu">
+      <div  v-if="userId === post.writerId" class="settings-menu">
         <img
           src="@/assets/dots-vertical.svg"
           alt="dots-vertical"
@@ -72,6 +72,7 @@
     <CommentList
       :comments="comments"
       :replies="replies"
+      :user-id="userId"
       @update-comment-reply-count="updateCommentReplyCount"
       @update-comment="handleUpdateComment"
       @delete-comment="handleDeleteComment"
@@ -377,6 +378,7 @@ export default {
       post,
       comments,
       replies, // replies 데이터를 추가로 반환
+      userId,
       newComment,
       showSettingsMenu,
       formattedDate,
