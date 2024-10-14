@@ -92,15 +92,18 @@
                 apiClient
                     .get("/mypage/userInfo")
                     .then((response) => {
-                        const data = response.data.data;
-                        this.user.email = data.email;
-                        this.user.birthDate = data.birth;
-                        this.user.nickname = data.nickname;
-                        this.user.phoneNumber = data.phone_number;
-                        this.profileUrl = data.profile_url;
+                        const data = response?.data?.data;
+                        this.user.email = data?.email;
+                        this.user.birthDate = data?.birth;
+                        this.user.nickname = data?.nickname;
+                        this.user.phoneNumber = data?.phone_number;
+                        this.profileUrl = data?.profile_url;
                         this.setUserInfo({
-                            nickname: data.nickname,
-                            profileUrl: data.profileUrl,
+                            nickname: data?.nickname,
+                            profileUrl: data?.profile_url,
+                            salary: data?.salary,
+                            gender: data?.gender,
+                            birth: data?.birth,
                         });
                     })
                     .catch((error) => {

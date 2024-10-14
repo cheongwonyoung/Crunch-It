@@ -34,8 +34,8 @@ import HeaderB from '@/components/HeaderB.vue';
 import MessageUser from '@/components/MessageUser.vue';
 import MessageBot from '@/components/MessageOther.vue';
 import MessageInput from '@/components/MessageInput.vue';
-import { useUserStore } from "@/stores/userStore";
-import { mapState } from "pinia";
+import { useUserStore } from '@/stores/userStore';
+import { mapState } from 'pinia';
 import { useRoute } from 'vue-router';
 function decodeJwt(token) {
   if (!token) return null;
@@ -58,8 +58,8 @@ export default {
     MessageBot,
     MessageInput,
   },
-  computed : {
-    ...mapState(useUserStore, ["userInfo"]),
+  computed: {
+    ...mapState(useUserStore, ['userInfo']),
   },
   data() {
     return {
@@ -69,12 +69,13 @@ export default {
       currentRoomName: '거지방',
       user: null,
       nickname: '',
-      profile: this.profile
+      profile: this.profile,
     };
   },
   methods: {
     goBack() {
       this.$router.go(-1);
+      // this.$router.push('/community');
     },
     handleSendMessage(messageContent) {
       if (messageContent.trim() !== '') {
@@ -89,7 +90,7 @@ export default {
           image: null, // 텍스트 메시지에는 이미지가 없으므로 null
           profile: this.profile,
         };
-        console.log("여기야 !!" +message.profile)
+        console.log('여기야 !!' + message.profile);
         this.stompClient.send(
           `/topic/chat/${this.currentRoomId}`,
           {},
@@ -98,7 +99,6 @@ export default {
         this.messages.push(message);
         this.scrollToBottom();
       }
-      
     },
     handleSendImage(file) {
       const MAX_WIDTH = 800; // 최대 너비
@@ -111,7 +111,7 @@ export default {
         img.src = event.target.result;
 
         img.onload = () => {
-          const canvas = document.createElement("canvas");
+          const canvas = document.createElement('canvas');
           let width = img.width;
           let height = img.height;
 
@@ -129,11 +129,12 @@ export default {
           // Canvas에 이미지 그리기 및 압축
           canvas.width = width;
           canvas.height = height;
-          const ctx = canvas.getContext("2d");
+          const ctx = canvas.getContext('2d');
           ctx.drawImage(img, 0, 0, width, height);
 
           // Base64 인코딩된 이미지 생성
-          const base64Image = canvas.toDataURL("image/jpeg", QUALITY) + `#${Date.now()}`;
+          const base64Image =
+            canvas.toDataURL('image/jpeg', QUALITY) + `#${Date.now()}`;
 
           // WebSocket을 통해 이미지 전송
           const message = {
@@ -205,9 +206,9 @@ export default {
     this.user = decodeJwt(token);
     this.nickname = this.userInfo.nickname;
     this.profile = this.userInfo.profileUrl;
-    console.log(this.userInfo.nickname)
-    console.log(this.userInfo.profileUrl)
-    
+    console.log(this.userInfo.nickname);
+    console.log(this.userInfo.profileUrl);
+
     this.connect();
   },
   beforeUnmount() {

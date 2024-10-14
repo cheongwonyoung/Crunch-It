@@ -20,6 +20,13 @@
         WHERE md_user_id = #{mdUserId}
     </select>
 
+    <!-- userId로 mdUserId를 조회하는 쿼리 추가 -->
+    <select id="getMdUserIdByUserId" resultType="int">
+        SELECT md_user_id
+        FROM user
+        WHERE user_id = #{userId}
+    </select>
+
     <select id="findByEmail" resultType="User" parameterType="string">
         SELECT user_id      AS userId,
                nickname     AS nickname,

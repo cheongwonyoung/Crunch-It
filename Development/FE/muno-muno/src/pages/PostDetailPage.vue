@@ -50,11 +50,12 @@
     <div class="post-actions">
       <div class="likes-comments">
         <img
-          src="@/assets/heart-rounded.svg"
-          alt="like"
-          @click="likePost"
-          class="action-icon"
+            :src="likedByUser===true ? require('@/assets/filledHeart.svg') : require('@/assets/heart-rounded.svg')"
+            alt="like"
+            @click="likePost"
+            class="action-icon"
         />
+
         <!-- Fix the class binding for likedByUser -->
         <span :class="{ liked: likedByUser }" class="likes-count"
           >공감 {{ post.likes }}</span
@@ -101,6 +102,7 @@ import { ref, computed, onMounted } from 'vue';
 import apiClient from '../axios';
 import { useRoute, useRouter } from 'vue-router';
 import CommentList from '@/components/CommentList.vue';
+
 
 export default {
   name: 'PostDetailP',
@@ -338,6 +340,7 @@ export default {
           writerId: post.value.writerId,
           userId,
         };
+        console.log(likedByUser.value);
 
         // 좋아요 상태에 따라 서버에 올바른 요청을 보냄
         if (likedByUser.value) {
@@ -358,6 +361,7 @@ export default {
             likedByUser.value = true;
             post.value.likes += 1;
             // 로컬 스토리지에 좋아요 상태 저장
+            console.log("@@@@@@@@@@@@@@@@@@");
             localStorage.setItem(`liked_${postId}`, 'true');
           }
         }
@@ -395,6 +399,7 @@ export default {
       nickname,
       goBack,
       updateCommentReplyCount,
+      likedByUser
     };
   },
 };
@@ -524,9 +529,7 @@ export default {
   margin-bottom: 20px;
 }
 
-.liked {
-  color: red;
-}
+
 
 .back-link {
   display: inline-block;
@@ -583,12 +586,6 @@ export default {
 .comment-count:hover {
   text-decoration: underline;
 }
-
-.liked {
-  color: red; /* 하트 아이콘을 빨간색으로 */
-  fill: red;  /* SVG나 이미지의 색을 빨간색으로 변경 */
-}
-
 
 .comment-input {
   position: fixed;

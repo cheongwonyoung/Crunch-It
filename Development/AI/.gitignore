@@ -1,6 +1,17 @@
 # Created by https://www.toptal.com/developers/gitignore/api/python,venv
 # Edit at https://www.toptal.com/developers/gitignore?templates=python,venv
 
+# Installed packages (venv-related paths, already covered)
+venv/
+
+# Package management
+Pipfile.lock  # If using Pipenv
+poetry.lock   # If using Poetry
+
+# TensorFlow-specific cache (if applicable)
+__pycache__/
+
+
 ### Python ###
 # Byte-compiled / optimized / DLL files
 __pycache__/
@@ -12,7 +23,7 @@ __pycache__/
 
 # Distribution / packaging
 .Python
-build/
+build
 develop-eggs/
 dist/
 downloads/

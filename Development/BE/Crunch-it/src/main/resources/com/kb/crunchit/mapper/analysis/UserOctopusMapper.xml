@@ -4,11 +4,12 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="com.kb.crunchit.mapper.analysis.UserOctopusMapper">
-    <select id="getUserOctopus" resultType="com.kb.crunchit.entity.Octopus" parameterType="integer">
+    <select id="getUserOctopus" resultType="Octopus" parameterType="integer">
         select bond_octopus_level as bondOctopusLevel,
                fund_octopus_level as fundOctopusLevel,
                saving_octopus_level as savingOctopusLevel,
-               stock_octopus_level as stockOctopusLevel
+               stock_octopus_level as stockOctopusLevel,
+               outcome_octopus as outcomeOctopusLevel
         from user_octopus
         where user_id = #{userId};
     </select>
