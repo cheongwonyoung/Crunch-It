@@ -158,6 +158,7 @@ export default {
   padding-left: 25px;
   box-sizing: border-box;
   cursor: pointer;
+  overflow: hidden;
 }
 
 .banner-content {
@@ -191,10 +192,27 @@ export default {
   margin-right: 16px;
 }
 
+@keyframes popUpAnimation {
+  0% {
+    transform: translateY(-2);
+  }
+  50% {
+    transform: translateY(-9.5px); /* 위로 10px 올라감 */
+  }
+  100% {
+    transform: translateY(-2);
+  }
+}
+
+.octopus-image {
+  position: relative; /* 문어 이미지가 배너 안에서 움직이도록 위치 지정 */
+  transform: translateY(10px); /* 문어 이미지를 10px 아래로 이동 */
+}
+
 .octopus-image img {
   width: 100%;
   height: 100%;
   object-fit: cover;
-  clip-path: inset(2px 0 0 0);
+  animation: popUpAnimation 1.7s ease-in-out infinite;
 }
 </style>

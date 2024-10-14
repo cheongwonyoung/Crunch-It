@@ -1,6 +1,9 @@
 package com.kb.crunchit.controller;
 
+import com.kb.crunchit.service.MyDataService;
 import com.kb.crunchit.service.RecommendationApiService;
+import com.kb.crunchit.service.RecommendationTopService;
+import com.kb.crunchit.service.StockInfoService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpHeaders;
@@ -9,6 +12,8 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDateTime;
+
 @RestController
 @RequestMapping("/productinfo")
 @RequiredArgsConstructor
@@ -16,6 +21,9 @@ import org.springframework.web.bind.annotation.*;
 public class RecommendationApiController {
 
     private final RecommendationApiService recommendationApiService;
+    private final StockInfoService stockInfoService;
+    private final MyDataService myDataService;
+    private final RecommendationTopService recommendationTopService;
 
     // 예금 상품 데이터 업데이트
     @GetMapping("/update/deposit")
@@ -121,26 +129,30 @@ public class RecommendationApiController {
 
     // 모든 상품 유형의 데이터 업데이트
     @GetMapping("/update/all")
-    public ResponseEntity<String> updateAllProductData(
-            @RequestParam(defaultValue = "20240101") String beginBasDt) {
-        log.debug("모든 상품 데이터 업데이트 호출됨");
+    public ResponseEntity<String> updateAllProductData() {
 
-        try {
-            recommendationApiService.fetchAndUpdateAllProductData();
+        log.info("이번달 자산정보 업데이트 시작 : {}", LocalDateTime.now());
+        stockInfoService.fetchAndUpdateStockData("20241008"); // 주식 API 호출하여 DB 업데이트, 잘 받아옴
+        myDataService.scheduledDataUpdate(); // 모든 사용자의 마이데이터 및 이번달 자산 정보 업데이트
+        log.info("이번달 자산정보 업데이트 끝 : {}", LocalDateTime.now());
 
-            HttpHeaders headers = new HttpHeaders();
-            headers.setContentType(MediaType.APPLICATION_JSON);
+        // KIS Token
+        String token = recommendationTopService.getKoreaToken();
+        // 당기순이익 상위
+        recommendationTopService.getProfitAssetIndexRanking(token);
+        // 시가 총액 상위
+        recommendationTopService.getAmountRanking(token);
+        // 배당률 상위
+        recommendationTopService.getDividendRanking(token);
 
-            return ResponseEntity.ok().headers(headers).body("{\"message\": \"모든 데이터 업데이트 완료\"}");
-        } catch (Exception e) {
-            log.error("모든 데이터 업데이트 중 오류 발생: {}", e.getMessage(), e);
+        // 예금, 적금, 펀드, 채권
+        String beginBasDt = "20240101";
+        recommendationApiService.fetchAndUpdateDepositData(beginBasDt);
+        recommendationApiService.fetchAndUpdateSavingData(beginBasDt);
+        recommendationApiService.fetchAndUpdateFundData(beginBasDt);
+        recommendationApiService.fetchAndUpdateBondData(beginBasDt);
 
-            HttpHeaders headers = new HttpHeaders();
-            headers.setContentType(MediaType.APPLICATION_JSON);
+        return ResponseEntity.ok().body("{\"message\": \"데이터 업데이트 완료\"}");
 
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                    .headers(headers)
-                    .body("{\"error\": \"모든 데이터 업데이트 중 오류 발생: " + e.getMessage() + "\"}");
-        }
     }
 }

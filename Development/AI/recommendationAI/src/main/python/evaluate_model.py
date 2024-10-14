@@ -1,5 +1,3 @@
-# evaluate_model.py 파일 수정 내용
-
 import numpy as np
 import pandas as pd
 from sklearn.model_selection import train_test_split
@@ -51,6 +49,7 @@ x_train, x_test, y_train, y_test = train_test_split(
 
 # 모델 평가
 try:
+    # y_test를 인덱스와 맞추기 위해 x_test를 두 개의 입력으로 사용하는 방법을 수정합니다.
     test_loss, test_accuracy = model.evaluate([x_test, x_test], y_test, verbose=2)
     print(f"Test Loss: {test_loss:.4f}, Test Accuracy: {test_accuracy:.4f}")
 except Exception as e:

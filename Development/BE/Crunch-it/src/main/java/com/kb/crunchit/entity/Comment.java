@@ -10,6 +10,7 @@ public class Comment {
     public int commentId;
     public int boardId;
     public int writerId;
+    public String nickname;
     public String content;
     public int likes;
     public LocalDateTime registerDate;

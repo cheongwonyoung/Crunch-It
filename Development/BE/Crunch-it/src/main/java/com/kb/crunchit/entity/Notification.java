@@ -8,6 +8,7 @@ import java.time.LocalDateTime;
 public class Notification {
     private Integer notificationId;
     private Integer userId;
+    private String nickname;
     private String title;
     private String message;
     private LocalDateTime createdAt;

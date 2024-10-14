@@ -10,6 +10,7 @@ public class CommentResponseDTO {
     private int boardId;
     private int writerId;
     private int commentId;
+    private String nickname;
     private String content;
     private int likes;
     private LocalDateTime registerDate;  // 댓글 등록일

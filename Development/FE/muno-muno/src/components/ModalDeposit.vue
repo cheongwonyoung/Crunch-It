@@ -15,7 +15,10 @@
         12개월 저축 금리: {{ product.yearOption.intrRate || 'N/A' }}% (우대
         {{ product.yearOption.intrRate2 || 'N/A' }}%)
       </p>
-      <button @click="close">닫기</button>
+      <div class="modal-buttons">
+        <button @click="closeModal">닫기</button>
+        <button>상품 보러 가기</button>
+      </div>
     </div>
   </div>
 </template>
@@ -28,7 +31,7 @@ export default {
     product: Object,
   },
   methods: {
-    close() {
+    closeModal() {
       this.$emit('close');
     },
   },
@@ -74,7 +77,7 @@ export default {
   margin-bottom: 8px;
 }
 
-.modal-content h2 {
+.product-title {
   margin: 0 0 12px 0;
   color: var(--gr30);
   text-align: center;

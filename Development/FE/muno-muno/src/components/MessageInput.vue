@@ -58,7 +58,11 @@ export default {
       const file = event.target.files[0];
       if (file) {
         this.$emit('sendImage', file); // 이미지 파일 상위 컴포넌트에 전달
+        this.resetFileInput(); // 파일 입력 초기화
       }
+    },
+    resetFileInput() {
+      this.$refs.fileInput.value = ''; // 파일 선택 초기화
     },
   },
 };
