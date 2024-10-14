@@ -98,10 +98,8 @@
 <script>
 import { ref, computed, onMounted } from 'vue';
 import apiClient from '../axios';
-//import axios from 'axios';
 import { useRoute, useRouter } from 'vue-router';
 import CommentList from '@/components/CommentList.vue';
-// import CommentInput from "@/components/CommentInput.vue";
 
 export default {
   name: 'PostDetailP',
@@ -131,7 +129,7 @@ export default {
     const replies = ref([]); // 모든 답글 데이터를 저장
     const newComment = ref(''); //댓글 입력 필드 상태
     const showSettingsMenu = ref(false);
-    const likedByUser = ref(false); // likedByUser 변수 정의
+
     const goBack = () => {
       router.push('/community');
     };
@@ -330,6 +328,7 @@ export default {
         }
       }
     };
+    const likedByUser = ref(false); // likedByUser 변수 정의
 
     const likePost = async () => {
       try {
@@ -339,22 +338,40 @@ export default {
           userId,
         };
 
+        // 좋아요 상태에 따라 서버에 올바른 요청을 보냄
         if (likedByUser.value) {
-          likedByUser.value = false;
-          post.value.likes -= 1;
-          await apiClient.post(`${LIKE_API_URL}`, payload);
+          // 좋아요 취소 요청
+          const response = await apiClient.post(`${LIKE_API_URL}`, payload);
+          if (response.status === 200) {
+            // 서버 응답 성공 시에만 상태 업데이트
+            likedByUser.value = false;
+            post.value.likes -= 1;
+            // 로컬 스토리지에서 좋아요 상태 제거
+            localStorage.removeItem(`liked_${postId}`);
+          }
         } else {
-          likedByUser.value = true;
-          post.value.likes += 1;
-          await apiClient.post(`${LIKE_API_URL}`, payload);
+          // 좋아요 추가 요청
+          const response = await apiClient.post(`${LIKE_API_URL}`, payload);
+          if (response.status === 200) {
+            // 서버 응답 성공 시에만 상태 업데이트
+            likedByUser.value = true;
+            post.value.likes += 1;
+            // 로컬 스토리지에 좋아요 상태 저장
+            localStorage.setItem(`liked_${postId}`, 'true');
+          }
         }
-        console.log("Post data after likePost:", post.value);
       } catch (error) {
         console.error('Error liking the post:', error);
       }
     };
 
-    onMounted(fetchPostAndComments);
+// 페이지가 로드될 때 로컬 스토리지에서 좋아요 상태 불러오기
+    onMounted(() => {
+      const likedStatus = localStorage.getItem(`liked_${postId}`);
+      likedByUser.value = likedStatus === 'true'; // 로컬 스토리지에서 상태 설정
+      fetchPostAndComments(); // 게시글과 댓글 데이터 불러오기
+    });
+
 
     return {
       post,
