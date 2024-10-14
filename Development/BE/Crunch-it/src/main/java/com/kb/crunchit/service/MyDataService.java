@@ -63,6 +63,15 @@ public class MyDataService { // WebClient 를 사용해 마이데이터 서버�
         log.info("모든 사용자의 데이터가 업데이트되었습니다: {}", LocalDateTime.now());
     }
 
+    // 로그인한 사용자의 마이데이터 및 이번달 자산 정보 업데이트
+    public void userScheduledDataUpdate(Integer userId) {
+        int mdUserId = userMapper.getMdUserIdByUserId(userId);
+        log.info("사용자 아이디 {}", mdUserId);
+        updateUserData(mdUserId);
+        log.info("사용자의 데이터가 업데이트되었습니다: {}", LocalDateTime.now());
+    }
+
+
     // 모든 사용자의 월별 데이터를 이전
     public void monthlyDataTransfer() {
         List<Integer> allUsers = userMapper.getAllUsers(); // 모든 사용자 정보 가져옴

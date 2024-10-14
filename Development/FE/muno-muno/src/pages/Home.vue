@@ -50,7 +50,7 @@
 
     <!-- 빨간 문어 이미지 추가 -->
     <div class="red-octopus-container">
-      <img src="@/assets/red_octopus.svg" alt="빨간 문어" class="red-octopus" />
+      <img src="@/assets/red_octopus.png" alt="빨간 문어" class="red-octopus" />
     </div>
 
     <!-- TabBar 컴포넌트 사용 -->
@@ -89,7 +89,7 @@ export default {
           levelImages: [
             require('@/assets/octopus_a1.svg'),
             require('@/assets/octopus_a2.svg'),
-            require('@/assets/octopus_a3.svg'),
+            require('@/assets/octopus_a3.png'),
           ],
           buttonImage: require('@/assets/button_a.svg'),
         },
@@ -97,8 +97,8 @@ export default {
           id: 2,
           name: '주식',
           levelImages: [
-            require('@/assets/octopus_b1.svg'),
-            require('@/assets/octopus_b2.svg'),
+            require('@/assets/octopus_b1.png'),
+            require('@/assets/octopus_b2.png'),
             require('@/assets/octopus_b3.svg'),
           ],
           buttonImage: require('@/assets/button_b.svg'),
@@ -108,7 +108,7 @@ export default {
           name: '펀드',
           levelImages: [
             require('@/assets/octopus_c1.svg'),
-            require('@/assets/octopus_c2.svg'),
+            require('@/assets/octopus_c2.png'),
             require('@/assets/octopus_c3.svg'),
           ],
           buttonImage: require('@/assets/button_c.svg'),
@@ -118,7 +118,7 @@ export default {
           name: '채권',
           levelImages: [
             require('@/assets/octopus_d1.svg'),
-            require('@/assets/octopus_d2.svg'),
+            require('@/assets/octopus_d2.png'),
             require('@/assets/octopus_d3.svg'),
           ],
           buttonImage: require('@/assets/button_d.svg'),
@@ -166,6 +166,7 @@ export default {
         .then((res) => {
           const amount = res.data.total_monthly_outcome;
           this.expenseAmount = amount ? amount : 0;
+          console.log(this.expenseAmount);
         })
         .catch((err) => {
           console.log(err);
@@ -210,7 +211,7 @@ export default {
 .red-octopus-container {
   display: flex;
   position: absolute;
-  bottom: 150px;
+  bottom: 148px;
   left: 27px;
 }
 

@@ -3,13 +3,6 @@
     <!-- HeaderX 컴포넌트를 사용 -->
     <HeaderX title="커뮤니티" :icons="headerIcons" />
 
-    <!-- 알림 아이콘 추가 -->
-    <!--      <div class="icons">-->
-    <!--        <button @click="goToNotifications" class="notification-icon">-->
-    <!--          <img src="@/assets/notification.svg" alt="Notification Icon" class="icon-svg" />-->
-    <!--        </button>-->
-    <!--      </div>-->
-
     <!-- 채팅 메시지 섹션 -->
     <div class="chat-header">
       <span>💬 문어봐도돼요?</span>
@@ -85,10 +78,10 @@ export default {
     ]);
 
     const communityCategories = ref([
-      { name: '문어방', imgSrc: require('@/assets/muno_room.svg') },
-      { name: '거지방', imgSrc: require('@/assets/geoji_room.svg') },
-      { name: '종토방', imgSrc: require('@/assets/jongto_room.svg') },
-      { name: '자유방', imgSrc: require('@/assets/free_room.svg') },
+      { name: '문어방', imgSrc: require('@/assets/muno_room.png') },
+      { name: '거지방', imgSrc: require('@/assets/geoji_room.png') },
+      { name: '종토방', imgSrc: require('@/assets/jongto_room.png') },
+      { name: '자유방', imgSrc: require('@/assets/free_room.png') },
     ]);
 
     // 선택된 방 ID와 이름을 저장할 변수
@@ -224,6 +217,8 @@ export default {
 
 .category-img {
   margin-bottom: 6px;
+  width: 60px;
+  height: 60px;
 }
 
 .category-name {

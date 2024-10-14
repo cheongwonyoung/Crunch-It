@@ -2,13 +2,12 @@
   <div class="start-modal" v-if="isVisible">
     <div class="start-modal-overlay" @click="closeModal"></div>
     <div class="start-modal-content">
-      <img src="@/assets/profile.svg" alt="Illustration" class="modal-image" />
+      <img src="@/assets/start.png" alt="Illustration" class="modal-image" />
       <div class="content">
-        <h1>쉽고 재미있는 자산 관리!</h1>
+        <h1>쉽고 재미있는 자산 관리</h1>
         <p class="description">
-          매달 펼쳐지는 자산 문어와 악당 문어의 대결!<br />
-          자산 문어와 악당 문어의 대결에 도전하세요.<br />
-          이번 달 챔피언이 될 준비가 되셨나요? 🐙
+          매달 펼쳐지는 자산 문어와 악당 문어의 대결.<br />
+          자산 문어와 악당 문어의 대결에 도전하세요!<br />
         </p>
 
         <div class="modal-buttons">
@@ -82,7 +81,7 @@ export default {
 .modal-image {
   width: 100px;
   height: auto;
-  margin-top: 24px;
+  margin-top: 0;
 }
 
 .content {
@@ -93,7 +92,8 @@ h1 {
   color: var(--gr30);
   font-size: 22px;
   font-weight: 550;
-  line-height: 1.5;
+  line-height: 100%;
+  margin: 14px 0 12px 0;
 }
 
 .description {

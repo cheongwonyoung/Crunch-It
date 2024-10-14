@@ -26,4 +26,6 @@ public interface UserMapper {
 
     // mdUserId로 userId를 조회하는 메서드 추가
     int getUserIdByMdUserId(int mdUserId);
+
+    int getMdUserIdByUserId(Integer userId);
 }
