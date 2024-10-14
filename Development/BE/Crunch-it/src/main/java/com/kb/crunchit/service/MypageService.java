@@ -19,6 +19,8 @@ public class MypageService {
                 .email(user.getEmail())
                 .birth(user.getBirth())
                 .phone_number(user.getPhoneNumber())
+                .gender(user.getGender())
+                .salary(user.getSalary())
                 .profile_url(user.getProfileUrl())
                 .build();
     }
