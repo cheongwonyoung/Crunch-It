@@ -1,7 +1,11 @@
 <template>
   <div v-if="product" class="product-item" @click="selectProduct">
-    <div class="product-badge">{{ product?.korCoNm || '금융사 없음' }}</div>
-    <div class="product-title">{{ product?.finPrdtNm || '상품명 없음' }}</div>
+    <div class="product-header">
+      <div class="product-badge">{{ product?.korCoNm || '금융사 없음' }}</div>
+    </div>
+    <div class="product-title">
+      <span>{{ product?.finPrdtNm || '상품명 없음' }}</span>
+    </div>
   </div>
   <div v-else>
     <p>상품 정보가 없습니다.</p>
@@ -38,6 +42,13 @@ export default {
   margin: 6px 20px;
 }
 
+.product-header {
+  width: 100%;
+  display: flex;
+  justify-content: flex-start;
+  margin-bottom: 10px;
+}
+
 .product-badge {
   padding: 4px 8px;
   border-radius: 10px;
@@ -51,6 +62,15 @@ export default {
   color: var(--gr10);
   font-size: 18px;
   font-weight: 600;
-  margin-top: 10px;
+  width: 100%;
+  text-align: left;
+}
+
+.product-title span {
+  display: inline-block;
+  word-break: keep-all;
+  overflow-wrap: break-word;
+  max-width: 100%;
+  line-height: 1.3;
 }
 </style>

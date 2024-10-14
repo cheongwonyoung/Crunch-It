@@ -38,6 +38,7 @@
       </div>
       <div v-else>
         <!-- 리스트가 계속 렌더링되도록 유지 -->
+
         <component
           v-for="product in products"
           :is="getProductItemComponent()"

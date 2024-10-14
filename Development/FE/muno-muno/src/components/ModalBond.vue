@@ -5,7 +5,9 @@
       <div class="product-badge">{{ product.issuerName }}</div>
 
       <!-- 금융 상품 제목 -->
-      <div class="product-title">{{ product.productName.slice(4) }}</div>
+      <div class="product-title">
+        <span>{{ product.productName.slice(4) }}</span>
+      </div>
 
       <!-- 금융 상품 정보 -->
       <p>등급: {{ product.creditRating || 'AAA' }}</p>
@@ -67,6 +69,7 @@ export default {
   background: var(--gr100);
   box-shadow: 0px 0px 10px 0px rgba(0, 0, 0, 0.1);
   text-align: center;
+  font-family: 'Pretendard', sans-serif;
 }
 
 .product-badge {
@@ -79,25 +82,30 @@ export default {
   justify-content: center;
   align-items: center;
   background: var(--p70);
-  margin-bottom: 8px;
+  margin-bottom: 12px;
 }
 
 .product-title {
-  margin: 0 0 12px 0;
+  margin: 0 0 16px 0;
   color: var(--gr30);
-  text-align: center;
   font-size: 22px;
   font-weight: 550;
-  line-height: 100%;
+}
+
+.product-title span {
+  display: inline-block;
+  word-break: keep-all;
+  overflow-wrap: break-word;
+  line-height: 1.3;
+  max-width: 100%;
 }
 
 .modal-content p {
-  margin: 6px 0;
+  margin: 8px 0;
   color: var(--gr50);
-  text-align: center;
   font-size: 14px;
   font-weight: 350;
-  line-height: 100%;
+  line-height: 1.4;
 }
 
 .modal-buttons {
@@ -105,6 +113,7 @@ export default {
   flex-direction: row;
   justify-content: space-between;
   margin-top: 26px;
+  font-family: 'Pretendard', sans-serif;
 }
 
 .modal-buttons button {
@@ -115,21 +124,18 @@ export default {
   width: 134px;
   height: 48px;
   flex-shrink: 0;
+  font-size: 16px;
+  font-weight: 500;
+  font-family: 'Pretendard', sans-serif;
 }
 
 .modal-buttons button:first-child {
-  font-size: 16px;
   background: var(--gr70);
   color: var(--gr50);
-  font-weight: 500;
-  line-height: 100%;
 }
 
 .modal-buttons button:last-child {
-  font-size: 16px;
   background: var(--p10);
   color: var(--gr100);
-  font-weight: 500;
-  line-height: 100%;
 }
 </style>
