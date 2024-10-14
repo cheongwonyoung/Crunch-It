@@ -91,7 +91,7 @@ export default {
             require('@/assets/octopus_a2.svg'),
             require('@/assets/octopus_a3.png'),
           ],
-          buttonImage: require('@/assets/button_a.svg'),
+          buttonImage: require('@/assets/button_a.png'),
         },
         {
           id: 2,
@@ -101,7 +101,7 @@ export default {
             require('@/assets/octopus_b2.png'),
             require('@/assets/octopus_b3.svg'),
           ],
-          buttonImage: require('@/assets/button_b.svg'),
+          buttonImage: require('@/assets/button_b.png'),
         },
         {
           id: 3,
@@ -111,7 +111,7 @@ export default {
             require('@/assets/octopus_c2.png'),
             require('@/assets/octopus_c3.svg'),
           ],
-          buttonImage: require('@/assets/button_c.svg'),
+          buttonImage: require('@/assets/button_c.png'),
         },
         {
           id: 4,
@@ -121,7 +121,7 @@ export default {
             require('@/assets/octopus_d2.png'),
             require('@/assets/octopus_d3.svg'),
           ],
-          buttonImage: require('@/assets/button_d.svg'),
+          buttonImage: require('@/assets/button_d.png'),
         },
       ],
     };
