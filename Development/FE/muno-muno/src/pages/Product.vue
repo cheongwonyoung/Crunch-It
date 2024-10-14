@@ -181,6 +181,7 @@ export default {
         this.loading = true; // API 요청 전 로딩 시작
         try {
           const response = await apiClient.get(apiUrl);
+          console.log(response.data);
           switch (category) {
             case '예금':
               this.products = response?.data?.depositList || [];
