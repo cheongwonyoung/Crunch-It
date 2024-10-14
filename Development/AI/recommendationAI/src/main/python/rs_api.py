@@ -12,8 +12,11 @@ app = Flask(__name__)
 CORS(app)
 
 # 모델 로드
-model = load_model(Config.getNNModel(), compile=False, custom_objects={'tf': tf})
-model.summary()
+try:
+    model = load_model(Config.getNNModel(), compile=False, custom_objects={'tf': tf})
+    model.summary()
+except Exception as e:
+    print("모델 로드 중 오류 발생:", str(e))
 
 df = DataStore.getNNFileOutput()
 print("데이터프레임 컬럼:", df.columns)
@@ -167,4 +170,4 @@ def productRecommendationApi():
             return jsonify({"message": "예측 중 오류가 발생했습니다.", "error": str(e)}), 500
 
 if __name__ == "__main__":
-    app.run(debug=True)
+    app.run(host='0.0.0.0', port=5000, debug=True)

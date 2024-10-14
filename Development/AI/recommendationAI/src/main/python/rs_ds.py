@@ -34,8 +34,9 @@ IN_HEADERS = [
     PRODUCT_DEVIDEND_COLUMN, PRODUCT_ASSET_CLASS_COLUMN
 ]
 
-input_file = 'C:/KBprojct/Crunch-It/Development/AI/recommendationAI/src/main/resources/CUST_INVESTMENT.csv'
-output_file = 'C:/KBprojct/Crunch-It/Development/AI/recommendationAI/output/data_reference.csv'
+input_file = './src/main/resources/CUST_INVESTMENT.csv'
+output_file = './output/data_reference.csv'
+
 
 # CSV 데이터 읽기
 in_df = pd.read_csv(

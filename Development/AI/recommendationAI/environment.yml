@@ -1,0 +1,23 @@
+name: myenv
+channels:
+    - conda-forge
+    - defaults
+dependencies:
+    - python=3.10.1
+    - wheel
+    - gcc
+    - gxx
+    - numpy
+    - pandas
+    - hdf5
+    - jinja2=3.0.3
+    - itsdangerous=2.0.1
+    - werkzeug=2.0.3
+    - pip
+    - pip:
+          - tensorflow==2.13.1 # 또는 다른 버전
+          - tables
+          - pyyaml
+          - scipy
+          - flask
+          - flask_cors

@@ -31,16 +31,15 @@ cd Development/AI/recommendationAI
 source venv/Scripts/activate
 
 pip install tensorflow==2.3.1
+pip install jinja2==3.0.3
+pip install itsdangerous==2.0.1
+pip install werkzeug==2.0.3
 
 # 새로운 bash에서
 
 cd Development/AI/recommendationAI
 
 source venv/Scripts/activate
-
-pip install jinja2==3.0.3
-pip install itsdangerous==2.0.1
-pip install werkzeug==2.0.3
 
 # Train the neural network (경로 주의)
 
