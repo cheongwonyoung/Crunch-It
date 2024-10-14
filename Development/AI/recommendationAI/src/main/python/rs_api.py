@@ -1,14 +1,9 @@
 import tensorflow as tf
 import pandas as pd
 import numpy as np
-
 from flask import Flask, request, jsonify
 from flask_cors import CORS
-
-from tensorflow.keras import Model
 from tensorflow.keras.models import load_model
-
-# custom class
 from config import Config
 import rs_ds as ds
 from rs_ds import DataStore
@@ -16,197 +11,160 @@ from rs_ds import DataStore
 app = Flask(__name__)
 CORS(app)
 
-model = load_model(Config.getNNModel(), compile=False)
+# 모델 로드
+model = load_model(Config.getNNModel(), compile=False, custom_objects={'tf': tf})
+model.summary()
 
-# read file
 df = DataStore.getNNFileOutput()
+print("데이터프레임 컬럼:", df.columns)
 
-
-@app.route("/recommendation/product", methods=['GET', 'POST'])
+@app.route("/recommendation/product", methods=['POST'])
 def productRecommendationApi():
     content = request.json
+    print("요청 내용:", content)
+    print(df.head())
 
-    desired_user = content["user"]
-    desired_age = content["age"]
+    # 필수 입력값 확인
+    if not content or not all(key in content for key in ["birth", "gender", "salary"]):
+        return jsonify({"message": "필수 입력값이 누락되었습니다."}), 400
+
+    desired_birth = pd.to_datetime(content["birth"], format='%Y-%m-%d', errors='coerce')
     desired_gender = content["gender"]
-    desired_marital_status = content["maritalStatus"]
-    desired_have_child = content["haveChild"]
-    desired_education = content["education"]
+    desired_salary = float(content["salary"])
 
-    batch_size = 256
-    # 2.47 ms
-    desired_user_index = df[ds.USER_INDEX_COLUMN].max() + 1 if df[df[ds.USER_COLUMN] == desired_user].empty else df[df[ds.USER_COLUMN] == desired_user][ds.USER_INDEX_COLUMN].to_numpy()[
-        0]
-    desired_age_index = df[ds.AGE_INDEX_COLUMN].max() + 1 if df[df[ds.AGE_COLUMN]
-                                                                == desired_age].empty else df[df[ds.AGE_COLUMN]
-                                                                                              == desired_age][ds.AGE_INDEX_COLUMN].to_numpy()[0]
-    desired_gender_index = df[ds.GENDER_INDEX_COLUMN].max() + 1 if df[df[ds.GENDER_COLUMN]
-                                                                      == desired_gender].empty else df[df[ds.GENDER_COLUMN]
-                                                                                                       == desired_gender][ds.GENDER_INDEX_COLUMN].to_numpy()[0]
-    desired_marital_status_index = df[ds.MARITAL_STATUS_INDEX_COLUMN].max() + 1 if df[df[ds.MARITAL_STATUS_COLUMN]
-                                                                                      == desired_marital_status].empty else df[df[ds.MARITAL_STATUS_COLUMN]
-                                                                                                                               == desired_marital_status][ds.MARITAL_STATUS_INDEX_COLUMN].to_numpy()[0]
-    desired_have_child_index = df[ds.HAVE_CHILD_INDEX_COLUMN].max() + 1 if df[df[ds.HAVE_CHILD_COLUMN]
-                                                                              == desired_have_child].empty else df[df[ds.HAVE_CHILD_COLUMN]
-                                                                                                                   == desired_have_child][ds.HAVE_CHILD_INDEX_COLUMN].to_numpy()[0]
-    desired_education_index = df[ds.EDUCATION_INDEX_COLUMN].max() + 1 if df[df[ds.EDUCATION_COLUMN]
-                                                                            == desired_education].empty else df[df[ds.EDUCATION_COLUMN]
-                                                                                                                == desired_education][ds.EDUCATION_INDEX_COLUMN].to_numpy()[0]
-    # 17.2 ms
-    # # if user already process the product remove it from the list
-    # # get a view on users processed products
-    products_currently_owned_by_user = df[df[ds.USER_INDEX_COLUMN] ==
-                                          desired_user_index][ds.PRODUCT_INDEX_COLUMN].to_numpy()
+    # 입력값 유효성 검사
+    if pd.isnull(desired_birth) or desired_gender not in [0, 1] or desired_salary <= 0:
+        return jsonify({"message": "잘못된 입력값입니다."}), 400
 
-    # get the products in similar users' portfolios
-    products = []
-    # potential_products = df[df[ds.USER_INDEX_COLUMN] != desired_user_index]
-    # for po in products_currently_owned_by_user:
-    #     potential_products = potential_products[potential_products[ds.PRODUCT_INDEX_COLUMN] != po]
-    potential_products = df
-    products += list(potential_products[ds.PRODUCT_INDEX_COLUMN])
+    # 사용자 데이터 선택
+    user_df = df[(df[ds.AGE_COLUMN] == desired_birth.year) & (df[ds.GENDER_COLUMN] == desired_gender)]
 
-    products = np.unique(products)
+    if user_df.empty:
+        return jsonify({"message": "해당 조건에 맞는 사용자를 찾을 수 없습니다."}), 400
 
+    desired_user_index = user_df[ds.USER_INDEX_COLUMN].iloc[0]
+
+    # 사용자 특징 가져오기
+    user_features = user_df[[ds.USER_INDEX_COLUMN, ds.GENDER_INDEX_COLUMN,
+                             ds.MARITAL_STATUS_INDEX_COLUMN, ds.HAVE_CHILD_INDEX_COLUMN,
+                             ds.EDUCATION_INDEX_COLUMN, ds.AGE_INDEX_COLUMN]].iloc[0].values
+
+    # 잠재적인 제품 선택 (중복 제거하지 않음)
+    potential_products = df[df[ds.USER_INDEX_COLUMN] != desired_user_index]
+    print(f"잠재적 제품 수: {len(potential_products)}")
+
+    if potential_products.empty:
+        return jsonify({"message": "잠재적인 제품이 없습니다."}), 400
+
+    # 모든 제품 선택 (중복 포함)
+    products = potential_products[ds.PRODUCT_INDEX_COLUMN]
+    print(f"선택된 제품 수: {len(products)}")
+
+    if len(products) == 0:
+        return jsonify({"message": "잠재적인 제품이 없습니다."}), 400
+
+    # AGE 값을 인덱스로 변환하는 함수
+    def age_to_index(age):
+        if age < 30:
+            return 0
+        elif age < 40:
+            return 1
+        elif age < 50:
+            return 2
+        elif age < 60:
+            return 3
+        else:
+            return 4
+
+    # Salary 값을 asset_index로 변환하는 함수 (기존에 생성한 방식)
+    def salary_to_asset_index(salary):
+        if salary < 2000000:
+            return 1
+        elif salary < 3000000:
+            return 2
+        elif salary < 4000000:
+            return 3
+        elif salary < 5000000:
+            return 4
+        else:
+            return 5
+
+    # Salary 값을 asset_index로 변환
+    desired_asset_index = salary_to_asset_index(desired_salary)
+
+    # products 리스트의 각 제품 특성을 생성하는 부분에서 수정
     modified_products = []
+    product_codes = []
     for p in products:
-        modified_product_element = []
         product_df = df[df[ds.PRODUCT_INDEX_COLUMN] == p]
+        if not product_df.empty:
+            # 제품 특성 배열 (6개의 특성을 가져오도록 수정)
+            product_features = product_df[[ds.AGE_COLUMN, ds.GENDER_COLUMN, ds.MARITAL_STATUS_INDEX_COLUMN,
+                                           ds.HAVE_CHILD_INDEX_COLUMN, ds.PRODUCT_STD_DEV_COLUMN,
+                                           ds.PRODUCT_ASSET_CLASS_INDEX_COLUMN]].iloc[0].values
 
-        modified_product_element.append(
-            product_df[ds.PRODUCT_INDEX_COLUMN].to_numpy()[0])
-        modified_product_element.append(
-            product_df[ds.PRODUCT_3_YR_RETURN_COLUMN].to_numpy()[0])
-        modified_product_element.append(
-            product_df[ds.PRODUCT_STD_DEV_COLUMN].to_numpy()[0])
-        modified_product_element.append(
-            product_df[ds.PRODUCT_DEVIDEND_COLUMN].to_numpy()[0])
-        modified_product_element.append(
-            product_df[ds.PRODUCT_ASSET_CLASS_INDEX_COLUMN].to_numpy()[0])
-        modified_product_element.append(1)
+            # AGE 값을 인덱스로 변환
+            product_features[0] = age_to_index(product_features[0])
 
-        modified_products.append(modified_product_element)
+            # Salary를 asset_index로 변환한 값으로 제품 특성을 수정
+            product_features[5] = desired_asset_index
 
-    users = []
-    for index in modified_products:
-        user_element = []
-        user_element.append(desired_user_index)
-        user_element.append(desired_age_index)
-        user_element.append(desired_gender_index)
-        user_element.append(desired_marital_status_index)
-        user_element.append(desired_have_child_index)
-        user_element.append(desired_education_index)
-        users.append(user_element)
+            # 제품 특성이 6개로 맞춰지지 않은 경우 0으로 채우기
+            if len(product_features) < 6:
+                product_features = np.pad(product_features, (0, 6 - len(product_features)), 'constant')
 
-    users = np.array(users)
-    items = np.array(modified_products)
+            modified_products.append([p] + list(product_features))  # 제품 인덱스 포함
+            product_codes.append(product_df[ds.CODE_COLUMN].iloc[0])  # 제품의 CODE 값 추가
 
-    # 22.1 ms
-    print('\nRanking most likely products using the NeuMF model...')
+    # 배열로 변환
+    modified_products = np.array(modified_products)
 
-    # and predict products for my user
-    if len(products) > 0:
-        results = model.predict(
-            [users, items], batch_size=batch_size, verbose=0)
-        # 207 ms
-        results = results.tolist()
+    # 사용자 입력과 제품 입력 크기를 맞춰서 배열 준비
+    if len(modified_products) > 0:
+        items = np.array(modified_products[:, 1:])  # 제품 특성만 추출
+        users = np.tile(user_features, (len(items), 1))  # 사용자 특성을 아이템의 수만큼 반복
 
-        results_df = pd.DataFrame(np.nan, index=range(len(results)), columns=[
-            ds.PROBABILITY_COLUMN, ds.PRODUCT_COLUMN])
+        # 입력 데이터를 float32로 변환
+        users = users.astype(np.float32)
+        items = items.astype(np.float32)
 
-        # loop through and get the probability (of being in the portfolio according to my model), the product name
-        for i, prob in enumerate(results):
-            results_df.loc[i] = [100 * prob[0], df[df[ds.PRODUCT_INDEX_COLUMN] == items[i][0]].iloc[0]
-                                 [ds.PRODUCT_COLUMN]]
-        results_df = results_df.sort_values(
-            by=[ds.PROBABILITY_COLUMN], ascending=False)
-    else:
-        results_df = pd.DataFrame(np.nan, index=range(0), columns=[
-            ds.PROBABILITY_COLUMN, ds.PRODUCT_COLUMN])
+        # 배열 크기 확인
+        print("사용자 입력 형태:", users.shape)  # (n_samples, 6)
+        print("제품 입력 형태:", items.shape)    # (n_samples, 6)
 
-    return results_df.to_json(orient="records")
-    # 209 ms
+        # 예측 수행
+        try:
+            results = model.predict([users, items], batch_size=256, verbose=1)
+            print("예측 결과 크기:", results.shape)
+            results = results.flatten()
 
+            # 예측 결과 크기 확인
+            if len(results) == len(modified_products):  # 제품 인덱스 수와 동일한지 확인
+                print("예측 결과의 길이와 제품의 수가 일치합니다.")
 
-@app.route("/recommendation/user", methods=['GET', 'POST'])
-def userRecommendationApi():
-    content = request.json
+                # 결과를 데이터프레임에 저장
+                result_df = pd.DataFrame({
+                    ds.PROBABILITY_COLUMN: 100 * results,  # 예측 확률을 퍼센트로 변환
+                    ds.CODE_COLUMN: product_codes          # 제품의 CODE 값
+                })
 
-    desired_product = content["product_name"]
-    desired_3year_return = float(content["3year_return"])
-    desired_standard_deviation = float(content["standard_deviation"])
-    desired_dividend = float(content["dividend"])
-    desired_asset_class = content["asset_class"]
+                # 데이터프레임을 예측 확률에 따라 정렬
+                result_df = result_df.sort_values(by=[ds.PROBABILITY_COLUMN], ascending=False)
 
-    batch_size = 256
+                # 상위 5개의 결과만 반환
+                top_5_results = result_df.head(5)
 
-    # 1.82 ms
+                # 결과를 출력하여 확인
+                print("예측 결과 샘플:", top_5_results)
 
-    desired_product_index = df[ds.PRODUCT_INDEX_COLUMN].max() + 1 if df[df[ds.PRODUCT_COLUMN] == desired_product].empty else df[df[ds.PRODUCT_COLUMN] == desired_product][ds.PRODUCT_INDEX_COLUMN].to_numpy()[
-        0]
+                return top_5_results.to_json(orient="records")  # JSON 형식으로 반환
 
-    desired_asset_class_index = df[ds.PRODUCT_ASSET_CLASS_INDEX_COLUMN].max() + 1 if df[df[ds.PRODUCT_ASSET_CLASS_COLUMN]
-                                                                                        == desired_asset_class].empty else df[df[ds.PRODUCT_ASSET_CLASS_COLUMN]
-                                                                                                                              == desired_asset_class][ds.PRODUCT_ASSET_CLASS_INDEX_COLUMN].to_numpy()[0]
-
-    users_currently_owned_by_product = df[df[ds.PRODUCT_INDEX_COLUMN] ==
-                                          desired_product_index][ds.USER_INDEX_COLUMN].to_numpy()
-
-    users_df = df[~df[ds.USER_INDEX_COLUMN].isin(
-        users_currently_owned_by_product)]
-
-    modified_users = users_df[[ds.USER_INDEX_COLUMN, ds.AGE_INDEX_COLUMN, ds.GENDER_INDEX_COLUMN,
-                               ds.MARITAL_STATUS_INDEX_COLUMN, ds.HAVE_CHILD_INDEX_COLUMN, ds.EDUCATION_INDEX_COLUMN]]
-
-    products = []
-    for index in range(len(modified_users)):
-        product_element = []
-        product_element.append(desired_product_index)
-        product_element.append(desired_3year_return)
-        product_element.append(desired_standard_deviation)
-        product_element.append(desired_dividend)
-        product_element.append(desired_asset_class_index)
-        product_element.append(1)
-        products.append(product_element)
-
-    users = np.array(modified_users)
-    items = np.array(products)
-
-    # 12.4 ms
-    print('\nRanking most likely products using the NeuMF model...')
-
-    # and predict products for my user
-    if len(users) > 0:
-        results = model.predict(
-            [users, items], batch_size=batch_size, verbose=0)
-        results = results.tolist()
-
-        results_df = pd.DataFrame(np.nan, index=range(len(results)), columns=[
-            ds.PROBABILITY_COLUMN, ds.USER_COLUMN])
-
-        # loop through and get the probability (of being in the portfolio according to my model), the product name
-        for i, prob in enumerate(results):
-            results_df.loc[i] = [100 * prob[0], df[df[ds.USER_INDEX_COLUMN] == users[i][0]].iloc[0]
-                                 [ds.USER_COLUMN]]
-            results_df = results_df.sort_values(
-                by=[ds.PROBABILITY_COLUMN], ascending=False)
-    else:
-        results_df = pd.DataFrame(np.nan, index=range(0), columns=[
-            ds.PROBABILITY_COLUMN, ds.USER_COLUMN])
-
-    return results_df.to_json(orient="records")
-
-
-@app.route("/recommendation/data")
-def getData():
-    result_df = df
-    for k in request.values:
-        val = int(request.values.get(k)) if request.values.get(
-            k).isnumeric() else request.values.get(k)
-        result_df = result_df[result_df[k] == val]
-    return result_df.to_json(orient="records")
-
+            else:
+                print(f"Error: 예측 결과({len(results)})와 제품({len(modified_products)}) 수가 일치하지 않습니다.")
+                return jsonify({"message": "예측 결과 길이 오류"}), 500
+        except Exception as e:
+            print("예측 중 오류 발생:", str(e))
+            return jsonify({"message": "예측 중 오류가 발생했습니다.", "error": str(e)}), 500
 
 if __name__ == "__main__":
-    app.run()
-
+    app.run(debug=True)

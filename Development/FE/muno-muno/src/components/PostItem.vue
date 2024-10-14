@@ -2,7 +2,7 @@
   <div class="post-item" @click="handleClick">
     <div class="post-header">
       <span class="category">{{ post.category }}</span>
-      <span class="user">{{ post.writerId }}</span>
+      <span class="user">{{ post.nickname }}</span>
     </div>
     <h3 class="post-title">{{ post.title }}</h3>
     <p class="post-content">{{ post.content }}</p>

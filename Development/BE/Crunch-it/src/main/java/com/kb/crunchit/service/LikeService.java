@@ -3,6 +3,7 @@ package com.kb.crunchit.service;
 
 import com.kb.crunchit.dto.request.BoardRequestDTO;
 import com.kb.crunchit.dto.request.LikeRequestDTO;
+import com.kb.crunchit.dto.request.NotificationRequestDTO;
 import com.kb.crunchit.dto.response.BoardResponseDTO;
 import com.kb.crunchit.entity.Like;
 import com.kb.crunchit.entity.Board;
@@ -20,6 +21,7 @@ public class LikeService {
 
     @Autowired
     private final LikeMapper likeMapper;
+    private final NotificationService notificationService;
 
     public boolean toggleLike(LikeRequestDTO likeRequestDTO){
         Like existingLike=likeMapper.findLikeByBoardIdAndUserId(likeRequestDTO.getBoardId(),likeRequestDTO.getUserId());
@@ -30,6 +32,18 @@ public class LikeService {
             return false;
         } else {
             likeMapper.addLike(likeRequestDTO);
+
+            //~님이 회원님의 글을 좋아합니다
+            // 좋아요 누른 사람 usrId 사용해서 닉네임 가져와서 사용
+            String nickname=likeMapper.findNicknameByUserId(likeRequestDTO.getUserId());
+
+            NotificationRequestDTO notificationRequestDTO=new NotificationRequestDTO();
+            notificationRequestDTO.setUserId(likeRequestDTO.getWriterId());
+            notificationRequestDTO.setNickname(nickname);
+            notificationRequestDTO.setTitle("회원님의 글을 좋아합니다!");
+            notificationRequestDTO.setMessage("");
+
+            notificationService.insertNotification(notificationRequestDTO);  // 알림 저장
             return true;
         }
     }

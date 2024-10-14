@@ -146,3 +146,7 @@ dependencies {
 test {
     useJUnitPlatform()
 }
+
+tasks.named('war') {
+    archiveFileName = 'ROOT.war'
+}

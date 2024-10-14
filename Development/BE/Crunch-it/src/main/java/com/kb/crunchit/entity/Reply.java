@@ -8,6 +8,7 @@ public class Reply {
     public int replyId;
     public int commentId;
     public int writerId;
+    public String nickname;
     public String content;
     public int likes;
     public LocalDateTime registerDate;

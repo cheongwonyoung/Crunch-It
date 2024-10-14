@@ -100,7 +100,7 @@
                         this.profileUrl = data.profile_url;
                         this.setUserInfo({
                             nickname: data.nickname,
-                            profileUrl: data.profileUrl,
+                            profileUrl: data.profile_url,
                         });
                     })
                     .catch((error) => {

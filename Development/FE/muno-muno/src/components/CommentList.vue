@@ -20,9 +20,10 @@
           <div v-else>
             <div class="comment-header">
 <!--              writerId가 아닌 닉네임이 뜨도록 해야함-->
-              <span class="writer">{{ comment.writerId }}</span>
+              <span class="writer">{{ comment.nickname }}</span>
 
-              <div class="settings-menu">
+<!--              사용자의 경우에만 수정이나 삭제버튼이 뜨도록-->
+              <div v-if="comment.writerId === userId" class="settings-menu">
                 <img src="@/assets/dots-vertical.svg" alt="dots-vertical" @click="toggleCommentSettingsMenu(index)" class="dots-icon" />
                 <div v-if="showCommentSettingsMenuIndex === index" class="dropdown-menu">
                   <ul>
@@ -67,9 +68,9 @@
               </div>
               <div v-else class="reply-wrapper">
                 <div class="reply-header">
-                  <span class="writer">{{ reply.writerId }}</span>
+                  <span class="writer">{{ reply.nickname }}</span>
 
-                  <div class="settings-menu">
+                  <div v-if="reply.writerId===userId" class="settings-menu">
                     <img src="@/assets/dots-vertical.svg" alt="dots-vertical" @click="toggleReplySettingsMenu(reply.replyId)" class="dots-icon" />
                     <div v-if="showReplySettingsMenuIndex === reply.replyId" class="dropdown-menu">
                       <ul>
@@ -105,6 +106,10 @@ export default {
     },
     replies: {
       type: Array,
+      required: true
+    },
+    userId: { // 부모 컴포넌트에서 로그인한 사용자의 userId를 전달받음
+      type: String,
       required: true
     }
   },
@@ -331,7 +336,7 @@ export default {
 }
 
 .reply-input textarea {
-  width: 100%;
+  width: 90%;
   padding: 10px;
   border: none;
   resize: none;
@@ -345,7 +350,7 @@ export default {
 }
 
 .submit-reply-btn {
-  background-color: #007bff;
+  background-color: #3E8AFF;
   color: white;
   border: none;
   border-radius: 5px;

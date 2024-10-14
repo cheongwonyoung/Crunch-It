@@ -10,6 +10,7 @@
             comment_id AS commentId,
             board_id AS boardId,
             writer_id AS writerId,
+            nickname,
             content,
             likes,
             register_date AS registerDate,
@@ -23,6 +24,7 @@
             comment_id AS commentId,
             board_id AS boardId,
             writer_id AS writerId,
+            nickname,
             content,
             likes,
             register_date AS registerDate,
@@ -32,9 +34,10 @@
     </select>
 
     <insert id="insertComment" parameterType="CommentRequest">
-        INSERT INTO comment(board_id, writer_id, content, register_date )
-        VALUES (#{boardId},#{writerId},#{content}, NOW())
+        INSERT INTO comment(board_id, writer_id, content, register_date,nickname )
+        VALUES (#{boardId},#{writerId},#{content}, NOW(),#{nickname})
     </insert>
+
 
     <update id="modifyComment" parameterType="CommentRequest">
         UPDATE comment

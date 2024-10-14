@@ -10,6 +10,7 @@ import java.time.LocalDateTime;
 public class NotificationResponseDTO {
     private Integer notificationId;
     private Integer userId;
+    private String nickname;
     private String title;
     private String message;
     private LocalDateTime createdAt;

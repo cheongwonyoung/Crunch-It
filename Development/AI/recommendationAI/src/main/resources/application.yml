@@ -1,7 +1,7 @@
 nn:
   file:
-    input: C:/FinalProject/Crunch-It/Development/AI/recommendationAI/src/main/resources/CUST_INVESTMENT.csv # 입력 파일 경로
-    output: C:/FinalProject/Crunch-It/Development/AI/recommendationAI/output/data_reference.csv # 출력 파일 경로
-  checkpoint: C:/FinalProject/Crunch-It/Development/AI/recommendationAI/output/ # 체크포인트 경로
-  model: C:/FinalProject/Crunch-It/Development/AI/recommendationAI/output/recommendation_system_model.h5 # 모델 파일 경로
+    input: C:/KBprojct/Crunch-It/Development/AI/recommendationAI/src/main/resources/CUST_INVESTMENT.csv # 입력 파일 경로
+    output: C:/KBprojct/Crunch-It/Development/AI/recommendationAI/output/data_reference.csv # 출력 파일 경로
+  checkpoint: C:/KBprojct/Crunch-It/Development/AI/recommendationAI/output/ # 체크포인트 경로
+  model: C:/KBprojct/Crunch-It/Development/AI/recommendationAI/output/recommendation_system_model.h5 # 모델 파일 경로
 # 경로 변경 주의!

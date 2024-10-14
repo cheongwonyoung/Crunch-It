@@ -43,17 +43,17 @@
     </typeAliases>
 
     <!-- 데이터베이스 환경 설정 -->
-    <environments default="development">
-        <environment id="development">
-            <transactionManager type="JDBC"/>
-            <dataSource type="POOLED">
-                <property name="driver" value="com.mysql.cj.jdbc.Driver"/>
-                <property name="url" value="jdbc:mysql://localhost:3306/crunchit"/>
-                <property name="username" value="root"/>
-                <property name="password" value="1234"/>
-            </dataSource>
-        </environment>
-    </environments>
+<!--    <environments default="development">-->
+<!--        <environment id="development">-->
+<!--            <transactionManager type="JDBC"/>-->
+<!--            <dataSource type="POOLED">-->
+<!--                <property name="driver" value="com.mysql.cj.jdbc.Driver"/>-->
+<!--                <property name="url" value="jdbc:mysql://localhost:3306/crunchit"/>-->
+<!--                <property name="username" value="root"/>-->
+<!--                <property name="password" value="1234"/>-->
+<!--            </dataSource>-->
+<!--        </environment>-->
+<!--    </environments>-->
 
     <mappers>
         <mapper resource="com/kb/crunchit/mapper/recommendation/top/UserAssetStatisticsMapper.xml"/>
