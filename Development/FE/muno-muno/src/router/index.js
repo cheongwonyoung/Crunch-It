@@ -59,15 +59,15 @@ router.beforeEach(async (to, from, next) => {
             next({ name: "Login" });
             return;
         }
-        const res = await apiClient.get("/auth/authenticate");
         try {
+            const res = await apiClient.get("/auth/authenticate");
             if (res.status != 200) next({ name: "Login" });
             else {
                 if (navigationOnBoardingRoutes.includes(to.name)) {
                     next();
                 }
-                const onBoardingRes = await apiClient.get("/onboarding/check");
                 try {
+                    const onBoardingRes = await apiClient.get("/onboarding/check");
                     if (onBoardingRes.data.onBoarded) next();
                     else next({ name: "MyData" });
                 } catch (err) {
