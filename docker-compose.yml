@@ -1,0 +1,38 @@
+version: '3.8'
+
+services:
+  main-server:
+    build: ./Development/BE/Crunch-it
+    container_name: main-server
+    ports:
+      - "8080:8080"
+    networks:
+      - app-network
+
+  my-data-server:
+    build: ./Development/MyData/mydata
+    container_name: my-data-server
+    ports:
+      - "8081:8081"
+    networks:
+      - app-network
+
+  front-server:
+    build: ./Development/FE/muno-muno
+    container_name: front-server
+    ports:
+      - "80:80"
+    networks:
+      - app-network
+
+  redis:
+    image: redis:latest
+    container_name: redis
+    ports:
+      - "6379:6379"  # Exposing the default Redis port
+    networks:
+      - app-network
+
+networks:
+  app-network:
+    driver: bridge
