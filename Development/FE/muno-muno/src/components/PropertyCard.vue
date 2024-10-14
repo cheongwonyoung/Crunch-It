@@ -1,13 +1,15 @@
 <!-- PropertyCard.vue -->
 <template>
-  <div class="property-card" :class="{ 'negative-background': isNegative }">
+  <div
+    class="property-card"
+    :class="{ 'negative-background': shouldShowNegativeBackground }"
+  >
     <h3 class="title">{{ title }}</h3>
     <p v-if="type !== 'ai'" class="description">
       <template
         v-if="type === 'asset' || type === 'expense' || type === 'investment'"
       >
-        <span :class="diff > 0 ? 'positive' : 'negative'">
-          {{ sign }}{{ formattedDiff }}원 </span
+        <span :class="getValueClass()"> {{ sign }}{{ formattedDiff }}원 </span
         ><br />
         {{ increaseOrDecrease }}했어요
       </template>
@@ -33,8 +35,6 @@ export default {
   },
   computed: {
     diff() {
-      console.log(this.amount);
-      console.log(this.previousAmount);
       return this.amount - this.previousAmount;
     },
     absDiff() {
@@ -49,13 +49,22 @@ export default {
     sign() {
       return this.diff > 0 ? '+' : '-';
     },
-    isNegative() {
-      return this.diff < 0;
+    shouldShowNegativeBackground() {
+      if (this.type === 'expense') {
+        return this.diff > 0; // 소비가 증가했을 때 빨간 배경
+      }
+      return this.diff < 0; // 다른 경우는 기존 로직 유지
     },
   },
   methods: {
     formatNumber(value) {
       return value.toLocaleString();
+    },
+    getValueClass() {
+      if (this.type === 'expense') {
+        return this.diff > 0 ? 'negative' : 'positive';
+      }
+      return this.diff > 0 ? 'positive' : 'negative';
     },
   },
 };
@@ -70,7 +79,7 @@ export default {
   background: var(--p80);
   padding: 15px;
   box-sizing: border-box;
-  transition: background-color 0.3s ease; /* 배경색 변경 시 부드러운 전환 효과 */
+  transition: background-color 0.3s ease;
 }
 
 .negative-background {

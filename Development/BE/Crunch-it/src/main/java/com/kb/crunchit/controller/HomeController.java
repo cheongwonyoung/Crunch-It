@@ -45,7 +45,7 @@ public class HomeController {
         CustomUserDetails user = (CustomUserDetails) auth.getPrincipal();
         Integer userId =  user.getUserId();
         try{
-            Integer total_monthly_outcome = homeService.getMonthlyOutcome(userId);
+            long total_monthly_outcome = homeService.getMonthlyOutcome(userId);
             resultMap.put("total_monthly_outcome", total_monthly_outcome);
         }
         catch(Exception e){
