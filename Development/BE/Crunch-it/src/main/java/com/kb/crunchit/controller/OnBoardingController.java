@@ -40,7 +40,7 @@ public class OnBoardingController {
         try {
             User userEntity = User.builder()
                     .userId(userId)
-                    .mdUserId(1)
+                    .mdUserId(100)
                     .outcomeLimit(dto.getOutcome_limit())
                     .salary(dto.getSalary())
                     .build();
