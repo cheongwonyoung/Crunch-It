@@ -52,8 +52,7 @@ export default {
   display: flex;
   justify-content: center;
   align-items: center;
-  background: rgba(0, 0, 0, 0.7);
-  z-index: 2000;
+  z-index: 2000; /* TabBar보다 높은 z-index 값 */
 }
 
 .start-modal-overlay {
@@ -75,7 +74,8 @@ export default {
   background: var(--gr100);
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
   text-align: center;
-  z-index: 10000;
+  position: relative; /* 추가 */
+  z-index: 2001; /* overlay보다 높은 z-index 값 */
 }
 
 .modal-image {
