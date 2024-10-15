@@ -87,6 +87,7 @@ export default {
   background: var(--gr100);
   box-shadow: 0px 0px 10px 0px rgba(0, 0, 0, 0.1);
   text-align: center;
+  font-family: 'Pretendard', sans-serif;
 }
 
 .product-badge {
@@ -125,6 +126,7 @@ export default {
   flex-direction: row;
   justify-content: space-between;
   margin-top: 26px;
+  font-family: 'Pretendard', sans-serif;
 }
 
 .modal-buttons button {
@@ -135,21 +137,19 @@ export default {
   width: 134px;
   height: 48px;
   flex-shrink: 0;
+  font-size: 16px;
+  font-weight: 500;
+  line-height: 100%;
+  font-family: 'Pretendard', sans-serif;
 }
 
 .modal-buttons button:first-child {
-  font-size: 16px;
   background: var(--gr70);
   color: var(--gr50);
-  font-weight: 500;
-  line-height: 100%;
 }
 
 .modal-buttons button:last-child {
-  font-size: 16px;
   background: var(--p10);
   color: var(--gr100);
-  font-weight: 500;
-  line-height: 100%;
 }
 </style>

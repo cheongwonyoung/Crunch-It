@@ -56,14 +56,13 @@ export default {
 </script>
 
 <style scoped>
-/* Styling for modal and buttons */
 .modal-overlay {
   position: fixed;
   top: 0;
   left: 0;
   width: 100%;
   height: 100%;
-  background: rgba(0, 0, 0, 0.5);
+  background: rgba(0, 0, 0, 0.7); /* 수정 */
   display: flex;
   justify-content: center;
   align-items: center;
@@ -93,14 +92,16 @@ export default {
   justify-content: center;
   align-items: center;
   background: var(--p70);
-  margin-bottom: 12px;
+  margin-bottom: 8px;
 }
 
 .product-title {
-  margin: 0 0 16px 0;
+  margin: 0 0 12px 0;
   color: var(--gr30);
+  text-align: center;
   font-size: 22px;
   font-weight: 550;
+  line-height: 100%;
 }
 
 .product-title span {
@@ -112,11 +113,12 @@ export default {
 }
 
 .modal-content p {
-  margin: 8px 0;
+  margin: 6px 0;
   color: var(--gr50);
+  text-align: center;
   font-size: 14px;
   font-weight: 350;
-  line-height: 1.4;
+  line-height: 100%;
 }
 
 .modal-buttons {
@@ -137,6 +139,7 @@ export default {
   flex-shrink: 0;
   font-size: 16px;
   font-weight: 500;
+  line-height: 100%;
   font-family: 'Pretendard', sans-serif;
 }
 

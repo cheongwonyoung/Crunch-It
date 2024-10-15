@@ -11,7 +11,7 @@
       />
 
       <!-- 설정 아이콘 및 드롭다운 메뉴 -->
-      <div  v-if="userId === post.writerId" class="settings-menu">
+      <div v-if="userId === post.writerId" class="settings-menu">
         <img
           src="@/assets/dots-vertical.svg"
           alt="dots-vertical"
@@ -29,11 +29,12 @@
       <span class="category">{{ post.category }}</span>
       <h1 class="title">{{ post.title }}</h1>
       <div class="user-info">
-
         <img
-            class="user-avatar"
-            :src="post.profileUrl ? post.profileUrl : require('@/assets/profile.svg')"
-            alt="avatar"
+          class="user-avatar"
+          :src="
+            post.profileUrl ? post.profileUrl : require('@/assets/profile.svg')
+          "
+          alt="avatar"
         />
 
         <div class="user-meta">
@@ -50,10 +51,14 @@
     <div class="post-actions">
       <div class="likes-comments">
         <img
-            :src="likedByUser===true ? require('@/assets/filledHeart.svg') : require('@/assets/heart-rounded.svg')"
-            alt="like"
-            @click="likePost"
-            class="action-icon"
+          :src="
+            likedByUser === true
+              ? require('@/assets/filledHeart.svg')
+              : require('@/assets/heart-rounded.svg')
+          "
+          alt="like"
+          @click="likePost"
+          class="action-icon"
         />
 
         <!-- Fix the class binding for likedByUser -->
@@ -82,7 +87,7 @@
       @delete-reply="handleDeleteReply"
     />
 
-    <div class="comment-input">
+    <!-- <div class="comment-input">
       <textarea
         v-model="newComment"
         placeholder="댓글을 입력하세요..."
@@ -92,8 +97,13 @@
       <button @click="submitComment" class="submit-btn">
         <img class="icon-send" src="@/assets/send.svg" alt="전송" />
       </button>
-    </div>
-
+    </div> -->
+    <MessageInputPost
+      :postId="postId"
+      :userId="userId"
+      :nickname="nickname"
+      @comment-submitted="fetchPostAndComments"
+    />
   </div>
 </template>
 
@@ -102,11 +112,11 @@ import { ref, computed, onMounted } from 'vue';
 import apiClient from '../axios';
 import { useRoute, useRouter } from 'vue-router';
 import CommentList from '@/components/CommentList.vue';
-
+import MessageInputPost from '@/components/MessageInputPost.vue';
 
 export default {
   name: 'PostDetailP',
-  components: { CommentList },
+  components: { CommentList, MessageInputPost },
   setup() {
     const route = useRoute();
     const router = useRouter();
@@ -122,7 +132,7 @@ export default {
       category: '',
       writerId: '',
       registerDate: '',
-      nickname:'',
+      nickname: '',
       modifyDate: '',
       likes: 0,
       commentsCount: 0,
@@ -227,7 +237,6 @@ export default {
       );
       //모든 답글 데이터 불러오고 replies배열에 저장
       fetchData(`${REPLY_API_URL}`, (data) => (replies.value = data));
-
     };
 
     const toggleSettingsMenu = () => {
@@ -304,7 +313,7 @@ export default {
           writerId: userId, // 로그인된 사용자 ID로 수정해야
           content: content,
           commentId: commentId,
-          nickname:nickname,
+          nickname: nickname,
         });
         replies.value.push(response.data); // 새로 등록한 답글을 즉시 화면에 반영
         fetchPostAndComments();
@@ -361,7 +370,7 @@ export default {
             likedByUser.value = true;
             post.value.likes += 1;
             // 로컬 스토리지에 좋아요 상태 저장
-            console.log("@@@@@@@@@@@@@@@@@@");
+            console.log('@@@@@@@@@@@@@@@@@@');
             localStorage.setItem(`liked_${postId}`, 'true');
           }
         }
@@ -370,18 +379,18 @@ export default {
       }
     };
 
-// 페이지가 로드될 때 로컬 스토리지에서 좋아요 상태 불러오기
+    // 페이지가 로드될 때 로컬 스토리지에서 좋아요 상태 불러오기
     onMounted(() => {
       const likedStatus = localStorage.getItem(`liked_${postId}`);
       likedByUser.value = likedStatus === 'true'; // 로컬 스토리지에서 상태 설정
       fetchPostAndComments(); // 게시글과 댓글 데이터 불러오기
     });
 
-
     return {
       post,
       comments,
       replies, // replies 데이터를 추가로 반환
+      postId,
       userId,
       newComment,
       showSettingsMenu,
@@ -399,7 +408,8 @@ export default {
       nickname,
       goBack,
       updateCommentReplyCount,
-      likedByUser
+      likedByUser,
+      fetchPostAndComments,
     };
   },
 };
@@ -408,9 +418,8 @@ export default {
 <style scoped>
 .post-detail-page {
   padding: 16px;
-  max-width: 700px;
+  width: 343px;
   margin: 0 auto;
-  font-family: 'Helvetica Neue', Arial, sans-serif;
   color: #444;
 }
 
@@ -456,7 +465,6 @@ export default {
   font-size: 14px;
   writing-mode: horizontal-tb;
   white-space: nowrap;
-  font-family: Arial, sans-serif;
 }
 
 .settings-menu .dropdown-menu li:hover {
@@ -470,23 +478,27 @@ export default {
 }
 
 .category {
-  font-size: 14px;
-  font-weight: 500;
-  color: #383e47;
+  color: #2973e4;
   margin-bottom: 5px;
+  font-family: Pretendard;
+  font-size: 12px;
+  font-style: normal;
+  font-weight: 600;
+  line-height: 100%; /* 12px */
 }
 
 .title {
   font-size: 20px;
   font-weight: 600;
   color: #292d33;
-  line-height: 1.5;
+  line-height: 100%; /* 20px */
   margin: 8px 0;
 }
 
 .user-info {
   display: flex;
   align-items: center;
+  margin-top: 10px;
 }
 
 .user-avatar {
@@ -516,11 +528,25 @@ export default {
   font-size: 16px;
   line-height: 1.6;
   color: #333;
-  margin-top: 10px; /* Add some space above and below the post content */
-  padding: 10px 0; /* Add padding to make the borders stand out */
-  border-top: 1px solid #ddd; /* Light gray line above the content */
-  border-bottom: 1px solid #ddd; /* Light gray line below the content */
-  white-space: pre-wrap; /* Ensure new lines are rendered as in the post */
+  margin-top: 10px;
+  padding: 10px 0;
+  border-top: 1px solid #ddd;
+  white-space: pre-wrap;
+  position: relative;
+  margin-left: -20px; /* 부모 요소의 왼쪽 패딩만큼 음수 마진 */
+  margin-right: -20px; /* 부모 요소의 오른쪽 패딩만큼 음수 마진 */
+  padding-left: 20px; /* 내용을 원래 위치로 되돌리기 위한 패딩 */
+  padding-right: 20px; /* 내용을 원래 위치로 되돌리기 위한 패딩 */
+}
+
+.post-content::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 1px;
+  background-color: #ddd;
 }
 
 .post-likes {
@@ -528,8 +554,6 @@ export default {
   color: #555;
   margin-bottom: 20px;
 }
-
-
 
 .back-link {
   display: inline-block;
@@ -549,7 +573,17 @@ export default {
   justify-content: space-between; /* Space between likes and comments */
   padding: 10px 0; /* Add padding to give some space */
   border-bottom: 6px solid #f5f6f7; /* Divider line below the actions */
-  margin-bottom: 16px; /* Space below the post actions */
+  margin-left: -20px; /* 부모 요소의 왼쪽 패딩만큼 음수 마진 */
+  margin-right: -20px; /* 부모 요소의 오른쪽 패딩만큼 음수 마진 */
+  padding-left: 20px; /* 내용을 원래 위치로 되돌리기 위한 패딩 */
+  padding-right: 20px; /* 내용을 원래 위치로 되돌리기 위한 패딩 */
+}
+
+.post-actions::after {
+  /* ... 기존 스타일 ... */
+  left: 0;
+  right: 0;
+  width: auto; /* width: 100% 대신 사용 */
 }
 
 .likes-comments {
@@ -636,5 +670,13 @@ export default {
 .icon-send {
   width: 24px;
   height: 24px;
+}
+
+.message-input {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  background-color: var(--gr100);
 }
 </style>

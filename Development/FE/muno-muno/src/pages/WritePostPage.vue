@@ -3,7 +3,7 @@
     <HeaderB title="게시글 작성" @back="onBack" />
 
     <form @submit.prevent="submitPost">
-      <div class="form-group category-wrapper">
+      <div class="category-wrapper">
         <label for="category" class="category-label">카테고리</label>
         <div class="select-wrapper">
           <select
@@ -75,7 +75,7 @@ export default {
 
     const token = localStorage.getItem('JwtToken');
     let userId = null;
-    let nickname=null;
+    let nickname = null;
 
     if (token) {
       try {
@@ -96,7 +96,7 @@ export default {
         }
 
         //userId = decodedToken?.user_id || decodedToken?.userId;
-        nickname=decodedToken?.nickname;
+        nickname = decodedToken?.nickname;
       } catch (error) {
         console.error('Error decoding token manually:', error);
       }
@@ -110,7 +110,7 @@ export default {
         category: category.value,
         content: content.value,
         writerId: userId,
-        nickname:nickname
+        nickname: nickname,
       };
       console.log(postData);
 
@@ -140,14 +140,19 @@ export default {
 
 <style scoped>
 .write-post-page {
-  position: absolute;
-  top: 108px;
-  left: 0;
-  width: 100%;
-  max-width: 600px;
   padding: 0 20px;
-  box-sizing: border-box;
-  overflow-y: auto;
+  margin-bottom: 34px;
+  background-color: var(--gr100);
+  height: 100vh;
+  width: 335px;
+  overflow-y: auto; /* 내용이 넘칠 경우 스크롤 허용 */
+  position: fixed; /* 고정 위치 */
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 10; /* 다른 요소들 위에 표시 */
+  font-family: 'Pretendard', sans-serif;
 }
 
 .form-group {
@@ -165,7 +170,7 @@ export default {
 .category-wrapper {
   display: flex;
   align-items: center;
-  margin-top: 12px;
+  margin-top: 76px;
 }
 
 .select-wrapper {
@@ -174,6 +179,7 @@ export default {
 }
 
 .category-select {
+  font-family: 'Pretendard', sans-serif;
   -webkit-appearance: none;
   color: var(--gr20);
   font-size: 20px;
@@ -181,11 +187,11 @@ export default {
   line-height: 100%;
   border: none;
   width: auto;
-  max-width: 60px;
+  max-width: 40px;
 }
 
 .input-field {
-  width: 335px;
+  width: 295px;
   height: 56px;
   flex-shrink: 0;
   border-radius: 12px;
@@ -195,6 +201,7 @@ export default {
   padding: 20px;
   color: var(--gr30);
   font-size: 16px;
+  font-family: 'Pretendard', sans-serif;
 }
 
 textarea.input-field {

@@ -51,7 +51,7 @@ export default {
   },
   computed: {
     formattedLimit() {
-      return this.limit.toLocaleString();
+      return this.limit.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
     },
   },
   methods: {
@@ -94,25 +94,31 @@ export default {
 
 <style scoped>
 .limit-setting-page {
-  top: 88px;
   display: flex;
   flex-direction: column;
-  justify-content: space-between;
-  padding: 0 20px;
-  text-align: left;
-  position: relative;
+  padding: 0px 20px;
+  background-color: var(--gr100);
+  height: 100vh;
+  position: fixed; /* 화면에 고정 */
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  overflow: hidden; /* 스크롤 막기 */
 }
 
 .content {
-  padding: 0;
-  margin: 0;
+  display: flex;
+  flex-direction: column; /* 요소들을 세로로 나열 */
+  margin-top: 64px;
 }
 
 .step-icon {
   display: block;
-  margin-bottom: 20px;
-  width: auto;
-  height: auto;
+  margin: 0 0 20px 0;
+  width: 102px;
+  height: 26px;
+  margin-top: 20px;
 }
 
 h1 {
@@ -120,7 +126,7 @@ h1 {
   font-size: 26px;
   font-weight: 600;
   line-height: 150%;
-  margin: 20px 0;
+  margin: 0 0 0 0; /* 위쪽 여백 제거, 아래쪽 여백만 유지 */
 }
 
 .spending-limit {

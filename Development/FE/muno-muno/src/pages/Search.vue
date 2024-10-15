@@ -3,7 +3,7 @@
     <HeaderB title="" @back="goBack" />
 
     <div class="search-content">
-      <h1>어떤 상품을 찾으시나요?</h1>
+      <h1 class="search-title">어떤 상품을 찾으시나요?</h1>
 
       <!-- 검색창 -->
       <div class="search-box">
@@ -205,6 +205,10 @@ export default {
 </script>
 
 <style scoped>
+.search-title {
+  font-family: 'Pretendard', sans-serif;
+}
+
 /* 폰트를 Pretendard로 변경 */
 body,
 input,
@@ -218,10 +222,31 @@ p {
 
 .search {
   padding: 0 20px;
+  margin-bottom: 34px;
+  background-color: var(--gr100);
+  height: 100vh;
+  /* height: 778px; */
+  overflow-y: auto; /* 내용이 넘칠 경우 스크롤 허용 */
+  position: fixed; /* 고정 위치 */
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 10; /* 다른 요소들 위에 표시 */
 }
 
 .search-content {
-  margin-top: 12px;
+  margin-top: 15px;
+}
+
+/* 스크롤바 숨기기 */
+.search::-webkit-scrollbar {
+  display: none;
+}
+
+.search {
+  -ms-overflow-style: none; /* IE and Edge */
+  scrollbar-width: none; /* Firefox */
 }
 
 h1 {
@@ -252,6 +277,7 @@ h1 {
   color: var(--gr20);
   height: 18px;
   caret-color: transparent;
+  font-family: 'Pretendard', sans-serif;
 }
 
 .input-text:focus {
@@ -275,7 +301,7 @@ h1 {
 .error-message {
   color: red;
   font-size: 14px;
-  margin-top: 200px;
+  margin-top: 156px; /* 200 */
   position: absolute; /* 절대 위치로 고정 */
   top: 30px; /* 검색창 바로 아래에 위치하도록 조정 */
   left: 20px; /* 왼쪽으로 20 띄워줌 */
@@ -321,6 +347,7 @@ h1 {
   justify-content: flex-start; /* 위쪽부터 시작 */
   align-items: center; /* 가로 방향 중앙 정렬 */
   margin-top: 20px;
+  padding-bottom: 34px; /* 여기에 원하는 값 추가 */
 }
 
 .product-item {

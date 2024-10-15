@@ -15,8 +15,8 @@
 import { ref, onMounted } from 'vue';
 import HeaderB from '@/components/HeaderB.vue';
 import NotificationItem from '@/components/NotificationItem.vue';
-import apiClient from "@/axios";
-import {useRouter} from "vue-router";
+import apiClient from '@/axios';
+import { useRouter } from 'vue-router';
 
 export default {
   name: 'NotificationP',
@@ -26,16 +26,16 @@ export default {
   },
   setup() {
     const notifications = ref([]);
-    const router=useRouter();
+    const router = useRouter();
 
-    const goBack= ()=>{
+    const goBack = () => {
       router.push('/community');
-    }
-    onMounted(()=>{
-      console.log("Component mounted");
+    };
+    onMounted(() => {
+      console.log('Component mounted');
       fetchNotifications();
       subscribeToSSE();
-    })
+    });
 
     // 기존 알림 데이터를 가져오는 함수 (Authorization 헤더 추가)
     const fetchNotifications = async () => {
@@ -49,8 +49,8 @@ export default {
 
         const response = await apiClient.get('/notifications', {
           headers: {
-            Authorization: `Bearer ${token}` // JWT 토큰을 Authorization 헤더에 포함
-          }
+            Authorization: `Bearer ${token}`, // JWT 토큰을 Authorization 헤더에 포함
+          },
         });
         notifications.value = response.data;
         //console.log(response.data);
@@ -74,8 +74,7 @@ export default {
         // const newNotification = JSON.parse(event.data);
         //console.log("new notification ",event.data);
 
-        notifications.value.push(
-            JSON.parse(event.data));
+        notifications.value.push(JSON.parse(event.data));
       };
 
       eventSource.onerror = function (error) {
@@ -95,7 +94,7 @@ export default {
 
     return {
       notifications,
-      goBack
+      goBack,
     };
   },
 };
@@ -104,7 +103,7 @@ export default {
 <style scoped>
 .notification-list {
   position: absolute;
-  top: 108px;
+  top: 64px;
   left: 0;
   width: 375px;
   height: 704px;
