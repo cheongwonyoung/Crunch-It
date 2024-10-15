@@ -40,7 +40,9 @@ export default {
           {
             src: require('@/assets/x.svg'),
             alt: 'Default Icon',
-            onClick: () => {},
+            onClick: () => {
+              this.onClose();
+            },
           },
         ];
       }

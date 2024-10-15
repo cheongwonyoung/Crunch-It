@@ -48,16 +48,15 @@ export default {
       touchEndX: 0, // 터치 종료 지점 X 좌표
       banners: [
         {
-          id: 'savings',
-          subtitle: '나와 닮은 문어들의 적금',
-          title: 'AI 문어의 추천',
-          category: '적금',
-        },
-        {
           subtitle: '문어들이 사랑하는 펀드',
           title: '수익률 No.1 펀드',
           category: '펀드',
           fundProduct: '글로벌 주식형 펀드',
+        },
+        {
+          subtitle: '주식 고수 문어 선정',
+          title: '수익률 No.1 주식',
+          category: '주식',
         },
         {
           subtitle: '문어들의 안전자산',
@@ -65,9 +64,10 @@ export default {
           category: '채권',
         },
         {
-          subtitle: '주식 고수 문어 선정',
-          title: '수익률 No.1 주식',
-          category: '주식',
+          id: 'savings',
+          subtitle: '나와 닮은 문어들의 적금',
+          title: 'AI 문어의 추천',
+          category: '적금',
         },
       ],
     };
