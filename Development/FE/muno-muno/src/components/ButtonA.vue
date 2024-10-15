@@ -16,6 +16,7 @@ export default {
 
 <style scoped>
 .buttonA {
+  font-family: 'Pretendard', sans-serif;
   color: var(--gr100);
   text-align: center;
   font-size: 16px;

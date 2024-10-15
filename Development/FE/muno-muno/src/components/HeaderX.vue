@@ -27,6 +27,11 @@ export default {
       default: () => [],
     },
   },
+  methods: {
+    onClose() {
+      this.$emit('close');
+    },
+  },
   computed: {
     resolvedIcons() {
       // 아이콘이 없으면 기본 아이콘으로 설정
@@ -54,7 +59,7 @@ export default {
   height: 65px;
   background-color: var(--gr100);
   position: fixed;
-  top: 44px;
+  top: 0px;
   left: 0;
   width: 100%;
   z-index: 1000;
@@ -65,6 +70,7 @@ export default {
 .header-text {
   font-size: 22px;
   font-weight: 600;
+  line-height: 100%;
 }
 
 .header-icons {

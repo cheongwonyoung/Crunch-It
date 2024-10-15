@@ -63,7 +63,7 @@
       />
       <span>커뮤니티</span>
     </router-link>
-    <img class="bar" src="@/assets/bar.svg" alt="Home Indicator Bar" />
+    <!-- <img class="bar" src="@/assets/bar.svg" alt="Home Indicator Bar" /> -->
   </nav>
 </template>
 
@@ -122,7 +122,7 @@ export default {
   color: var(--p10);
 }
 
-.bar {
+/* .bar {
   position: absolute;
   bottom: 0;
   left: 0;
@@ -130,5 +130,5 @@ export default {
   height: 34px;
   z-index: -1;
   object-fit: contain;
-}
+} */
 </style>

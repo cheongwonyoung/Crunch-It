@@ -88,15 +88,15 @@ export default {
 }
 
 .post-content {
-  width: 100%;               /* 컨테이너의 너비 */
-  height: calc(1.5em * 3);    /* 3줄 높이 제한 */
-  line-height: 1.5em;         /* 한 줄의 높이를 지정 */
-  overflow: hidden;           /* 넘치는 텍스트 숨기기 */
-  text-overflow: ellipsis;    /* 넘치는 텍스트가 생기면 "..."로 표시 */
-  display: -webkit-box;       /* Flexbox 유사 레이아웃 */
-  -webkit-line-clamp: 3;      /* 3줄로 제한 */
-  -webkit-box-orient: vertical; /* 수직 방향 레이아웃 설정 */
-  white-space: normal;        /* 텍스트 줄바꿈 허용 */
+  width: 100%;
+  max-height: 4.5em; /* 3줄의 최대 높이 (1.5em * 3) */
+  line-height: 1.5em;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: -webkit-box;
+  -webkit-line-clamp: 3; /* 3줄로 제한 */
+  -webkit-box-orient: vertical;
+  word-wrap: break-word; /* 긴 단어 처리 */
 }
 
 .post-footer {

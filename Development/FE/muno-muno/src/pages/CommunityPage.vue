@@ -126,15 +126,17 @@ export default {
     };
 
     const filteredPosts = computed(() => {
-      return posts.value.filter((post) => {
-        if (!post || !post.boardId) {
-          return false;
-        }
-        if (selectedCategory.value === '전체') {
-          return true;
-        }
-        return post.category === selectedCategory.value;
-      });
+      return posts.value
+        .filter((post) => {
+          if (!post || !post.boardId) {
+            return false;
+          }
+          if (selectedCategory.value === '전체') {
+            return true;
+          }
+          return post.category === selectedCategory.value;
+        })
+        .reverse();
     });
 
     const selectCategory = (category) => {
@@ -179,7 +181,7 @@ export default {
 .community-page {
   padding: 0 20px;
   position: absolute;
-  top: 120px;
+  top: 64px;
   width: 375px;
   height: auto;
   box-sizing: border-box;
@@ -189,6 +191,7 @@ export default {
 .chat-header {
   display: flex;
   align-items: center;
+  margin-top: 14px;
   margin-bottom: 18px;
   color: var(--gr30);
   font-size: 20px;

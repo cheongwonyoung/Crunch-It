@@ -1,6 +1,6 @@
 <template>
   <div id="app">
-    <StatusBar />
+    <!-- <StatusBar /> -->
     <div class="content">
       <router-view></router-view>
     </div>
@@ -10,11 +10,11 @@
 
 <script>
 import TabBar from './components/TabBar.vue';
-import StatusBar from './components/StatusBar.vue';
+// import StatusBar from './components/StatusBar.vue';
 export default {
   components: {
     TabBar,
-    StatusBar,
+    // StatusBar,
   },
   data() {
     return {
@@ -49,8 +49,8 @@ export default {
 body,
 html {
   font-family: 'Pretendard', sans-serif;
-  width: 100%;
-  height: 100%;
+  /* width: 375px;
+  height: 768px; */
   margin: 0;
   padding: 0;
   overflow: auto;
@@ -59,8 +59,9 @@ html {
 }
 
 #app {
-  width: 100%;
-  height: 100%;
+  width: 375px;
+  height: 812px;
+  font-family: 'Pretendard', sans-serif;
 }
 
 :root {
@@ -85,8 +86,8 @@ html {
 }
 
 .content {
-  padding-top: 44px;
-  height: calc(100% - 86px - 44px);
+  /* padding-top: 44px; */
+  height: calc(100% - 86px);
   overflow-y: auto;
 }
 
