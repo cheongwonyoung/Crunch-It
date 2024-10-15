@@ -218,10 +218,47 @@ export default {
             case '예금':
               this.products = response?.data?.depositList || [];
               // 정렬 로직 추가
+              // 정렬: 1순위 - '국민은행', 2순위 - sixMonthOption의 intrRate2 내림차순
+              this.products.sort((a, b) => {
+                // '국민은행' 우선
+                if (a.korCoNm === '국민은행' && b.korCoNm !== '국민은행')
+                  return -1;
+                if (b.korCoNm === '국민은행' && a.korCoNm !== '국민은행')
+                  return 1;
+
+                // sixMonthOption의 intrRate2 내림차순 정렬
+                const aIntrRate2 = a.sixMonthOption?.intrRate2 || 0;
+                const bIntrRate2 = b.sixMonthOption?.intrRate2 || 0;
+                return bIntrRate2 - aIntrRate2;
+              });
               break;
             case '적금':
               this.products = response?.data?.savingList || [];
               // 정렬 로직 추가
+              // '국민은행' 우선 정렬 후, '국민은행' 내에서 12개월 옵션 intrRate2로 정렬하고, 없으면 6개월 옵션 기준
+              this.products.sort((a, b) => {
+                // '국민은행' 우선
+                if (a.korCoNm === '국민은행' && b.korCoNm !== '국민은행')
+                  return -1;
+                if (b.korCoNm === '국민은행' && a.korCoNm !== '국민은행')
+                  return 1;
+
+                // 둘 다 '국민은행'이거나 둘 다 아니면 intrRate2 기준으로 정렬
+                const aIntrRate2 =
+                  a.yearOption?.['12']?.intrRate2 !== undefined
+                    ? a.yearOption['12'].intrRate2
+                    : a.sixMonthOption?.intrRate2 !== undefined
+                    ? a.sixMonthOption.intrRate2
+                    : -Infinity;
+                const bIntrRate2 =
+                  b.yearOption?.['12']?.intrRate2 !== undefined
+                    ? b.yearOption['12'].intrRate2
+                    : b.sixMonthOption?.intrRate2 !== undefined
+                    ? b.sixMonthOption.intrRate2
+                    : -Infinity;
+
+                return bIntrRate2 - aIntrRate2;
+              });
               break;
             case '펀드':
               this.products = response?.data || [];

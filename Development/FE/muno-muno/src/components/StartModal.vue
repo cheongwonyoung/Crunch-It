@@ -125,10 +125,12 @@ h1 {
 .secondary-button {
   background: var(--gr70);
   color: var(--gr50);
+  font-family: 'Pretendard', sans-serif;
 }
 
 .close-button {
   background: var(--p10);
   color: var(--gr100);
+  font-family: 'Pretendard', sans-serif;
 }
 </style>
