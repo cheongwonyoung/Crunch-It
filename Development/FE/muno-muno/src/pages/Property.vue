@@ -187,7 +187,7 @@ export default {
 
 .fixed-header {
   position: fixed;
-  top: 44px; /* StatusBar 높이 */
+  /* top: 44px; StatusBar 높이 */
   left: 0;
   right: 0;
   z-index: 1000;
@@ -215,7 +215,7 @@ export default {
   overflow-y: auto;
   -webkit-overflow-scrolling: touch;
   scrollbar-width: none;
-  padding-top: 64px; /* 헤더(64px) 높이 */
+  padding-top: 64px;
 }
 
 .scrollable-content::-webkit-scrollbar {

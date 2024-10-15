@@ -1,37 +1,31 @@
 <template>
   <div class="modal-overlay" v-if="show" @click.self="close">
     <div class="modal-content">
-      <!-- Display the company name or N/A -->
       <div class="product-badge">{{ product?.korCoNm || 'N/A' }}</div>
-
-      <!-- Display the product title (finPrdtNm) -->
-      <div class="product-title">
-        <span>{{ product?.finPrdtNm || 'N/A' }}</span>
-      </div>
-
-      <!-- Display recommendation similarity (probability) -->
-      <p v-if="product?.probability !== undefined">
-        추천 유사도: {{ product.probability.toFixed(2) }}%
-      </p>
-
-      <!-- Display join method -->
+      <div class="product-title">{{ product?.finPrdtNm || 'N/A' }}</div>
       <p>가입 방법: {{ product?.joinWay || 'N/A' }}</p>
 
-      <!-- Check for sixMonthOption availability -->
+      <!-- sixMonthOption이 존재하는지 확인 -->
       <p v-if="product?.sixMonthOption?.length > 0">
         금리 유형: {{ product.sixMonthOption[0]?.intrRateTypeNm || 'N/A' }}
       </p>
       <p v-if="product?.sixMonthOption?.length > 0">
         적립 유형: {{ product.sixMonthOption[0]?.rsrvTypeNm || 'N/A' }}
       </p>
+      <p v-if="product?.yearOption?.length > 0">
+        적립 유형: {{ product.yearOption[0]?.rsrvTypeNm || 'N/A' }}
+      </p>
+      <p v-if="product?.sixMonthOption?.length > 0">
+        6개월 저축 금리: {{ product.sixMonthOption[0]?.intrRate || 'N/A' }}%
+        (우대 {{ product.sixMonthOption[0]?.intrRate2 || 'N/A' }}%)
+      </p>
 
-      <!-- Check for yearOption availability and display interest rate for 12 months -->
+      <!-- yearOption이 존재하는지 확인 -->
       <p v-if="product?.yearOption?.length > 0">
         12개월 저축 금리: {{ product.yearOption[0]?.intrRate || 'N/A' }}% (우대
         {{ product.yearOption[0]?.intrRate2 || 'N/A' }}%)
       </p>
 
-      <!-- Buttons to close modal or go to product details -->
       <div class="modal-buttons">
         <button @click="closeModal">닫기</button>
         <button>상품 보러 가기</button>
@@ -56,14 +50,13 @@ export default {
 </script>
 
 <style scoped>
-/* Styling for modal and buttons */
 .modal-overlay {
   position: fixed;
   top: 0;
   left: 0;
   width: 100%;
   height: 100%;
-  background: rgba(0, 0, 0, 0.5);
+  background: rgba(0, 0, 0, 0.7); /* 수정 */
   display: flex;
   justify-content: center;
   align-items: center;
@@ -93,14 +86,16 @@ export default {
   justify-content: center;
   align-items: center;
   background: var(--p70);
-  margin-bottom: 12px;
+  margin-bottom: 8px;
 }
 
 .product-title {
-  margin: 0 0 16px 0;
+  margin: 0 0 12px 0;
   color: var(--gr30);
+  text-align: center;
   font-size: 22px;
   font-weight: 550;
+  line-height: 100%;
 }
 
 .product-title span {
@@ -112,11 +107,12 @@ export default {
 }
 
 .modal-content p {
-  margin: 8px 0;
+  margin: 6px 0;
   color: var(--gr50);
+  text-align: center;
   font-size: 14px;
   font-weight: 350;
-  line-height: 1.4;
+  line-height: 100%;
 }
 
 .modal-buttons {
@@ -137,6 +133,7 @@ export default {
   flex-shrink: 0;
   font-size: 16px;
   font-weight: 500;
+  line-height: 100%;
   font-family: 'Pretendard', sans-serif;
 }
 

@@ -67,7 +67,7 @@ export default {
       }
       //실시간 알림 구독
       const eventSource = new EventSource(
-        `http://ec2-3-38-135-108.ap-northeast-2.compute.amazonaws.com:8080/notifications/subscribe?token=${token}`
+        `http://localhost:8080/notifications/subscribe?token=${token}`
       );
 
       eventSource.onmessage = function (event) {
@@ -103,7 +103,7 @@ export default {
 <style scoped>
 .notification-list {
   position: absolute;
-  top: 108px;
+  top: 64px;
   left: 0;
   width: 375px;
   height: 704px;

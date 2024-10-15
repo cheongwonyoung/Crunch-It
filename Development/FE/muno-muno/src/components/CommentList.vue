@@ -1,17 +1,24 @@
 <template>
   <div class="comment-list">
-<!--    <h4>댓글 {{ totalCommentsAndReplies }}개</h4>-->
+    <!--    <h4>댓글 {{ totalCommentsAndReplies }}개</h4>-->
     <ul v-if="comments.length > 0" class="comment-list-items">
-      <li v-for="(comment, index) in comments" :key="comment.commentId" class="comment-item">
-
+      <li
+        v-for="(comment, index) in comments"
+        :key="comment.commentId"
+        class="comment-item"
+      >
         <!-- 댓글 내용 -->
         <div class="comment-wrapper">
-
           <!-- 수정 중인 상태에서는 textarea 표시 -->
           <div v-if="editIndex === index" class="edit-comment">
             <textarea v-model="editContent" class="edit-textarea"></textarea>
             <div class="edit-actions">
-              <button @click="updateComment(comment.commentId, editContent)" class="submit-edit-btn">저장</button>
+              <button
+                @click="updateComment(comment.commentId, editContent)"
+                class="submit-edit-btn"
+              >
+                저장
+              </button>
               <button @click="cancelEdit" class="cancel-edit-btn">취소</button>
             </div>
           </div>
@@ -19,31 +26,38 @@
           <!-- 수정 중이 아닐 때 일반 댓글 표시 -->
           <div v-else>
             <div class="comment-header">
-<!--              writerId가 아닌 닉네임이 뜨도록 해야함-->
+              <!--              writerId가 아닌 닉네임이 뜨도록 해야함-->
               <span class="writer">{{ comment.nickname }}</span>
 
-<!--              사용자의 경우에만 수정이나 삭제버튼이 뜨도록-->
+              <!--              사용자의 경우에만 수정이나 삭제버튼이 뜨도록-->
               <div v-if="comment.writerId === userId" class="settings-menu">
-                <img src="@/assets/dots-vertical.svg" alt="dots-vertical" @click="toggleCommentSettingsMenu(index)" class="dots-icon" />
-                <div v-if="showCommentSettingsMenuIndex === index" class="dropdown-menu">
+                <img
+                  src="@/assets/dots-vertical.svg"
+                  alt="dots-vertical"
+                  @click="toggleCommentSettingsMenu(index)"
+                  class="dots-icon"
+                />
+                <div
+                  v-if="showCommentSettingsMenuIndex === index"
+                  class="dropdown-menu"
+                >
                   <ul>
                     <li @click="enableEdit(index, comment.content)">수정</li>
                     <li @click="deleteComment(comment.commentId)">삭제</li>
                   </ul>
                 </div>
               </div>
-
-
             </div>
             <div class="comment-content">
               <p>{{ comment.content }}</p>
               <span class="date">{{ formatDate(comment.registerDate) }}</span>
             </div>
             <div class="comment-actions">
-              <button class="reply-button" @click="toggleReplyInput(index)">답글</button>
+              <button class="reply-button" @click="toggleReplyInput(index)">
+                답글
+              </button>
             </div>
           </div>
-
         </div>
 
         <!-- 답글 입력 영역 및 답글 리스트는 기존대로 -->
@@ -51,35 +65,68 @@
           <div class="reply-input-wrapper">
             <textarea v-model="replyContent" rows="3"></textarea>
             <div class="reply-footer">
-              <button @click="submitReply(comment.commentId)" class="submit-reply-btn">등록</button>
+              <button
+                @click="submitReply(comment.commentId)"
+                class="submit-reply-btn"
+              >
+                등록
+              </button>
             </div>
           </div>
         </div>
 
-        <div v-if="getRepliesByCommentId(comment.commentId).length" class="reply-list">
+        <div
+          v-if="getRepliesByCommentId(comment.commentId).length"
+          class="reply-list"
+        >
           <ul>
-            <li v-for="reply in getRepliesByCommentId(comment.commentId)" :key="reply.replyId" class="reply-item">
+            <li
+              v-for="reply in getRepliesByCommentId(comment.commentId)"
+              :key="reply.replyId"
+              class="reply-item"
+            >
               <div v-if="editReplyIndex === reply.replyId" class="edit-reply">
-                <textarea v-model="editReplyContent" class="edit-textarea"></textarea>
+                <textarea
+                  v-model="editReplyContent"
+                  class="edit-textarea"
+                ></textarea>
                 <div class="edit-actions">
-                  <button @click="updateReply(reply.replyId, editReplyContent)" class="submit-edit-btn">저장</button>
-                  <button @click="cancelReplyEdit" class="cancel-edit-btn">취소</button>
+                  <button
+                    @click="updateReply(reply.replyId, editReplyContent)"
+                    class="submit-edit-btn"
+                  >
+                    저장
+                  </button>
+                  <button @click="cancelReplyEdit" class="cancel-edit-btn">
+                    취소
+                  </button>
                 </div>
               </div>
               <div v-else class="reply-wrapper">
                 <div class="reply-header">
                   <span class="writer">{{ reply.nickname }}</span>
 
-                  <div v-if="reply.writerId===userId" class="settings-menu">
-                    <img src="@/assets/dots-vertical.svg" alt="dots-vertical" @click="toggleReplySettingsMenu(reply.replyId)" class="dots-icon" />
-                    <div v-if="showReplySettingsMenuIndex === reply.replyId" class="dropdown-menu">
+                  <div v-if="reply.writerId === userId" class="settings-menu">
+                    <img
+                      src="@/assets/dots-vertical.svg"
+                      alt="dots-vertical"
+                      @click="toggleReplySettingsMenu(reply.replyId)"
+                      class="dots-icon"
+                    />
+                    <div
+                      v-if="showReplySettingsMenuIndex === reply.replyId"
+                      class="dropdown-menu"
+                    >
                       <ul>
-                        <li @click="enableReplyEdit(reply.replyId, reply.content)">수정</li>
+                        <li
+                          @click="enableReplyEdit(reply.replyId, reply.content)"
+                        >
+                          수정
+                        </li>
                         <li @click="deleteReply(reply.replyId)">삭제</li>
                       </ul>
                     </div>
                   </div>
-
                 </div>
                 <div class="reply-content">
                   <p>{{ reply.content }}</p>
@@ -89,7 +136,6 @@
             </li>
           </ul>
         </div>
-
       </li>
     </ul>
     <p v-else>댓글이 없습니다.</p>
@@ -102,16 +148,17 @@ export default {
   props: {
     comments: {
       type: Array,
-      required: true
+      required: true,
     },
     replies: {
       type: Array,
-      required: true
+      required: true,
     },
-    userId: { // 부모 컴포넌트에서 로그인한 사용자의 userId를 전달받음
+    userId: {
+      // 부모 컴포넌트에서 로그인한 사용자의 userId를 전달받음
       type: String,
-      required: true
-    }
+      required: true,
+    },
   },
   mounted() {
     // Emit the correct comment and reply count when the component is mounted
@@ -125,7 +172,7 @@ export default {
     replies() {
       // Emit updated counts whenever replies change
       this.emitCommentAndReplyCount();
-    }
+    },
   },
 
   data() {
@@ -151,7 +198,9 @@ export default {
     formatDate(dateArray) {
       if (!dateArray || dateArray.length < 3) return '날짜 없음';
       const [year, month, day] = dateArray;
-      return `${year}. ${String(month).padStart(2, '0')}. ${String(day).padStart(2, '0')}`;
+      return `${year}. ${String(month).padStart(2, '0')}. ${String(
+        day
+      ).padStart(2, '0')}`;
     },
     enableEdit(index, content) {
       this.editIndex = index;
@@ -195,7 +244,6 @@ export default {
       }
     },
 
-
     async deleteComment(commentId) {
       try {
         await this.$emit('delete-comment', commentId);
@@ -215,7 +263,10 @@ export default {
       if (!this.replyContent.trim()) return;
 
       try {
-        await this.$emit('submit-reply', { commentId, content: this.replyContent });
+        await this.$emit('submit-reply', {
+          commentId,
+          content: this.replyContent,
+        });
         this.replyContent = ''; // 입력창 초기화
         this.showReplyInputIndex = null; // 답글 입력창 닫기
       } catch (error) {
@@ -223,7 +274,7 @@ export default {
       }
     },
     getRepliesByCommentId(commentId) {
-      return this.replies.filter(reply => reply.commentId === commentId);
+      return this.replies.filter((reply) => reply.commentId === commentId);
     },
     async updateReply(replyId, content) {
       try {
@@ -245,14 +296,14 @@ export default {
         this.showReplySettingsMenuIndex = null; // 설정 메뉴 닫기
       }
     },
-  }
+  },
 };
 </script>
 
 <style scoped>
 /* 댓글 리스트 스타일 */
 .comment-list {
-  margin-top: 20px;
+  /* margin-top: 20px; */
   padding: 0 16px;
 }
 
@@ -286,7 +337,7 @@ export default {
   font-weight: 600; /* Bold for the writer name */
   font-family: 'Pretendard', sans-serif;
   font-size: 14px;
-  color: #292D33;
+  color: #292d33;
 }
 
 .comment-content p,
@@ -294,8 +345,9 @@ export default {
   margin: 5px 0;
   font-family: 'Pretendard', sans-serif;
   font-size: 14px;
-  color: #383E47;
+  color: #383e47;
   line-height: 1.6;
+  word-break: break-word; /* 긴 텍스트 줄바꿈 */
 }
 
 .comment-content .date,
@@ -346,11 +398,11 @@ export default {
   background-color: #fff;
   border-radius: 5px;
   margin-bottom: 10px;
-  box-shadow: inset 0 1px 3px rgba(0,0,0,0.1);
+  box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.1);
 }
 
 .submit-reply-btn {
-  background-color: #3E8AFF;
+  background-color: #3e8aff;
   color: white;
   border: none;
   border-radius: 5px;
@@ -409,7 +461,6 @@ export default {
   display: none;
 }
 
-
 .reply-item::before,
 .reply-item::after {
   content: none;
@@ -417,9 +468,9 @@ export default {
 }
 
 .reply-item {
-  padding-left: 0 ;
+  padding-left: 0;
   border-left: none;
-  list-style-type: none ; /* Ensure no bullets or symbols */
+  list-style-type: none; /* Ensure no bullets or symbols */
 }
 
 /* Additional styling for the replies if needed */
@@ -432,8 +483,7 @@ export default {
 .reply-content p {
   font-family: 'Pretendard', sans-serif;
   font-size: 14px;
-  color: #383E47;
+  color: #383e47;
   line-height: 1.6;
 }
-
 </style>

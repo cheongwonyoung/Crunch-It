@@ -58,12 +58,17 @@ export default {
 <style scoped>
 .onboarding-container {
   top: 88px;
+  left: 0;
+  right: 0;
+  bottom: 0;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
   padding: 0 20px;
   text-align: left;
-  position: relative;
+  position: fixed; /* 위치 고정 */
+  overflow: hidden; /* 스크롤 막기 */
+  height: 100vh; /* 화면 전체 높이 차지 */
 }
 
 .step-icon {

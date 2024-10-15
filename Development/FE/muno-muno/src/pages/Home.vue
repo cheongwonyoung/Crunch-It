@@ -8,13 +8,13 @@
     />
 
     <!-- Status Bar -->
-    <div class="status-bar">
+    <!-- <div class="status-bar">
       <img
         src="@/assets/statusBar.svg"
         alt="Status Bar"
         class="status-bar-svg"
       />
-    </div>
+    </div> -->
 
     <!-- 헤더 -->
     <div class="header">
@@ -192,11 +192,16 @@ export default {
 <style scoped>
 .homepage {
   background-color: var(--p70);
-  overflow: hidden;
+  overflow: hidden; /* 스크롤 비활성화 유지 */
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  height: 680px;
+  height: 100vh; /* 뷰포트 전체 높이 사용 */
+  position: fixed; /* 페이지 고정 */
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
 }
 
 .expense-container-wrapper {
@@ -215,7 +220,7 @@ export default {
   left: 27px;
 }
 
-.status-bar {
+/* .status-bar {
   background-color: var(--p70);
   height: 44px;
   display: flex;
@@ -230,7 +235,7 @@ export default {
 .status-bar-svg {
   width: 375px;
   height: 44px;
-}
+} */
 
 .header {
   display: flex;
@@ -240,7 +245,7 @@ export default {
   height: 65px;
   background-color: var(--p70);
   position: fixed;
-  top: 44px;
+  /* top: 44px; */
   left: 0;
   width: 100%;
   z-index: 1000;
