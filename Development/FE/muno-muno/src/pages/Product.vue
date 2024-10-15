@@ -178,7 +178,7 @@ export default {
     async fetchRecommendationData() {
       try {
         const recommendationResponse = await apiClient.post(
-          'http://127.0.0.1:5000/recommendation/product',
+          'http://ec2-3-38-135-108.ap-northeast-2.compute.amazonaws.com:5000/recommendation/product',
           {
             birth: this.birth,
             gender: this.gender,
