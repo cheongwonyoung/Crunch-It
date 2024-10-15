@@ -74,6 +74,9 @@ export default {
   width: 32px;
   height: 32px;
   margin-right: 8px;
+  border-radius: 50%;
+  border: 0.5px solid var(--gr80);
+  box-shadow: 0px 0px 10px 0px rgba(0, 0, 0, 0.06);
 }
 
 .message-text-label {
@@ -131,4 +134,5 @@ export default {
   margin-bottom: 2px;
   white-space: nowrap;
 }
+
 </style>
