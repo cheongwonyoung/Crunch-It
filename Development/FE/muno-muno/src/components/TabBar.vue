@@ -86,7 +86,7 @@ export default {
   background-color: var(--gr100);
   border-top: 1px solid var(--gr70);
   box-shadow: 0px -1px 5px rgba(0, 0, 0, 0.1);
-  z-index: 1;
+  z-index: -1;
 }
 
 .tab-item {
