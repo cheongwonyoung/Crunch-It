@@ -5,7 +5,7 @@ FROM node:18 AS build
 WORKDIR /app
 
 # Copy only package.json
-COPY package.json .
+COPY package.json ./
 
 # Install dependencies
 RUN npm install
@@ -16,14 +16,9 @@ COPY . .
 # Build the Vue app
 RUN npm run build
 
-# 2. Production Stage
-FROM nginx:alpine
-
-# Copy built files from the build stage
+# Step 2: Create Nginx Server
+FROM nginx:1.20 AS prod-stage
 COPY --from=build /app/dist /usr/share/nginx/html
-
-# Expose port 80
+COPY --from=build /app/nginx.conf /etc/nginx/conf.d/default.conf
 EXPOSE 80
-
-# Start Nginx server
 CMD ["nginx", "-g", "daemon off;"]
