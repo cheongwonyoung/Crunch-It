@@ -1,37 +1,31 @@
 <template>
   <div class="modal-overlay" v-if="show" @click.self="close">
     <div class="modal-content">
-      <!-- Display the company name or N/A -->
       <div class="product-badge">{{ product?.korCoNm || 'N/A' }}</div>
-
-      <!-- Display the product title (finPrdtNm) -->
-      <div class="product-title">
-        <span>{{ product?.finPrdtNm || 'N/A' }}</span>
-      </div>
-
-      <!-- Display recommendation similarity (probability) -->
-      <p v-if="product?.probability !== undefined">
-        추천 유사도: {{ product.probability.toFixed(2) }}%
-      </p>
-
-      <!-- Display join method -->
+      <div class="product-title">{{ product?.finPrdtNm || 'N/A' }}</div>
       <p>가입 방법: {{ product?.joinWay || 'N/A' }}</p>
 
-      <!-- Check for sixMonthOption availability -->
+      <!-- sixMonthOption이 존재하는지 확인 -->
       <p v-if="product?.sixMonthOption?.length > 0">
         금리 유형: {{ product.sixMonthOption[0]?.intrRateTypeNm || 'N/A' }}
       </p>
       <p v-if="product?.sixMonthOption?.length > 0">
         적립 유형: {{ product.sixMonthOption[0]?.rsrvTypeNm || 'N/A' }}
       </p>
+      <p v-if="product?.yearOption?.length > 0">
+        적립 유형: {{ product.yearOption[0]?.rsrvTypeNm || 'N/A' }}
+      </p>
+      <p v-if="product?.sixMonthOption?.length > 0">
+        6개월 저축 금리: {{ product.sixMonthOption[0]?.intrRate || 'N/A' }}%
+        (우대 {{ product.sixMonthOption[0]?.intrRate2 || 'N/A' }}%)
+      </p>
 
-      <!-- Check for yearOption availability and display interest rate for 12 months -->
+      <!-- yearOption이 존재하는지 확인 -->
       <p v-if="product?.yearOption?.length > 0">
         12개월 저축 금리: {{ product.yearOption[0]?.intrRate || 'N/A' }}% (우대
         {{ product.yearOption[0]?.intrRate2 || 'N/A' }}%)
       </p>
 
-      <!-- Buttons to close modal or go to product details -->
       <div class="modal-buttons">
         <button @click="closeModal">닫기</button>
         <button>상품 보러 가기</button>
