@@ -13,9 +13,7 @@
 ⠀
 ⠀
 ## ② 프로젝트 소개
-<img src="https://github.com/user-attachments/assets/944b2e9d-6f77-4a4d-97b8-d64583b1066b"/>
 <img src="https://github.com/user-attachments/assets/21893212-f5ea-4054-97c7-9b2588ea88f7"/>
-<img src="https://github.com/user-attachments/assets/2fc3b34b-bed3-45b6-9232-4cde0ff614ba"/>
 <img src="https://github.com/user-attachments/assets/08baa4f3-08da-47f4-a5c9-b82eec08703c"/>
 
 ⠀
