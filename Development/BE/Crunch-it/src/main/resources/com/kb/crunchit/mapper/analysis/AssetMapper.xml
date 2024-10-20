@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.kb.crunchit.mapper.analysis.AssetMapper">
+
+    <select id="getMonthStatistics" resultType="AssetResponseDto">
+        <!-- 받아온 년도와 월이 현재 날짜와 일치하는지 확인 -->
+        <if test="year == @java.time.LocalDate@now().getYear() and month == @java.time.LocalDate@now().getMonthValue()">
+            SELECT
+            COALESCE(uas.total_account_balance, current_month.total_account_balance) as total_account_balance,
+            COALESCE(uas.savings_amount, current_month.savings_amount) as savings_amount,
+            COALESCE(uas.stock_invest_amount, current_month.stock_invest_amount) as stock_invest_amount,
+            COALESCE(uas.fund_invest_amount, current_month.fund_invest_amount) as fund_invest_amount,
+            COALESCE(uas.bond_invest_amount, current_month.bond_invest_amount) as bond_invest_amount,
+            COALESCE(uas.stock_profit_amount, current_month.stock_profit_amount) as stock_profit_amount,
+            COALESCE(uas.fund_profit_amount, current_month.fund_profit_amount) as fund_profit_amount,
+            COALESCE(uas.bond_profit_amount, current_month.bond_profit_amount) as bond_profit_amount,
+            COALESCE(uas.total_outcome, current_month.total_outcome) as total_outcome,
+            prev_month.total_account_balance as prev_total_account_balance,
+            prev_month.savings_amount as prev_savings_amount,
+            prev_month.stock_invest_amount as prev_stock_invest_amount,
+            prev_month.fund_invest_amount as prev_fund_invest_amount,
+            prev_month.bond_invest_amount as prev_bond_invest_amount,
+            prev_month.stock_profit_amount as prev_stock_profit_amount,
+            prev_month.fund_profit_amount as prev_fund_profit_amount,
+            prev_month.bond_profit_amount as prev_bond_profit_amount,
+            prev_month.total_outcome as prev_total_outcome
+            FROM user_asset_statistics uas
+            LEFT JOIN user_invest_history current_month ON uas.user_id = current_month.user_id
+            AND YEAR(current_month.register_date) = #{year}
+            AND MONTH(current_month.register_date) = #{month}
+            LEFT JOIN user_invest_history prev_month ON uas.user_id = prev_month.user_id
+            AND (
+            (YEAR(prev_month.register_date) = #{year} AND MONTH(prev_month.register_date) = #{month} - 1)
+            OR (YEAR(prev_month.register_date) = #{year} - 1 AND MONTH(prev_month.register_date) = 12 AND #{month} = 1)
+            )
+            WHERE uas.user_id = #{userId}
+            LIMIT 1
+        </if>
+
+        <!-- 받아온 년/월이 현재 날짜와 일치하지 않는 경우 -->
+        <if test="year != @java.time.LocalDate@now().getYear() or month != @java.time.LocalDate@now().getMonthValue()">
+            SELECT
+            current_month.total_account_balance as total_account_balance,
+            current_month.savings_amount as savings_amount,
+            current_month.stock_invest_amount as stock_invest_amount,
+            current_month.fund_invest_amount as fund_invest_amount,
+            current_month.bond_invest_amount as bond_invest_amount,
+            current_month.stock_profit_amount as stock_profit_amount,
+            current_month.fund_profit_amount as fund_profit_amount,
+            current_month.bond_profit_amount as bond_profit_amount,
+            current_month.total_outcome as total_outcome,
+            prev_month.total_account_balance as prev_total_account_balance,
+            prev_month.savings_amount as prev_savings_amount,
+            prev_month.stock_invest_amount as prev_stock_invest_amount,
+            prev_month.fund_invest_amount as prev_fund_invest_amount,
+            prev_month.bond_invest_amount as prev_bond_invest_amount,
+            prev_month.stock_profit_amount as prev_stock_profit_amount,
+            prev_month.fund_profit_amount as prev_fund_profit_amount,
+            prev_month.bond_profit_amount as prev_bond_profit_amount,
+            prev_month.total_outcome as prev_total_outcome
+            FROM user_invest_history current_month
+            LEFT JOIN user_invest_history prev_month ON current_month.user_id = prev_month.user_id
+            AND (
+            (YEAR(prev_month.register_date) = #{year} AND MONTH(prev_month.register_date) = #{month} - 1)
+            OR (YEAR(prev_month.register_date) = #{year} - 1 AND MONTH(prev_month.register_date) = 12 AND #{month} = 1)
+            )
+            WHERE current_month.user_id = #{userId}
+            AND YEAR(current_month.register_date) = #{year}
+            AND MONTH(current_month.register_date) = #{month}
+            LIMIT 1
+        </if>
+    </select>
+
+</mapper>

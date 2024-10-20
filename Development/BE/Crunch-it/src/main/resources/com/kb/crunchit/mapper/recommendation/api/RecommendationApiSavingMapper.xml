@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.kb.crunchit.mapper.recommendation.api.RecommendationApiSavingMapper">
+
+    <!-- Mapping columns to SavingInfo entity properties -->
+    <resultMap id="SavingResultMap" type="com.kb.crunchit.entity.SavingInfo">
+        <result property="productCode" column="fin_prdt_cd"/>   <!-- 상품 코드 -->
+        <result property="bankName" column="kor_co_nm"/>     <!-- 금융회사 이름 -->
+        <result property="productName" column="fin_prdt_nm"/>   <!-- 금융 상품명 -->
+        <result property="joinMethod" column="join_way"/>       <!-- 가입 방법 -->
+    </resultMap>
+
+    <!-- Insert statement for saving data -->
+    <insert id="insertSaving" parameterType="com.kb.crunchit.entity.SavingInfo">
+        INSERT INTO recommendation_api_saving
+            (fin_prdt_cd, kor_co_nm, fin_prdt_nm, join_way)
+        VALUES
+            (#{productCode}, #{bankName}, #{productName}, #{joinMethod})
+    </insert>
+
+    <!-- Update statement for saving data -->
+    <update id="updateSaving" parameterType="com.kb.crunchit.entity.SavingInfo">
+        UPDATE recommendation_api_saving
+        SET kor_co_nm = #{bankName},
+            fin_prdt_nm = #{productName},
+            join_way = #{joinMethod}
+        WHERE fin_prdt_cd = #{productCode}
+    </update>
+
+    <!-- Select to check if a saving record already exists -->
+    <select id="existsSaving" parameterType="String" resultType="int">
+        SELECT COUNT(*) FROM recommendation_api_saving
+        WHERE fin_prdt_cd = #{productCode}
+    </select>
+    <select id="getAllSavings" resultType="RecommendationApiSaving">
+        SELECT *
+        FROM recommendation_api_saving
+    </select>
+
+</mapper>

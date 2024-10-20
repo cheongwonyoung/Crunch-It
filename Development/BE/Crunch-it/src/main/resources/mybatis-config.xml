@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE configuration PUBLIC "-//mybatis.org//DTD Config 3.0//EN" "http://mybatis.org/dtd/mybatis-3-config.dtd">
+<configuration>
+    <settings>
+        <setting name="mapUnderscoreToCamelCase" value="true"/>
+    </settings>
+    <typeAliases>
+        <typeAlias alias="UserStockResponseDTO" type="com.kb.crunchit.dto.response.recommendation.top.UserStockResponseDTO"/>
+        <typeAlias alias="UserBondResponseDTO" type="com.kb.crunchit.dto.response.recommendation.top.UserBondResponseDTO"/>
+        <typeAlias alias="UserFundResponseDTO" type="com.kb.crunchit.dto.response.recommendation.top.UserFundResponseDTO"/>
+
+        <typeAlias alias="Board" type="com.kb.crunchit.entity.Board"/>
+        <typeAlias alias="BoardRequest" type="com.kb.crunchit.dto.request.BoardRequestDTO"/>
+        <typeAlias alias="BoardResponse" type="com.kb.crunchit.dto.response.BoardResponseDTO"/>
+        <typeAlias alias="Comment" type="com.kb.crunchit.entity.Comment"/>
+        <typeAlias alias="CommentRequest" type="com.kb.crunchit.dto.request.CommentRequestDTO"/>
+        <typeAlias alias="CommentResponse" type="com.kb.crunchit.dto.response.CommentResponseDTO"/>
+        <typeAlias alias="Reply" type="com.kb.crunchit.entity.Reply"/>
+        <typeAlias alias="ReplyRequest" type="com.kb.crunchit.dto.request.ReplyRequestDTO"/>
+        <typeAlias alias="ReplyResponse" type="com.kb.crunchit.dto.response.ReplyResponseDTO"/>
+        <typeAlias alias="Like" type="com.kb.crunchit.entity.Like"/>
+        <typeAlias alias="LikeRequest" type="com.kb.crunchit.dto.request.LikeRequestDTO"/>
+        <typeAlias alias="LikeResponse" type="com.kb.crunchit.dto.response.LikeResponseDTO"/>
+        <typeAlias alias="StockPriceInfo" type="com.kb.crunchit.entity.StockPriceInfo"/>
+        <typeAlias alias="User" type="com.kb.crunchit.entity.User"/>
+        <typeAlias alias="Notification" type="com.kb.crunchit.entity.Notification"/>
+        <typeAlias alias="NotificationRequest" type="com.kb.crunchit.dto.request.NotificationRequestDTO"/>
+        <typeAlias alias="KisStockProfitRank" type="com.kb.crunchit.entity.KisStockProfitRank"/>
+        <typeAlias alias="KisStockAmountRank" type="com.kb.crunchit.entity.KisStockAmountRank"/>
+        <typeAlias alias="KisStockDividendRank" type="com.kb.crunchit.entity.KisStockDividendRank"/>
+        <typeAlias alias="Octopus" type="com.kb.crunchit.entity.Octopus"/>
+
+        <typeAlias alias="AssetStatistics" type="com.kb.crunchit.entity.AssetStatistics" />
+        <typeAlias alias="InvestHistory" type="com.kb.crunchit.entity.InvestHistory" />
+        <typeAlias alias="Stock" type="com.kb.crunchit.entity.Stock" />
+        <typeAlias alias="Bond" type="com.kb.crunchit.entity.Bond" />
+        <typeAlias alias="AssetResponseDto" type="com.kb.crunchit.dto.response.analysis.AssetResponseDto" />
+        <typeAlias alias="RecommendationApiDeposit" type="com.kb.crunchit.entity.RecommendationApiDeposit"/>
+        <typeAlias alias="RecommendationApiDepositOption" type="com.kb.crunchit.entity.RecommendationApiDepositOption"/>
+        <typeAlias alias="RecommendationApiSaving" type="com.kb.crunchit.entity.RecommendationApiSaving"/>
+        <typeAlias alias="RecommendationApiSavingOption" type="com.kb.crunchit.entity.RecommendationApiSavingOption"/>
+
+    </typeAliases>
+
+    <!-- 데이터베이스 환경 설정 -->
+<!--    <environments default="development">-->
+<!--        <environment id="development">-->
+<!--            <transactionManager type="JDBC"/>-->
+<!--            <dataSource type="POOLED">-->
+<!--                <property name="driver" value="com.mysql.cj.jdbc.Driver"/>-->
+<!--                <property name="url" value="jdbc:mysql://localhost:3306/crunchit"/>-->
+<!--                <property name="username" value="root"/>-->
+<!--                <property name="password" value="1234"/>-->
+<!--            </dataSource>-->
+<!--        </environment>-->
+<!--    </environments>-->
+
+    <mappers>
+        <mapper resource="com/kb/crunchit/mapper/recommendation/top/UserAssetStatisticsMapper.xml"/>
+        <mapper resource="com/kb/crunchit/mapper/recommendation/top/UserBondMapper.xml"/>
+        <mapper resource="com/kb/crunchit/mapper/recommendation/top/UserFundMapper.xml"/>
+        <mapper resource="com/kb/crunchit/mapper/recommendation/top/UserStockMapper.xml"/>
+        <mapper resource="com/kb/crunchit/mapper/UserMapper.xml"/>
+        <mapper resource="com/kb/crunchit/mapper/BoardMapper.xml"/>
+    </mappers>
+
+</configuration>

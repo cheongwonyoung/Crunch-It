@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+
+<mapper namespace="com.kb.crunchit.mapper.UserMapper">
+
+    <!-- 모든 user 조회 -->
+    <select id="getAllUsers" resultType="Integer">
+        SELECT md_user_id
+        FROM user
+        WHERE md_user_id IS NOT NULL
+    </select>
+
+    <!-- mdUserId로 userId를 조회하는 쿼리 추가 -->
+    <select id="getUserIdByMdUserId" resultType="int">
+        SELECT user_id
+        FROM user
+        WHERE md_user_id = #{mdUserId}
+    </select>
+
+    <!-- userId로 mdUserId를 조회하는 쿼리 추가 -->
+    <select id="getMdUserIdByUserId" resultType="int">
+        SELECT md_user_id
+        FROM user
+        WHERE user_id = #{userId}
+    </select>
+
+    <select id="findByEmail" resultType="User" parameterType="string">
+        SELECT user_id      AS userId,
+               nickname     AS nickname,
+               password     AS password,
+               pin_number   AS pinNumber,
+               birth        AS birth,
+               gender       AS gender,
+               phone_number AS phoneNumber,
+               email        AS email,
+               md_user_id   AS mdUserId,
+               profile_url  AS profileUrl,
+               salary       AS salary
+        FROM user
+        WHERE email = #{email};
+    </select>
+
+    <select id="findByNickname" resultType="User" parameterType="string">
+        select *
+        from user
+        where nickname = #{nickname};
+    </select>
+
+    <select id="getUserProfile" resultType="string" parameterType="string">
+        select profile_url
+        from user
+        where email = #{email};
+    </select>
+    <select id="onBoardingCheck" resultType="java.lang.Integer" parameterType="integer">
+        select count(md_user_id)
+        from user
+        where user_id = #{userId}
+    </select>
+
+    <insert id="insertUser" parameterType="User">
+        insert into user (nickname, password, phone_number, email, birth)
+        values (#{nickname}, #{password}, #{phoneNumber}, #{email}, #{birth})
+    </insert>
+
+    <update id="updateUser" parameterType="User">
+        update user
+        set nickname     = #{nickname},
+            birth        = #{birth},
+            phone_number = #{phoneNumber}
+        where email = #{email}
+    </update>
+    <update id="updateUserProfile" parameterType="User">
+        update user
+        set profile_url = #{profileUrl}
+        where email = #{email}
+    </update>
+    <update id="updatePassword" parameterType="User">
+        update user
+        set password = #{password}
+        where email = #{email}
+    </update>
+    <update id="updateUserOnBoarding" parameterType="User">
+        update user
+        set md_user_id = #{mdUserId} , salary = #{salary}, outcome_limit = #{outcomeLimit}
+        where user_id = #{userId}
+    </update>
+
+</mapper>

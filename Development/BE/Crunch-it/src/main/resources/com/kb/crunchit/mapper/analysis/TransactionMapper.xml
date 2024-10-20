@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.kb.crunchit.mapper.analysis.TransactionMapper">
+
+    <!-- 마이데이터의 md_user_id로 메인 DB의 user_id를 조회 -->
+    <select id="getUserIdByMdUserId" resultType="int" parameterType="int">
+        SELECT user_id
+        FROM user
+        WHERE md_user_id = #{mdUserId}
+    </select>
+
+    <!-- 거래내역이 특정 user_id에 대해 메인 DB에 존재하는지 확인 -->
+    <select id="exists" resultType="boolean" parameterType="map">
+        SELECT COUNT(1)
+        FROM user_income_outcome_transaction
+        WHERE income_outcome_transaction_id = #{transactionId}
+          AND user_id = #{userId}
+    </select>
+
+    <!-- 거래내역 업데이트 -->
+    <update id="updateTransaction" parameterType="map">
+        UPDATE user_income_outcome_transaction
+        SET account_id       = #{transaction.accountId},
+            transaction_type = #{transaction.transactionType},
+            amount           = #{transaction.amount},
+            register_date    = #{transaction.registerDate}
+        WHERE income_outcome_transaction_id = #{transaction.transactionId}
+          AND user_id = #{userId}
+    </update>
+
+    <!-- 새로운 거래내역 추가 -->
+    <insert id="insertTransaction" parameterType="map">
+        INSERT INTO user_income_outcome_transaction (income_outcome_transaction_id, account_id, user_id,
+                                                     transaction_type, amount, register_date)
+        VALUES (#{transaction.transactionId}, #{transaction.accountId}, #{userId}, #{transaction.transactionType},
+                #{transaction.amount}, #{transaction.registerDate})
+    </insert>
+
+    <!-- 거래내역 삭제 -->
+    <delete id="deleteTransaction" parameterType="map">
+        DELETE
+        FROM user_income_outcome_transaction
+        WHERE income_outcome_transaction_id = #{transactionId}
+          AND user_id = #{userId}
+    </delete>
+
+    <!-- 특정 사용자의 모든 거래내역 ID 가져오기 -->
+    <select id="getAllTransactionIds" resultType="int" parameterType="int">
+        SELECT income_outcome_transaction_id
+        FROM user_income_outcome_transaction
+        WHERE user_id = #{userId}
+    </select>
+
+    <!-- 이번 달 총 지출 -->
+    <!-- user_income_outcome_transaction (입출금내역) 테이블에서 transaction_type 이 지출(1) 인 금액의 합 -->
+    <select id="calculateTotalOutcome" resultType="long">
+        SELECT COALESCE(SUM(amount), 0)
+        FROM user_income_outcome_transaction
+        WHERE user_id = #{userId}
+            AND transaction_type = 1
+            AND YEAR(register_date) = YEAR(CURRENT_DATE())
+            AND MONTH(register_date) = MONTH(CURRENT_DATE())
+    </select>
+
+</mapper>

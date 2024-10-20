@@ -1,102 +1,152 @@
 plugins {
-  id 'java'
-  id 'war'
+    id 'java'
+    id 'war'
 }
 
 group 'com.kb'
 version '1.0-SNAPSHOT'
 
 repositories {
-  mavenCentral()
+    mavenCentral()
 }
 
 ext {
-  junitVersion = '5.9.2'
+    junitVersion = '5.9.2'
+    lombokVersion = '1.18.28'
+    springVersion = '5.3.37'
 }
 
 sourceCompatibility = '17'
 targetCompatibility = '17'
 
 tasks.withType(JavaCompile) {
-  options.encoding = 'UTF-8'
+    options.encoding = 'UTF-8'
 }
 
 dependencies {
-  compileOnly('javax.servlet:javax.servlet-api:4.0.1')
+    compileOnly('javax.servlet:javax.servlet-api:4.0.1')
 
-  // 스프링
-  implementation ("org.springframework:spring-context:5.3.37")
-          { exclude group: 'commons-logging', module: 'commons-logging' }
-  implementation "org.springframework:spring-webmvc:5.3.37"
-  implementation 'javax.inject:javax.inject:1'
+    // 스프링
+    implementation("org.springframework:spring-context:${springVersion}")
+            { exclude group: 'commons-logging', module: 'commons-logging' }
+    implementation "org.springframework:spring-webmvc:${springVersion}"
+    implementation 'javax.inject:javax.inject:1'
 
-  //el과 jstl 사용시 필요한 모듈
-  compileOnly 'javax.servlet.jsp:jsp-api:2.1'
-  implementation 'javax.servlet:jstl:1.2'
+    //el과 jstl 사용시 필요한 모듈
+    compileOnly 'javax.servlet.jsp:jsp-api:2.1'
+    implementation 'javax.servlet:jstl:1.2'
 
-  // Logging- 최근에 log4j(보안이슈-거의 사용 안함 -> logback - log4j2(실패)
-  // https://mvnrepository.com/artifact/ch.qos.logback/logback-classic
-  testImplementation group: 'ch.qos.logback', name: 'logback-classic', version: '1.4.14'
-  implementation 'org.slf4j:slf4j-api:2.0.3'
+    // Logging- 최근에 log4j(보안이슈-거의 사용 안함 -> logback - log4j2(실패)
+    // https://mvnrepository.com/artifact/ch.qos.logback/logback-classic
+    testImplementation group: 'ch.qos.logback', name: 'logback-classic', version: '1.4.14'
+    implementation 'org.slf4j:slf4j-simple:1.7.36'
 
-  // xml내 한글 처리
-  implementation 'xerces:xercesImpl:2.12.2'
+    // xml내 한글 처리
+    implementation 'xerces:xercesImpl:2.12.2'
 
-  //lombok - 보일러플레이트 코드 -  getter/setter/기본생성자
-  //필요하긴한데 코드가 너무 지루한 기본코드들을 어노테이션으로 해결한다
-  //개발자를 편하게 해주기 위해 개발한 라이브러리
-  compileOnly 'org.projectlombok:lombok:1.18.28'
-  annotationProcessor 'org.projectlombok:lombok:1.18.28'
+    //lombok - 보일러플레이트 코드 -  getter/setter/기본생성자
+    //필요하긴한데 코드가 너무 지루한 기본코드들을 어노테이션으로 해결한다
+    //개발자를 편하게 해주기 위해 개발한 라이브러리
+    compileOnly "org.projectlombok:lombok:${lombokVersion}"
+    annotationProcessor "org.projectlombok:lombok:${lombokVersion}"
 
-  //Restful api 서버 구축에 필요한 라이브러리
-  //Java객체를 JSON으로 전환하는 일을 담당한다
-  // https://mvnrepository.com/artifact/com.fasterxml.jackson.core/jackson-databind
-  implementation group: 'com.fasterxml.jackson.core', name: 'jackson-databind', version: '2.17.2'
-  // https://mvnrepository.com/artifact/com.fasterxml.jackson.core/jackson-core
-  implementation group: 'com.fasterxml.jackson.core', name: 'jackson-core', version: '2.17.2'
+    //Restful api 서버 구축에 필요한 라이브러리
+    //Java객체를 JSON으로 전환하는 일을 담당한다
+    // https://mvnrepository.com/artifact/com.fasterxml.jackson.core/jackson-databind
+    implementation group: 'com.fasterxml.jackson.core', name: 'jackson-databind', version: '2.17.2'
+    // https://mvnrepository.com/artifact/com.fasterxml.jackson.core/jackson-core
+    implementation group: 'com.fasterxml.jackson.core', name: 'jackson-core', version: '2.17.2'
 
-  //mybatis
-  implementation 'org.springframework:spring-jdbc:5.3.37'
-  implementation 'org.mybatis:mybatis:3.5.10'
-  implementation 'org.mybatis:mybatis-spring:2.0.7'
+    //mybatis
+    implementation 'org.springframework:spring-jdbc:5.3.37'
+    implementation 'org.mybatis:mybatis:3.5.10'
+    implementation 'org.mybatis:mybatis-spring:2.0.7'
 
-  // MySQL
-  runtimeOnly 'mysql:mysql-connector-java:8.0.26'
+    // MySQL
+    runtimeOnly 'mysql:mysql-connector-java:8.0.26'
+
+    // 히카리 디비커넥션풀
+    implementation group: 'com.zaxxer', name: 'HikariCP', version: '5.1.0'
+
+    // AOP
+    implementation 'org.aspectj:aspectjrt:1.9.20'
+    implementation 'org.aspectj:aspectjweaver:1.9.20'
+
+    testImplementation("org.junit.jupiter:junit-jupiter-api:${junitVersion}")
+    testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:${junitVersion}")
+
+    //security
+    // https://mvnrepository.com/artifact/org.springframework.security/spring-security-core
+    implementation group: 'org.springframework.security', name: 'spring-security-core', version: '5.8.13'
+
+    // https://mvnrepository.com/artifact/org.springframework.security/spring-security-web
+    implementation group: 'org.springframework.security', name: 'spring-security-web', version: '5.8.13'
+    // https://mvnrepository.com/artifact/org.springframework.security/spring-security-config
+    implementation group: 'org.springframework.security', name: 'spring-security-config', version: '5.8.13'
+
+    //jwt토큰기반인증용
+    implementation group: 'io.jsonwebtoken', name: 'jjwt-api', version: '0.11.5'
+    runtimeOnly group: 'io.jsonwebtoken', name: 'jjwt-impl', version: '0.11.5'
+    runtimeOnly group: 'io.jsonwebtoken', name: 'jjwt-jackson', version: '0.11.5'
+
+    // Spring WebFlux 의존성 추가 (Spring Legacy에서는 Spring Web 대신 WebFlux 의존성 추가)
+    implementation 'org.springframework:spring-webflux:5.3.10'
+    implementation 'io.projectreactor.netty:reactor-netty:1.0.0'
+    // Reactor Core (비동기 스트림을 처리하기 위한 필수 라이브러리)
+    implementation 'io.projectreactor:reactor-core:3.4.9'
+    // Jackson (JSON 직렬화/역직렬화를 위한 라이브러리)
+    implementation 'com.fasterxml.jackson.core:jackson-databind:2.12.4'
+    implementation 'com.fasterxml.jackson.datatype:jackson-datatype-jsr310:2.12.4'
+
+    //test
+    testImplementation("org.junit.jupiter:junit-jupiter-api:${junitVersion}")
+    testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:${junitVersion}")
+
+    testImplementation "org.springframework:spring-test:${springVersion}"
+    testCompileOnly "org.projectlombok:lombok:${lombokVersion}"
+    testAnnotationProcessor "org.projectlombok:lombok:${lombokVersion}"
+
+    implementation 'com.auth0:java-jwt:4.2.1'
+    implementation 'javax.servlet:javax.servlet-api:4.0.1'
+
+    implementation 'com.fasterxml.jackson.dataformat:jackson-dataformat-xml'
+    // AWS SDK S3
+    implementation 'software.amazon.awssdk:s3:2.20.39'
+    implementation 'software.amazon.awssdk:sts:2.20.39'
+
+    // Apache Commons FileUpload (MultipartResolver 사용을 위한 의존성)
+    implementation 'commons-fileupload:commons-fileupload:1.4'
+
+    // 이메일 인증
+    // https://mvnrepository.com/artifact/org.springframework.boot/spring-boot-starter-mail
+    implementation group: 'org.springframework.boot', name: 'spring-boot-starter-mail', version: '2.7.18'
+    // https://mvnrepository.com/artifact/javax.mail/javax.mail-api
+    implementation group: 'javax.mail', name: 'javax.mail-api', version: '1.6.2'
 
 
 
-  // 히카리 디비커넥션풀
-  implementation group: 'com.zaxxer', name: 'HikariCP', version: '5.1.0'
+
+
+    //Redis
+    // https://mvnrepository.com/artifact/org.springframework.data/spring-data-redis
+    implementation group: 'org.springframework.data', name: 'spring-data-redis', version: '2.6.6'
+
+
+    // Lettuce (Redis 클라이언트)
+    // https://mvnrepository.com/artifact/io.lettuce/lettuce-core
+    implementation group: 'io.lettuce', name: 'lettuce-core', version: '6.1.9.RELEASE'
 
 
 
-  // AOP
-  implementation 'org.aspectj:aspectjrt:1.9.20'
-  implementation 'org.aspectj:aspectjweaver:1.9.20'
-
-  testImplementation("org.junit.jupiter:junit-jupiter-api:${junitVersion}")
-  testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:${junitVersion}")
-
-  //security
-  // https://mvnrepository.com/artifact/org.springframework.security/spring-security-core
-  implementation group: 'org.springframework.security', name: 'spring-security-core', version: '5.8.13'
-
-  // https://mvnrepository.com/artifact/org.springframework.security/spring-security-web
-  implementation group: 'org.springframework.security', name: 'spring-security-web', version: '5.8.13'
-  // https://mvnrepository.com/artifact/org.springframework.security/spring-security-config
-  implementation group: 'org.springframework.security', name: 'spring-security-config', version: '5.8.13'
-
-  //jwt토큰기반인증용
-  implementation group: 'io.jsonwebtoken', name: 'jjwt-api', version: '0.11.5'
-  runtimeOnly group: 'io.jsonwebtoken', name: 'jjwt-impl', version: '0.11.5'
-  runtimeOnly group: 'io.jsonwebtoken', name: 'jjwt-jackson', version: '0.11.5'
-
-  testImplementation("org.junit.jupiter:junit-jupiter-api:${junitVersion}")
-  testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:${junitVersion}")
-
-  testImplementation("org.junit.jupiter:junit-jupiter-api:${junitVersion}")
-  testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:${junitVersion}")
+    // WebSocket 및 STOMP 메시징을 위한 의존성
+    implementation 'org.springframework:spring-messaging:5.3.37'
+    implementation 'org.springframework:spring-websocket:5.3.37'
 }
 
 test {
-useJUnitPlatform()}
+    useJUnitPlatform()
+}
+
+tasks.named('war') {
+    archiveFileName = 'ROOT.war'
+}

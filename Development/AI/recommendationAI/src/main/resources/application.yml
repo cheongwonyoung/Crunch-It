@@ -1,0 +1,7 @@
+nn:
+    file:
+        input: ./src/main/resources/CUST_INVESTMENT.csv # 입력 파일 경로
+        output: ./output/data_reference.csv # 출력 파일 경로
+    checkpoint: ./output/ # 체크포인트 경로
+    model: ./output/recommendation_system_model.h5 # 모델 파일 경로
+# 경로 변경 주의!

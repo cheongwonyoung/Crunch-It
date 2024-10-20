@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.kb.crunchit.mapper.recommendation.api.RecommendationApiDepositMapper">
+
+    <resultMap id="DepositResultMap" type="com.kb.crunchit.entity.DepositInfo">
+        <result property="bankName" column="kor_co_nm"/>
+        <result property="productCode" column="fin_prdt_cd"/>
+        <result property="productName" column="fin_prdt_nm"/>
+        <result property="joinMethod" column="join_way"/>
+    </resultMap>
+
+    <select id="getAllDeposits" resultType="RecommendationApiDeposit">
+        SELECT * FROM recommendation_api_deposit;
+    </select>
+
+    <select id="selectAllDeposits" resultMap="DepositResultMap">
+        SELECT * FROM recommendation_api_deposit
+    </select>
+
+    <insert id="insertDeposit" parameterType="com.kb.crunchit.entity.DepositInfo">
+        INSERT INTO recommendation_api_deposit (kor_co_nm, fin_prdt_cd, fin_prdt_nm, join_way)
+        VALUES (#{bankName}, #{productCode}, #{productName}, #{joinMethod})
+    </insert>
+
+    <update id="updateDeposit" parameterType="com.kb.crunchit.entity.DepositInfo">
+        UPDATE recommendation_api_deposit
+        SET kor_co_nm = #{bankName},
+            fin_prdt_nm = #{productName},
+            join_way = #{joinMethod}
+        WHERE fin_prdt_cd = #{productCode}
+    </update>
+
+    <select id="exists" parameterType="String" resultType="int">
+        SELECT COUNT(*) FROM recommendation_api_deposit WHERE fin_prdt_cd = #{productCode}
+    </select>
+
+</mapper>
