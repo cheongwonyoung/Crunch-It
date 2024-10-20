@@ -2,7 +2,6 @@
 <img src="https://github.com/user-attachments/assets/773a1e2b-d718-47bb-b833-4f7cf882c0a2"/>
 <h2>
 	금융 자산 관리 서비스
-	<img src="https://github.com/user-attachments/assets/dda1918c-def9-4d1c-9bb6-f53eb1f6892a" width=30/>
 </h2>
 <p>
 자산 관리를 어떻게 시작해야 할지 몰라서 망설이신 적 있으신가요?<br>
@@ -10,7 +9,7 @@
 <br>
 <br>
 무너질 걱정없는 자산관리, 무노와 함께해요 “muno” 
-<img src="https://github.com/user-attachments/assets/593765ec-04d2-4500-9002-8bbf87863791" width=30/>
+<img src="https://github.com/user-attachments/assets/58f31def-3511-426f-bbff-f0af27bca6d3" width=30/>
 </p>
 
 <!-- [프로젝트 소개](#🚀-프로젝트-소개) • [주요 기능](#✨-주요-기능) • [기술 스택](#🔧-기술-스택)• [인프라 구조](#⚙️-인프라-구조)• [개발 일지](#📚-팀-ashe-개발-일지)• [팀원 소개](#👩‍💻-팀원-소개) -->
