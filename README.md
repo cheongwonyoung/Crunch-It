@@ -20,7 +20,7 @@
 - [프로젝트 기간](#프로젝트-기간)
 - [프로젝트 소개](#프로젝트-소개)
 - [주요 기능](#주요-기능)
-- [전체 동작 영상](#전체-동작-영상)
+- [동작 영상](#동작-영상)
 - [기술 스택](#기술-스택)
 - [아키텍처](#아키텍처)
 - [프로젝트 팀원](#프로젝트-팀원)
@@ -111,9 +111,14 @@
 <br>
 <br>
 
-## 전체 동작 영상
-
-<img width="329" src="https://github.com/user-attachments/assets/3e12f0a1-b9a4-4dcf-ab3d-d6819d25c5f8">
+## 동작 영상
+<table>
+	  <tr>
+    <td align="center"><img src="https://github.com/user-attachments/assets/a35ca352-698f-4c77-bbba-2294afdb1c1c"/></td>
+    <td align="center"><img src="https://github.com/user-attachments/assets/708abb5f-b922-437c-be1b-9a5afb198ca3"/></td>
+    <td align="center"><img src="https://github.com/user-attachments/assets/0848f273-0c24-4a8d-8cc6-abc50e776ad9"/></td>
+  </tr>
+</table>
 
 <br>
 <br>
